@@ -1,0 +1,108 @@
+.premium_wrapper {
+    margin-top: 5rem;
+}
+
+.premium_text_wrapper {
+    color: #FFF;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.premium_color {
+    color: #FFB000;
+}
+
+.premium_header {
+    margin-bottom: 0px;
+}
+
+.premium_description {
+    opacity: 0.7;
+    font-weight: bold;
+    margin-top: 0.7rem;
+    font-size: 1.25rem;
+}
+
+.premium_card_wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+    height: 50rem;
+}
+
+.premium_monthly {
+    width: 20%;
+    margin-right: 5rem;
+    border-radius: 0.75rem;
+    background-color: #252525;
+}
+
+.premium_yearly {
+    width: 20%;
+    border-radius: 0.75rem;
+    background-color: #252525;
+}
+
+.premium_price {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-right: 0px;
+}
+
+.premium_price_yr {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-right: 0px;
+    color: #FFF;
+}
+
+.secondary_color {
+    color: #979797;
+    font-size: 1.2rem;
+}
+
+.secondary_color_yr {
+    color: #FFF;
+    font-size: 1.2rem;
+}
+
+.divider {
+    border: none;
+    width: 80%;
+    opacity: 0.5;
+    border-top: 0.2rem solid #FFF;
+}
+
+.card_description {
+    text-align: center;
+}
+
+.card_content {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.purchase_button {
+    color: #FFF;
+    border: none;
+    font-size: 1.3rem;
+    font-family: "Quicksand";
+    font-weight: bold;
+    padding: 0.05rem;
+    width: 80%;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    background-color: #7091F5;
+    margin-bottom: 2.25rem;
+}
+
+.purchase_button:hover {
+    cursor: pointer;
+}
+
+.purchase_button p {
+    opacity: 0.8;
+}
