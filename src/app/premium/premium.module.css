@@ -27,7 +27,7 @@
     display: flex;
     justify-content: center;
     margin-top: 5rem;
-    height: 50rem;
+    height: 32rem;
 }
 
 .premium_monthly {
@@ -35,12 +35,16 @@
     margin-right: 5rem;
     border-radius: 0.75rem;
     background-color: #252525;
+    max-height: 50rem;
+    margin-bottom: 25px; /* 25px separation from the purchase button */
 }
 
 .premium_yearly {
     width: 20%;
     border-radius: 0.75rem;
     background-color: #252525;
+    max-height: 50rem;
+    margin-bottom: 25px; /* 25px separation from the purchase button */
 }
 
 .premium_price {
@@ -83,6 +87,7 @@
     text-align: center;
     justify-content: center;
     align-items: center;
+    height: 25px;
 }
 
 .purchase_button {
