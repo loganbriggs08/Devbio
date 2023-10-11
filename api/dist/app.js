@@ -28,9 +28,7 @@ const app = (0, express_1.default)();
 })
     .then(async () => {
     console.log('Database connected');
-    // Get the repository for the Session entity
     const sessionRepository = (0, typeorm_1.getRepository)(Session_1.Session);
-    // Create the TypeormStore and pass the repository
     const typeormStore = new typeorm_store_1.TypeormStore({
         cleanupLimit: 2,
         ttl: 86400,

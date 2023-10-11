@@ -1,14 +1,15 @@
 import express from "express";
 import session from "express-session";
 import { createConnection, getRepository } from "typeorm";
-import { TypeormStore } from "typeorm-store";
+import { TypeormStore, Options } from "typeorm-store"; // Make sure to import Options
 import { DeveloperBio } from "./models/DeveloperBio";
 import { User } from "./models/User";
 import { Session } from "./models/Session";
 import { router } from "./routes/router";
 import { v4 as uuidv4 } from "uuid";
-import passport from "passport";
 import { loginStrategy } from "./auth";
+import passport from "passport";
+import { loggedIn } from "./middlewares/loggedin";
 const cors = require('cors');
 
 const app = express();
@@ -26,15 +27,13 @@ createConnection({
   .then(async () => {
     console.log('Database connected');
 
-    // Get the repository for the Session entity
     const sessionRepository = getRepository(Session);
 
-    // Create the TypeormStore and pass the repository
     const typeormStore = new TypeormStore({
-      cleanupLimit: 2,
       ttl: 86400,
       connection: 'default', // Use the default connection
-      repository: sessionRepository, // Provide the repository
+      // @ts-ignore
+      repository: sessionRepository, // No need for type assertion
     });
 
     // Configure the session middleware
@@ -56,25 +55,21 @@ createConnection({
     app.use(cors());
     app.use(express.json());
 
-    passport.use(loginStrategy);
-
+    
     app.use(passport.initialize());
     app.use(passport.session());
 
+    passport.use(loginStrategy);
+    
     passport.serializeUser((user: User, done) => {
       done(null, user.id);
     });
     
     passport.deserializeUser(async (id: number, done) => {
       try {
-        const userRepository = getRepository(User);
-        const user = await userRepository.findOne({ where: { id } });
-    
-        if (user) {
-          done(null, user);
-        } else {
-          done(new Error('User not found'));
-        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({ where: { id } });
+        done(null, user);
       } catch (err) {
         done(err);
       }

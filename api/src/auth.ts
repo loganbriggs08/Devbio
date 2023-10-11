@@ -8,6 +8,7 @@ const loginStrategy = new LocalStrategy(
   {
     usernameField: 'username',
     passwordField: 'password',
+    passReqToCallback: true,
   },
   async function (username, password, done) {
     try {

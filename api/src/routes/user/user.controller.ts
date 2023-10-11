@@ -4,8 +4,12 @@ import { loggedIn } from "../../middlewares/loggedin";
 
 const router = Router();
 
-router.post('/login', UserService.login);
-router.post('/register', UserService.register);
-router.post('/logout', loggedIn, UserService.logout);
+router.post(
+    "/register",
+    UserService.register
+  );
+  router.post("/login", UserService.login);
+  router.delete("/logout", loggedIn, UserService.logout);
 
 export default router;
+

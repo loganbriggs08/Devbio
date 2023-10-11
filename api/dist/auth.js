@@ -24,4 +24,3 @@ const loginStrategy = new passport_local_1.Strategy({
     }
 });
 exports.loginStrategy = loginStrategy;
-// https://typeorm.io/faq#how-can-i-set-the-default-value-to-some-function-for-example-now
