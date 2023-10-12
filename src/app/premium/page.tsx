@@ -1,4 +1,5 @@
 import styles from "./premium.module.css"
+import { IoMdSettings } from "react-icons/io"
 
 export default function Premium() {
   return (
@@ -14,18 +15,21 @@ export default function Premium() {
           <hr className={styles.divider}/>
           <div className={styles.card_content}>
             <p>
-              3x Explore Boosts<br/>
-              Banner Image<br/>
-              Premium Role<br/>
-              Premium Badge<br/>
-              Coloured Username<br/>
-              Access to Beta Features
-              <br/>
-              <br/>
-              <br/>
-              <br/>
+              <IoMdSettings className={styles.premium_icon} /> Highly customize your Profile
             </p>
-            <button type="button" className={styles.purchase_button}><p>Purchase</p></button>
+
+            <p>
+              hello world
+            </p>
+
+            <p>
+              hello world
+            </p>
+
+            <p>
+              hello world
+            </p>
+            <button type="button" className={styles.purchase_button}><p>Continue</p></button>
           </div>
         </div>
 
@@ -45,7 +49,7 @@ export default function Premium() {
               <br/>
               <br/>
             </p>
-            <button type="button" className={styles.purchase_button}><p>Purchase</p></button>
+            <button type="button" className={styles.purchase_button}><p>Continue</p></button>
           </div>
         </div>
       </div>

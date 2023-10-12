@@ -61,10 +61,13 @@
 .dashboard_button {
     color: #FFF;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-family: "Quicksand";
     font-weight: bold;
-    padding: 0.2rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
     margin-left: 0.5rem;
     border-radius: 0.3rem;
     background-color: #7091F5;
@@ -72,13 +75,8 @@
 
 .dashboard_button:hover {
     cursor: pointer;
-    
-}
-
-.dashboard_button p:hover {
-    opacity: 1;
 }
 
 .dashboard_button p {
-    opacity: 0.8;
+    opacity: 1;
 }

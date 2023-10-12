@@ -4,7 +4,11 @@ import { useRouter } from 'next/navigation';
 import styles from './navbar.module.css';
 
 export const NavbarComponent: React.FC = () => {
-    const router = useRouter()
+    const appRouter = useRouter()
+
+    const pushToDashboard = () => {
+        appRouter.push('/dashboard');
+    };
 
     return (
         <div className={styles.NavBar}>
@@ -17,7 +21,7 @@ export const NavbarComponent: React.FC = () => {
                 <li className={styles.navbar_li}><a className={styles.navbar_premium_a} href="/premium">Premium</a></li>
                 <li className={styles.navbar_li}><a className={styles.navbar_a} href="/explore">Explore</a></li>
 
-                <button type="button" className={styles.dashboard_button} onClick={(Login) => router.push('/dashboard')}><a  href="/dashboard"></a><p>Dashboard</p></button>
+                <button type="button" className={styles.dashboard_button} onClick={() => {pushToDashboard}}><p>Dashboard</p></button>
             </ul>
         </div>
     );
