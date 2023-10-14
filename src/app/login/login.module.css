@@ -26,31 +26,41 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%; /* Full width for the form container */
-    text-align: center; /* Center the form components */
+    width: 100%;
+    text-align: center; 
 }
 
 .login_input {
-    width: 100%; /* Full width for the input */
+    width: 70%;
     height: 50px;
+    color: #fff;
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
     border: none;
-    background-color: #FFFFFF;
+    background-color: #7091F5;
+}
+
+.login_input::placeholder {
+    font-size: medium;
+    font-weight: 500;
+    /*    bold font    */
+    
+
+    color: #fff;
 }
 
 .login_button {
-    width: 100%; /* Full width for the button */
+    width: 50%; 
     height: 50px;
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
     border: none;
-    background-color: #FFFFFF;
+    background-color: #7091F5;
     font-size: 24px;
     font-weight: 600;
-    color: #000000;
+    color: #fff;
 }
 
 .login_forgot {

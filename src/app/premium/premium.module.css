@@ -119,3 +119,13 @@
     vertical-align: middle;
     padding-left: 1rem;
 }
+
+
+
+.centered {
+    margin-top: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
