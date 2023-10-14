@@ -1,7 +1,55 @@
-.home_text {
+.centered {
+    justify-content: center;
     text-align: center;
 }
 
-.accent_color {
+.accentText {
     color: #7091F5;
+}
+
+.top {
+    height: 50vh;
+    margin-top: 4rem;
+    background-color: #1E1E20;
+}
+
+.description_text {
+  margin-top: 0.2rem;
+  opacity: 0.8;
+  font-size: 1.3rem;
+  font-weight: 100;
+}
+
+.top_text {
+    margin-bottom: 0.3rem;
+}
+
+.get_started_button {
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    background-color: #7091F5;
+    min-width: 15%;
+    display: inline-block;
+    text-align: center;
+}
+
+
+.get_started_button:hover { 
+    cursor: pointer;
+}
+
+.arrow_icon {
+    margin-left: 0.3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
 }
