@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
 import styles from "./page.module.css";
+import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 
 const words = ["Unique", "Developer", "Innovative", "Creative"];
@@ -9,6 +10,7 @@ const wordChangeInterval = 3000;
 const animationDuration = 1000;
 
 export default function Home() {
+    const router = useRouter()
     const [wordIndex, setWordIndex] = useState(0);
     const wordRef = useRef<HTMLSpanElement | null>(null);
 
@@ -32,8 +34,12 @@ export default function Home() {
         }
     }, [wordIndex]);
 
+    const pushToDashboard = () => {
+        router.push('/dashboard')
+    }
+
     return (
-        <main>
+        <div>
             <div className={styles.top}>
                 <div className={styles.centered}>
                     <h1 className={styles.top_text}>
@@ -47,8 +53,8 @@ export default function Home() {
                         Elevating the Developer Experience has never been easier.
                     </p>
 
-                    <button className={styles.get_started_button}>
-                        Get Started <FaLongArrowAltRight className={styles.arrow_icon} />
+                    <button className={styles.get_started_button} onClick={pushToDashboard}>
+                        Get Started
                     </button>
 
                     <div className={styles.image_div}>
@@ -58,6 +64,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     );
 }
