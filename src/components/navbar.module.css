@@ -61,14 +61,11 @@
 .dashboard_button {
     color: #FFF;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-family: "Quicksand";
     font-weight: bold;
-    padding-top: 0.1rem;
-    padding-bottom: 0.1rem;
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
-    margin-left: 0.5rem;
+    padding: 1rem;
+    margin: none;
     border-radius: 0.3rem;
     background-color: #7091F5;
 }
@@ -78,5 +75,5 @@
 }
 
 .dashboard_button p {
-    opacity: 1;
+    opacity: 0.8;
 }
