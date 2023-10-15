@@ -121,9 +121,14 @@
     height: 79.15px;
     left: 0;
     top: 0;
+    border: none;
     position: absolute;
     background: #7091F5;
     border-radius: 8px;
+  }
+
+  .purchase_button:hover {
+    cursor: pointer;
   }
   
   /* Purchase Text */

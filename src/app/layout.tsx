@@ -5,7 +5,7 @@ import { NavbarComponent } from '@/components/navbar'
 
 export const metadata: Metadata = {
   title: 'devbio.me',
-  description: 'Create the perfect developer profile with ease.',
+  description: 'Easy to make profiles made to enhance the developer experience.',
 }
 
 export default function RootLayout({

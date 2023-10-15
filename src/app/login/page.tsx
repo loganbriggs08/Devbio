@@ -1,54 +1,84 @@
 'use client'
-import React, { useState } from 'react';
+
 import axios from 'axios';
+import React, { useState } from 'react';
 import styles from "./login.module.css";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Dashboard = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [usernameInput, setUsernameInput] = useState('');
+    const [passwordInput, setPasswordInput] = useState('');
 
-    const handleSubmit = async (e) => {
-        console.log('Login')
-        e.preventDefault();
+    const handleLogin = async () => {
         try {
             const response = await axios.post('http://localhost:3001/api/user/login', {
-                username,
-                password
+                username: usernameInput,
+                password: passwordInput
             });
             console.log('Login Successful', response.data);
         } catch (error) {
-            console.error('Login Failed', error);
+            ErrorToast("Failed to login with the account details provided.");
         }
     };
 
-    return (
-        <div>
-            <h1 className={styles.login_header}>Login</h1>
-            <p className={styles.login_description}>Login to your account.</p>
+    const ErrorToast = (message: string) => {
+		toast.error(message, {  
+			position: "bottom-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "dark",
+		});
+	}
 
-            <div className={styles.login_form}>
-                <form onSubmit={handleSubmit}>
+    return (
+        <div className={styles.component_wrapper}>
+            <div className={styles.component_wrapper_2}>
+                <div className={styles.header_text_wrapper}>
+                    <h1 className={styles.header_text}>Login to Account</h1>
+                    <p className={styles.description_text}>Please fill in the information below to login to an Account.</p>
+
                     <input
+                        className={styles.tiktok_username_input}
                         type="text"
                         placeholder="Username"
-                        className={styles.login_input}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={usernameInput}
+                        onChange={(e) => setUsernameInput(e.target.value)}
                     />
+
                     <input
+                        className={styles.password_input}
                         type="password"
                         placeholder="Password"
-                        className={styles.login_input}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={passwordInput}
+                        onChange={(e) => setPasswordInput(e.target.value)}
                     />
-                    <button type="submit" className={styles.login_button}>Login</button>
-                </form>
 
-                <a href="/forgot-password" className={styles.login_forgot}>Forgot password?</a>
+                    <button className={styles.link_account_button} onClick={handleLogin}>Login to Account</button>
 
-                <p className={styles.login_register}>Don't have an account? <a href="/register" className={styles.login_register_link}>Register</a></p>
+                    <a href="/register" className={styles.a_tag}>
+                        <p className={styles.no_account}>Don't have an account? Click here</p>
+                    </a>
+                </div>
             </div>
+
+        <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            toastStyle={{ backgroundColor: "#1E1E20" }}
+		/>
         </div>
     );
 };

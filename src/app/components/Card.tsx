@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import styles from './card.module.css'; // Make sure to import your CSS file
+import styles from './card.module.css';
 
 export const CustomCard = ({ title, description, buttonText }) => {
   const descriptionLines = description.split("\\n").map((line) => line.trim());
