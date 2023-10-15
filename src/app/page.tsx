@@ -10,13 +10,17 @@ const wordChangeInterval = 3000;
 const animationDuration = 1000;
 
 export default function Home() {
-    const router = useRouter()
-    const [wordIndex, setWordIndex] = useState(0);
+    const navigation = useRouter();
+    const [wordIndex, setWordIndex] = useState(getRandomIndex());
     const wordRef = useRef<HTMLSpanElement | null>(null);
+
+    function getRandomIndex() {
+        return Math.floor(Math.random() * words.length);
+    }
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+            setWordIndex(getRandomIndex());
         }, wordChangeInterval);
 
         return () => clearInterval(intervalId);
@@ -35,8 +39,8 @@ export default function Home() {
     }, [wordIndex]);
 
     const pushToDashboard = () => {
-        router.push('/dashboard')
-    }
+        navigation.push('/dashboard');
+    };
 
     return (
         <div>
