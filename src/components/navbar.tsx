@@ -27,5 +27,4 @@ export const NavbarComponent: React.FC = () => {
             </ul>
         </div>
     );
-
-};  
+}; 
