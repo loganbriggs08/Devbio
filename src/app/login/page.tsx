@@ -11,12 +11,6 @@ const Dashboard = () => {
     const [passwordInput, setPasswordInput] = useState('');
 
     const handleLogin = async () => {
-<<<<<<< Updated upstream
-        console.log("hello world")
-
-=======
-        console.log("niggers123")
->>>>>>> Stashed changes
         try {
             const response = await axios.post('http://localhost:3001/api/user/login', {
                 username: usernameInput,
