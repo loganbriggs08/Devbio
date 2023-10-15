@@ -1,4 +1,5 @@
 import styles from "./page.module.css"
+import Image from 'next/image'
 import { FaLongArrowAltRight } from 'react-icons/fa';
 
 export default function Home() {
@@ -11,8 +12,13 @@ export default function Home() {
                     
                     <button className={styles.get_started_button}>Get Started <FaLongArrowAltRight className={styles.arrow_icon} /></button>
 
+                    <div className={styles.image_div}>
+                        <a href="/dashboard">
+                            <img src="https://cdn.discordapp.com/attachments/1124442686192095345/1163087317871902770/example_profile.png" alt="Example image of a profile made with devbio.me"/>
+                        </a>
+                    </div>
                 </div>
-                </div>
+            </div>
         </main>
     )
 }   
