@@ -12,13 +12,20 @@ const Dashboard = () => {
 
     const handleLogin = async () => {
         console.log("hello world")
+
         try {
             const response = await axios.post('http://localhost:3001/api/user/login', {
                 username: usernameInput,
                 password: passwordInput
             });
-            console.log('Login Successful', response.data);
+            
+            console.log(response.status)
+
+            if (response.status == 401) {
+                ErrorToast("Failed to login, username or password entered was incorrect.");
+            }
         } catch (error) {
+            console.log(error)
             ErrorToast("An Error occured while trying to login.");
         }
     };
