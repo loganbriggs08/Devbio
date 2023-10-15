@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import styles from "./layout.module.css";
 import { NavbarComponent } from '@/components/navbar'
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <NavbarComponent />
-      <div>
+      <div className={styles.website_wrapper}>
         {children}
       </div>
     </html>

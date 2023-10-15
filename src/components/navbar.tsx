@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 import styles from './navbar.module.css';
 
 export const NavbarComponent: React.FC = () => {
-    const appRouter = useRouter()
+    const router = useRouter()
 
     const pushToDashboard = () => {
-        appRouter.push('/dashboard');
-    };
+        router.push('/dashboard')
+    }
 
     return (
         <div className={styles.NavBar}>

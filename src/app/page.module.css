@@ -13,19 +13,24 @@
 
 .top {
     height: 50vh;
-    margin-top: 4rem;
+    margin-top: 5rem;
     background-color: #1E1E20;
 }
 
 .description_text {
   margin-top: 0.2rem;
   opacity: 0.8;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 100;
+  margin-bottom: 2rem;
 }
 
 .top_text {
     margin-bottom: 0.3rem;
+}
+
+.bottom_text {
+    margin-top: 4rem;
 }
 
 .get_started_button {
