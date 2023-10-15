@@ -11,6 +11,7 @@ const Dashboard = () => {
     const [passwordInput, setPasswordInput] = useState('');
 
     const handleLogin = async () => {
+        console.log("hello world")
         try {
             const response = await axios.post('http://localhost:3001/api/user/login', {
                 username: usernameInput,
@@ -18,7 +19,7 @@ const Dashboard = () => {
             });
             console.log('Login Successful', response.data);
         } catch (error) {
-            ErrorToast("Failed to login with the account details provided.");
+            ErrorToast("An Error occured while trying to login.");
         }
     };
 
@@ -58,7 +59,7 @@ const Dashboard = () => {
                         onChange={(e) => setPasswordInput(e.target.value)}
                     />
 
-                    <button className={styles.link_account_button} onClick={handleLogin}>Login to Account</button>
+                    <button className={styles.link_account_button} onClick={() => handleLogin()}>Login to Account</button>
 
                     <a href="/register" className={styles.a_tag}>
                         <p className={styles.no_account}>Don't have an account? Click here</p>

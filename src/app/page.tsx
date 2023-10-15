@@ -52,14 +52,16 @@ export default function Home() {
                         </span> Profiles
                     </h1>
                     <p className={styles.description_text}>
-                        Simplify Your Developer Journey with easy to make and Tailored Profiles on devbio.me
+                        Simplify your Developer Journey with easy to make and Tailored Profiles on devbio.me
                         <br />
                         Elevating the Developer Experience has never been easier.
                     </p>
 
-                    <button className={styles.get_started_button} onClick={pushToDashboard}>
-                        Get Started
-                    </button>
+                    <a href="/dashboard">
+                        <button className={styles.get_started_button} onClick={pushToDashboard}>
+                            Get Started
+                        </button>
+                    </a>
 
                     <div className={styles.image_div}>
                         <a href="/dashboard">
