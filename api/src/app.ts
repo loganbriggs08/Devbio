@@ -48,7 +48,7 @@ createConnection({
         genid: () => {
           return generateUniqueSessionId();
         },
-        store: typeormStore, // Use the TypeormStore
+        store: typeormStore,
       })
     );
 

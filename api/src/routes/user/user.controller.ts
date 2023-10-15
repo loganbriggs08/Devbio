@@ -10,6 +10,6 @@ router.post(
   );
   router.post("/login", UserService.login);
   router.delete("/logout", loggedIn, UserService.logout);
-
+  
 export default router;
 
