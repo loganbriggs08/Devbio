@@ -33,8 +33,7 @@ export const CustomCard = ({ title, description, buttonText }) => {
         </div>
       </div>
       <div className={styles.purchase_container}>
-        <button className={styles.purchase_button}></button>
-        <div className={styles.purchase_text}>{buttonText}</div>
+        <button className={styles.purchase_button}><p className={styles.purchase_text}>{buttonText}</p></button>
       </div>
       <div className={styles.divider_line}></div>
     </div>
