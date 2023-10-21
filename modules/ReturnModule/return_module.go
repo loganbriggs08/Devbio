@@ -1,6 +1,9 @@
-package QuickReturn
+package ReturnModule
 
 import (
+	"devbio/structs"
+	"encoding/json"
+	"log"
 	"net/http"
 )
 
