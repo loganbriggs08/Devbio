@@ -3,7 +3,6 @@ package accounts
 import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
-	"fmt"
 	"net/http"
 )
 
@@ -12,8 +11,6 @@ func GetRequest(w http.ResponseWriter, r *http.Request) {
 
 	if sessionAuthentication != "" {
 		accountDataStruct := database.GetAccountData(sessionAuthentication)
-
-		fmt.Println(accountDataStruct)
 
 		if accountDataStruct.Username == "" {
 			ReturnModule.InternalServerError(w, r)
