@@ -29,7 +29,7 @@ const GetStartedComponent = () => {
             });
 
             if (response.data.session_authentication) {
-                setCookie("session", response.data.session_authentication, 7)
+                setCookie("session", response.data.session_authentication, 30)
                 router.push("/dashboard")
             }
             
