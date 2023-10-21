@@ -28,7 +28,7 @@ func main() {
 	if database.InitializeDatabase() && database.CreateTables() {
 		pterm.Success.Println("Database has been initalized successfully.")
 
-		http.HandleFunc("/api/accounts", endpoints.ManageAccounts)
+		http.HandleFunc("/api/account", endpoints.ManageAccounts)
 
 		log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 	} else {

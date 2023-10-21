@@ -1,7 +1,7 @@
 package endpoints
 
 import (
-	"devbio/endpoints/accounts"
+	"devbio/endpoints/account"
 	"devbio/modules/return_module"
 	"net/http"
 )

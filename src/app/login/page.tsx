@@ -12,7 +12,7 @@ const LoginComponent = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/user/login', {
+            const response = await axios.post('http://localhost:3001/api/account', {
                 username: usernameInput,
                 password: passwordInput
             });
