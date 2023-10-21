@@ -189,3 +189,20 @@ func AddSession(username, sessionToken string) bool {
 
 	return true
 }
+
+func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
+	var passwordHashAndSalt structs.HashedAndSaltedPassword
+
+	err := databaseConnection.QueryRow("SELECT password_hash, password_salt FROM accounts WHERE username = ?", username).Scan(&passwordHashAndSalt.HashedPassword, &passwordHashAndSalt.RandomSalt)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return passwordHashAndSalt
+		} else {
+			log.Fatal(err)
+			return passwordHashAndSalt
+		}
+	}
+
+	return passwordHashAndSalt
+}

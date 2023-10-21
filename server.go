@@ -29,6 +29,7 @@ func main() {
 		pterm.Success.Println("Database has been initalized successfully.")
 
 		http.HandleFunc("/api/account", endpoints.ManageAccounts)
+		http.HandleFunc("/api/account/session", endpoints.ManageSessions)
 
 		log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 	} else {
