@@ -3,8 +3,10 @@ package database
 import (
 	"database/sql"
 	"devbio/modules"
+	"devbio/structs"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -91,6 +93,75 @@ func CreateAccount(username, password string) bool {
 	}
 
 	return true
+}
+
+func GetAccountData(sessionToken string) structs.UserResponse {
+	var userData structs.UserResponse
+	var badgesString, skillsString, interestsString, spokenLanguagesString string
+
+	query := "SELECT username FROM sessions WHERE session_token = ?"
+	row := databaseConnection.QueryRow(query, sessionToken)
+
+	var username sql.NullString
+	if err := row.Scan(&username); err != nil {
+		if err == sql.ErrNoRows {
+			return userData
+		}
+		log.Println("Error while retrieving username:", err)
+		return userData
+	}
+
+	if !username.Valid {
+		return userData
+	}
+
+	row = databaseConnection.QueryRow("SELECT username, badges, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
+
+	err := row.Scan(
+		&userData.Username,
+		&badgesString,
+		&userData.IsHirable,
+		&userData.IsDisabled,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return userData
+		}
+		log.Println("Error while scanning data:", err)
+		return userData
+	}
+
+	row = databaseConnection.QueryRow("SELECT profile_picture, description, location FROM profile_data WHERE username = ?", username)
+
+	row.Scan(
+		&userData.ProfilePicture,
+		&userData.Description,
+		&userData.Location,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return userData
+		}
+		log.Println("Error while scanning data:", err)
+		return userData
+	}
+
+	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
+		log.Println("Error while unmarshaling badges:", err)
+	}
+	if err := json.Unmarshal([]byte(skillsString), &userData.Skills); err != nil {
+		log.Println("Error while unmarshaling skills:", err)
+	}
+	if err := json.Unmarshal([]byte(interestsString), &userData.Interests); err != nil {
+		log.Println("Error while unmarshaling interests:", err)
+	}
+	if err := json.Unmarshal([]byte(spokenLanguagesString), &userData.SpokenLanguages); err != nil {
+		log.Println("Error while unmarshaling spoken languages:", err)
+	}
+
+	return userData
 }
 
 func AccountExists(username string) bool {
