@@ -15,10 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <NavbarComponent />
-      <div className={styles.website_wrapper}>
-        {children}
-      </div>
+      <body>
+        <NavbarComponent />
+
+        <div className={styles.website_wrapper}>
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
