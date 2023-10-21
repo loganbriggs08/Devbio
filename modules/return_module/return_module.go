@@ -110,3 +110,19 @@ func SessionCreated(w http.ResponseWriter, r *http.Request, sessionAuthenticatio
 		log.Fatal(ResponseWriterError)
 	}
 }
+
+func AccountData(w http.ResponseWriter, r *http.Request, accountDataStruct structs.UserResponse) {
+	AccountDataResponse, ErrorResponseError := json.Marshal(accountDataStruct)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(AccountDataResponse)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}
