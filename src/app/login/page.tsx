@@ -3,24 +3,39 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import styles from "./login.module.css";
+import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
 const LoginComponent = () => {
+    const router = useRouter();
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
 
+    function setCookie(name: string, value: string, days: number) {
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + days);
+      
+        const cookieValue = encodeURIComponent(name) + "=" + encodeURIComponent(value) + "; expires=" + expirationDate.toUTCString() + "; path=/";
+        document.cookie = cookieValue;
+    }
+
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/account', {
-                username: usernameInput,
-                password: passwordInput
+            const response = await axios.get('http://localhost:6969/api/account/session', {
+                headers: {
+                    username: usernameInput,
+                    password: passwordInput
+                }
             });
-            
-            console.log(response.status)
 
-            if (response.status == 401) {
-                ErrorToast("Failed to login, username or password entered was incorrect.");
+            if (response.data.session_authentication) {
+                setCookie("session", response.data.session_authentication, 30)
+                router.push("/dashboard")
+            }
+            
+            if (response.data.error_message == "An account already exists with that username.") {
+                ErrorToast(response.data.error_message);
             }
         } catch (error) {
             console.log(error)
