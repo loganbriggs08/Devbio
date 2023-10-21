@@ -29,14 +29,7 @@ func CreateTables() bool {
 			password_hash VARCHAR(255),
 			password_salt VARCHAR(25)
 		);
-
-			CREATE TABLE IF NOT EXISTS badges (
-				badge_id INT AUTO_INCREMENT PRIMARY KEY,
-				username VARCHAR(40),
-				badge_name VARCHAR(255),
-				FOREIGN KEY (username) REFERENCES accounts(username)
-			);
-
+			
 			CREATE TABLE IF NOT EXISTS profile_data (
 				profile_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
@@ -49,6 +42,13 @@ func CreateTables() bool {
 				FOREIGN KEY (username) REFERENCES accounts(username)
 			);
 
+			CREATE TABLE IF NOT EXISTS badges (
+				badge_id INT AUTO_INCREMENT PRIMARY KEY,
+				username VARCHAR(40),
+				badge_name VARCHAR(255),
+				FOREIGN KEY (username) REFERENCES accounts(username)
+			);
+
 			CREATE TABLE IF NOT EXISTS connections (
 				connection_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
@@ -57,6 +57,12 @@ func CreateTables() bool {
 				FOREIGN KEY (username) REFERENCES profile_data(username),
 				FOREIGN KEY (account_username) REFERENCES accounts(username)
 			);
+
+		CREATE TABLE IF NOT EXISTS sessions (
+			username VARCHAR(40),
+			session_token VARCHAR(255),
+			FOREIGN KEY (username) REFERENCES accounts(username)
+		);
 	`)
 
 	if err != nil {
