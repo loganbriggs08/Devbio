@@ -20,6 +20,7 @@ type UserResponse struct {
 	Description     string   `json:"description"`
 	Skills          []string `json:"skills"`
 	Interests       []string `json:"interests"`
+	Location        string   `json:"location"`
 	SpokenLanguages []string `json:"spoken_languages"`
 	Badges          []string `json:"badges"`
 	IsHirable       bool     `json:"is_hirable"`
