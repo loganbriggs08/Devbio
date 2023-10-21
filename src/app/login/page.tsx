@@ -6,7 +6,7 @@ import styles from "./login.module.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
-const Dashboard = () => {
+const LoginComponent = () => {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
 
@@ -66,7 +66,7 @@ const Dashboard = () => {
 
                     <button className={styles.link_account_button} onClick={() => handleLogin()}>Login to Account</button>
 
-                    <a href="/register" className={styles.a_tag}>
+                    <a href="/get-started" className={styles.a_tag}>
                         <p className={styles.no_account}>Don't have an account? Click here</p>
                     </a>
                 </div>
@@ -89,4 +89,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default LoginComponent;
