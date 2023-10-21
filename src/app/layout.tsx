@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import styles from "./layout.module.css";
-import { NavbarComponent } from '@/components/navbar'
 
 export const metadata: Metadata = {
   title: 'devbio.me',
@@ -16,8 +15,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavbarComponent />
-
         <div className={styles.website_wrapper}>
           {children}
         </div>

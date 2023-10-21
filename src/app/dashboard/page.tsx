@@ -1,7 +1,15 @@
 'use client'
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+
+const DynamicDashboardComponent = dynamic(
+  () => import('@/components/dashboard') as any,
+  {
+    ssr: false,
+  }
+);
 
 interface UserData {
   username: string;
@@ -55,15 +63,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div>
-      {userData && (
-        <div>
-          <h1>Welcome to the Dashboard</h1>
-          <p>Welcome, {userData.username}!</p>
-          {userData.badges && userData.badges.length > 0 && (
-            <p>Badges: {userData.badges.join(', ')}</p>
-          )}
-        </div>
-      )}
+      {userData && (<DynamicDashboardComponent />)}
     </div>
   );
 };

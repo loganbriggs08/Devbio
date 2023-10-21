@@ -64,6 +64,8 @@
 }
 
 .link_account_button {
+    font-family: "Quicksand";
+    font-weight: 500;
     background-color: #7091F5;
     padding-left: 0.8rem;
     margin-bottom: 0.3rem;

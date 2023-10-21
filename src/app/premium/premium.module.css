@@ -36,7 +36,7 @@
     border-radius: 0.75rem;
     background-color: #252525;
     max-height: 50rem;
-    margin-bottom: 25px; /* 25px separation from the purchase button */
+    margin-bottom: 25px;
 }
 
 .premium_yearly {
@@ -44,7 +44,7 @@
     border-radius: 0.75rem;
     background-color: #252525;
     max-height: 50rem;
-    margin-bottom: 25px; /* 25px separation from the purchase button */
+    margin-bottom: 25px;
 }
 
 .premium_price {

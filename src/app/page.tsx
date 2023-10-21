@@ -2,6 +2,7 @@
 
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
+import { NavbarComponent } from '@/components/navbar'
 import React, { useState, useEffect, useRef } from 'react';
 
 const words = ["Unique", "Developer", "Innovative", "Creative"];
@@ -43,6 +44,7 @@ export default function Home() {
 
     return (
         <div>
+            <NavbarComponent/>
             <div className={styles.top}>
                 <div className={styles.centered}>
                     <div className={styles.get_started_header}>
