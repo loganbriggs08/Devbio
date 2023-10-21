@@ -2,6 +2,8 @@ module devbio
 
 go 1.21.1
 
+require golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+
 require (
 	atomicgo.dev/cursor v0.2.0 // indirect
 	atomicgo.dev/keyboard v0.2.9 // indirect
