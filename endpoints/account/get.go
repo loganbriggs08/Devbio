@@ -1,27 +1,25 @@
 package accounts
 
 import (
+	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
-	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 func GetRequest(w http.ResponseWriter, r *http.Request) {
-	var requestData struct {
-		Username string `json:"username"`
-	}
+	sessionAuthentication := r.Header.Get("session")
 
-	decoder := json.NewDecoder(r.Body)
+	if sessionAuthentication != "" {
+		accountDataStruct := database.GetAccountData(sessionAuthentication)
 
-	if err := decoder.Decode(&requestData); err != nil {
-		ReturnModule.InternalServerError(w, r)
-		return
-	}
+		fmt.Println(accountDataStruct)
 
-	accountUsername := requestData.Username
-
-	if accountUsername != "" {
-
+		if accountDataStruct.Username == "" {
+			ReturnModule.InternalServerError(w, r)
+		} else {
+			ReturnModule.AccountData(w, r, accountDataStruct)
+		}
 	} else {
 		ReturnModule.MissingData(w, r)
 	}
