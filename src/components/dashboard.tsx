@@ -1,4 +1,6 @@
 import styles from './dashboard.module.css';
+import { useRouter } from 'next/navigation';
+import ProfileComponent from '@/components/profile'
 import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
 
@@ -16,6 +18,7 @@ interface UserData {
 }
 
 const DashboardComponent = () => {
+    const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
@@ -38,6 +41,18 @@ const DashboardComponent = () => {
             })
         }
     }, []);
+
+    const clearCookiesAndRedirect = (() => {
+        const cookies = document.cookie.split(';');
+
+        cookies.forEach((cookie) => {
+            const cookieParts = cookie.split('=');
+            const cookieName = cookieParts[0].trim();
+            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        });
+
+        router.push("/")
+    })
   
   return (
     <div className={styles.container}>
@@ -45,34 +60,34 @@ const DashboardComponent = () => {
             <div style={{ display: 'flex', width: '100%'}}>
                 <div className={styles.sidebar}>
                     <h1>User Settings</h1>
-                    <p className={styles.sidebar_p}>My Profile</p>
-                    <p className={styles.sidebar_p}>Privacy & Safety</p>
-                    <p className={styles.sidebar_p}>Connections</p>
+                    <button className={styles.sidebar_selected_button}>My Profile</button>
+                    <button className={styles.sidebar_button}>Privacy & Safety</button>
+                    <button className={styles.sidebar_button}>Connections</button>
                     <span className={styles.divider_line}></span>
+
                     <h1>Payments</h1>
-                    <p className={styles.sidebar_p}>Premium<span className={styles.premiumText}>+</span></p>
-                    <p className={styles.sidebar_p}>Subscription</p>
-                    <p className={styles.sidebar_p}>Billing</p>
+                    <button className={styles.sidebar_button}>Premium<span className={styles.premiumText}>+</span></button>
+                    <button className={styles.sidebar_button}>Subscription</button>
+                    <button className={styles.sidebar_button}>Billing</button>
                     <span className={styles.divider_line}></span>
+
                     <h1>Site Settings</h1>
-                    <p className={styles.sidebar_p}>Appearance</p>
-                    <p className={styles.sidebar_p}>Notifications</p>
-                    <p className={styles.sidebar_p}>Our Policies</p>
+                    <button className={styles.sidebar_button}>Appearance</button>
+                    <button className={styles.sidebar_button}>Notifications</button>
+                    <button className={styles.sidebar_button}>Our Policies</button>
                     <span className={styles.divider_line}></span>
                     
-                    <h1>DevBio</h1>
-                    <p className={styles.sidebar_p}>What's new?</p>
-                    <p className={styles.sidebar_p}>Social Media</p>
-                    <p className={styles.sidebar_p}>Support Server</p>
+                    <h1>Devbio</h1>
+                    <button className={styles.sidebar_button}>What's new?</button>
+                    <button className={styles.sidebar_button}>Social Media</button>
+                    <button className={styles.sidebar_button}>Support Server</button>
 
                     <span className={styles.divider_line}></span>
-                    <button className={styles.logoutButton}>Logout</button>
+                    <button onClick={() => {clearCookiesAndRedirect()}} className={styles.logoutButton}>Logout</button>
                 </div>
 
                 <div className={styles.content}>
-                    <div className={styles.text_content}>
-                        <h1>Main Component</h1>
-                    </div>
+                    <ProfileComponent userData={userData}/>
                 </div>
             </div>
         ) : (
