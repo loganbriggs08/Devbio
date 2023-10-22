@@ -1,6 +1,6 @@
 import styles from "./premium.module.css"
-import { CustomCard } from "../components/Card"
 import { NavbarComponent } from '@/components/navbar'
+import { Card } from '@/components/card'
 
 
 export default function Premium() {
@@ -13,17 +13,30 @@ export default function Premium() {
           <h1 className={styles.premium_header}>Upgrade to <span className={styles.premium_color}>Premium</span></h1>
           <p className={styles.premium_description}>Discover unique <span className={styles.premium_color}>Premium</span> features.</p>
         </div>
+        
         <div className={styles.centered}>
-          <CustomCard
-            title="Premium"
-            description="3x Explore Boosts\nBanner Image\nPremium Role\nPremium Badge\nColoured Username\nAccess to Beta Features\n\n\n\n"
-            buttonText="Purchase"
-          />
-          <CustomCard
-            title="Premium+"
-            description=""
-            buttonText="Purchase"
-          />
+          <Card
+                  title="Premium"
+                  item1="Premium Badge"
+                  item2="Explore Boost"
+                  item3="Custom Domain"
+                  item4="Beta Features"
+                  item5="Colored Name"
+                  item6="Claim Inactive Usernames"
+                  price={5.99}
+                  pp={false}
+              /> 
+          <Card
+              title="Premium"
+              item1="Premium Features"
+              item2="Prioritized Support"
+              item3="Premium+ Discord Role"
+              item4="5x Explore Boosts"
+              item5="More Customisibility"
+              item6="Premium+ Badge"
+              price={12.99}
+              pp={true}
+          /> 
         </div>
       </div>
     </div>

@@ -13,6 +13,16 @@ import (
 
 var databaseConnection *sql.DB
 
+type updateRequestData struct {
+	Username        string
+	ProfilePicture  string   `json:"profile_picture"`
+	Description     string   `json:"description"`
+	Skills          []string `json:"skills"`
+	Location        string   `json:"location"`
+	Interests       []string `json:"interests"`
+	SpokenLanguages []string `json:"spoken_languages"`
+}
+
 func InitializeDatabase() bool {
 	connection, databaseConnectionError := sql.Open("sqlite3", "database.db")
 
@@ -29,6 +39,7 @@ func CreateTables() bool {
 		CREATE TABLE IF NOT EXISTS accounts (
 			username VARCHAR(40) PRIMARY KEY,
 			badges TEXT,
+			is_setup BOOLEAN,
 			is_hireable BOOLEAN,
 			is_disabled BOOLEAN,
 			password_hash VARCHAR(255),
@@ -61,6 +72,25 @@ func CreateTables() bool {
 			session_token VARCHAR(255),
 			FOREIGN KEY (username) REFERENCES accounts(username)
 		);
+
+		CREATE TABLE IF NOT EXISTS explore (
+		    username VARCHAR(40),
+			rank INT,
+			avg_rating FLOAT,
+			years_experience FLOAT,
+			commits INT,
+			open_projects INT,
+			boosts INT,
+			FOREIGN KEY (boosts) REFERENCES boosts(boosts),
+		    FOREIGN KEY (username) REFERENCES profile_data(username)
+		);
+
+		CREATE TABLE IF NOT EXISTS boosts (
+		    username VARCHAR(40),
+			boosts INT,
+			used_boosts INT,
+		    FOREIGN KEY (username) REFERENCES profile_data(username)
+		);
 	`)
 
 	if err != nil {
@@ -83,9 +113,9 @@ func CreateAccount(username, password string) bool {
 	}
 
 	_, err = databaseConnection.Exec(`
-		INSERT INTO accounts (username, badges, is_hireable, is_disabled, password_hash, password_salt)
-		VALUES (?, ?, ?, ?, ?, ?)
-	`, username, string(badgesJSON), false, false, hashedPasswordStruct.HashedPassword, hashedPasswordStruct.RandomSalt)
+		INSERT INTO accounts (username, badges, is_setup, is_hireable, is_disabled, password_hash, password_salt)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
+	`, username, string(badgesJSON), false, false, false, hashedPasswordStruct.HashedPassword, hashedPasswordStruct.RandomSalt)
 
 	if err != nil {
 		fmt.Println(err)
@@ -115,11 +145,12 @@ func GetAccountData(sessionToken string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT username, badges, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
+	row = databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
 
 	err := row.Scan(
 		&userData.Username,
 		&badgesString,
+		&userData.IsSetup,
 		&userData.IsHirable,
 		&userData.IsDisabled,
 	)
@@ -205,4 +236,101 @@ func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
 	}
 
 	return passwordHashAndSalt
+}
+
+func GetAllUsers() ([]string, bool) {
+	var userList []string
+	rows, err := databaseConnection.Query("SELECT username FROM accounts WHERE is_hireable = ?", true)
+
+	for rows.Next() {
+		var username string
+
+		rowScanError := rows.Scan(&username)
+
+		if rowScanError != nil {
+			return userList, true
+		}
+
+		userList = append(userList, username)
+	}
+
+	if err != nil {
+		fmt.Println(err)
+		return userList, true
+	}
+
+	return userList, false
+}
+
+func GetExploreData(username string) (structs.ExploreData, bool) {
+	var exploreData structs.ExploreData
+
+	err := databaseConnection.QueryRow("SELECT * FROM explore WHERE username = ?", username).Scan(&exploreData.Rank, &exploreData.Username, &exploreData.AvgRating, &exploreData.YearsExperience, &exploreData.Commits, &exploreData.OpenProjects, &exploreData.Boosts)
+
+	if err != nil {
+		fmt.Println(err)
+		return exploreData, true
+	}
+
+	return exploreData, false
+}
+
+func UpdateProfileData(profileData updateRequestData) bool {
+	var count int
+	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM profile_data WHERE username = ?;", profileData.Username).Scan(&count)
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	skillsJSON, err := json.Marshal(profileData.Skills)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	interestsJSON, err := json.Marshal(profileData.Interests)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	spokenLanguagesJSON, err := json.Marshal(profileData.SpokenLanguages)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	if count > 0 {
+		_, err = databaseConnection.Exec("UPDATE profile_data SET profile_picture = ?, description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.ProfilePicture, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+
+		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+	} else {
+		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.ProfilePicture, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+
+		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+	}
+
+	return true
 }

@@ -129,3 +129,9 @@
     align-items: center;
     height: 100%;
 }
+
+.card_container {
+    background-color: #252525;
+    width: 256px;
+    height: 500px;
+}

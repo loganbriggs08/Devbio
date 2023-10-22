@@ -1,0 +1,63 @@
+.container {
+    width: 450px;
+    height: 490px;
+    background-color: #252525;
+    border-radius: 12px;
+    text-align: center;
+    margin-left: 25px;
+}
+
+.title {
+    color: #fff;
+    font-size: 48px;
+    font-family: "Quicksand";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.price {
+    color: white;
+    font-size: 24px;
+    font-family: "Quicksand";
+    font-weight: 700;
+    word-wrap: break-word;
+    margin-top: -2rem;
+
+}
+
+.month {
+    color: #fff;
+    opacity: 0.8;
+    font-size: 16px;
+    font-family: "Quicksand";
+    font-weight: 700;
+    word-wrap: break-word;
+    margin-top: -2rem;
+}
+
+.divider_line {
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 1rem; 
+    opacity: 0.3;
+}
+
+.purchaseButton {
+    font-family: "Quicksand";
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin: 1rem 0;
+    padding: 0.8rem;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    width: 80%;
+    background-color: #7091F5;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.premium_text {
+    color: #FFB000;
+}

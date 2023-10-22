@@ -126,3 +126,23 @@ func AccountData(w http.ResponseWriter, r *http.Request, accountDataStruct struc
 		log.Fatal(ResponseWriterError)
 	}
 }
+
+func Success(w http.ResponseWriter, r *http.Request) {
+	SuccessResponse := structs.SuccessResponse{
+		Success: true,
+	}
+
+	SuccessResponseMarshal, ErrorResponseError := json.Marshal(SuccessResponse)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(SuccessResponseMarshal)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}

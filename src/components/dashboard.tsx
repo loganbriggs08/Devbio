@@ -53,37 +53,56 @@ const DashboardComponent = () => {
 
         router.push("/")
     })
+
+    const pushToPremium = () => {
+        router.push('/premium');
+    };
   
   return (
     <div className={styles.container}>
         {userData ? (
             <div style={{ display: 'flex', width: '100%'}}>
                 <div className={styles.sidebar}>
-                    <h1>User Settings</h1>
+                    <div className={styles.user_info}>
+                        {userData?.profile_picture ? (
+                            <img className={styles.profile_image} src={userData?.profile_picture} />
+                        ): (
+                            <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
+                        )}
+
+                        <div className={styles.info_container}>
+                            <h1 className={styles.username_text_user_info}>{userData?.username}</h1>
+                            {userData?.is_hirable ? (
+                                <p className={styles.location_text}>You are hireable.</p>
+                            ) : (
+                                <p className={styles.location_text}>Your not hireable.</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <button className={styles.upgrade_button} onClick={pushToPremium}>Upgrade</button>
+                    
+                    <h1 className={styles.sidebar_section_header}>User Settings</h1>
                     <button className={styles.sidebar_selected_button}>My Profile</button>
                     <button className={styles.sidebar_button}>Privacy & Safety</button>
                     <button className={styles.sidebar_button}>Connections</button>
-                    <span className={styles.divider_line}></span>
+                    <div className={styles.divider_line}></div>
 
-                    <h1>Payments</h1>
-                    <button className={styles.sidebar_button}>Premium<span className={styles.premiumText}>+</span></button>
-                    <button className={styles.sidebar_button}>Subscription</button>
-                    <button className={styles.sidebar_button}>Billing</button>
-                    <span className={styles.divider_line}></span>
-
-                    <h1>Site Settings</h1>
+                    <h1 className={styles.sidebar_section_header}>Site Settings</h1>
                     <button className={styles.sidebar_button}>Appearance</button>
                     <button className={styles.sidebar_button}>Notifications</button>
                     <button className={styles.sidebar_button}>Our Policies</button>
-                    <span className={styles.divider_line}></span>
-                    
-                    <h1>Devbio</h1>
-                    <button className={styles.sidebar_button}>What's new?</button>
-                    <button className={styles.sidebar_button}>Social Media</button>
-                    <button className={styles.sidebar_button}>Support Server</button>
+                    <div className={styles.divider_line}></div>
 
-                    <span className={styles.divider_line}></span>
-                    <button onClick={() => {clearCookiesAndRedirect()}} className={styles.logoutButton}>Logout</button>
+                    <h1 className={styles.sidebar_section_header}>Payments <span className={styles.coming_soon}>COMING SOON</span></h1>
+                    <button className={styles.sidebar_button}>Premium<span className={styles.premiumText}>+</span></button>
+                    <button className={styles.sidebar_button}>Subscription</button>
+                    <button className={styles.sidebar_button}>Billing</button>
+                    <div className={styles.divider_line}></div>
+                    
+                    <div className={styles.bottom_component_wrapper}>
+                        <button onClick={() => {clearCookiesAndRedirect()}} className={styles.logoutButton}>Logout</button>
+                    </div>
                 </div>
 
                 <div className={styles.content}>

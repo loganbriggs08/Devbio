@@ -30,6 +30,7 @@ func main() {
 
 		http.HandleFunc("/api/account", endpoints.ManageAccounts)
 		http.HandleFunc("/api/account/session", endpoints.ManageSessions)
+		http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
 
 		log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 	} else {
