@@ -1,0 +1,42 @@
+.profile_wrapper {
+    width: 40%;
+    border-radius: 0.4rem;
+    background-color: #272829;
+}
+
+.profile_top {
+    height: 9rem;
+    border-radius: 0.4rem 0.4rem 0rem 0rem;
+    margin-top: 0px;
+    padding-top: 0px;
+    background-color: #7091F5;
+}
+
+.profile_content {
+    margin-left: 5%;
+    margin-bottom: 5rem;
+}
+
+.profile_image_container {
+    margin-top: -5rem;
+    margin-left: 2%;
+}
+
+.profile_image {
+    border-radius: 50%;
+    width: 17%;
+    height: 17%;
+    background-color: #272829;
+    padding: 0.5rem;
+}
+
+.username_text {
+    margin-bottom: 0.5rem;
+}
+
+.description_text {
+    margin-top: 0px;
+    margin-right: 5%;
+    opacity: 0.8;
+    font-size: 1.3rem;
+}
