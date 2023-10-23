@@ -3,7 +3,7 @@ import styles from '@/components/profile.module.css'
 
 interface UserData {
     username: string;
-    profile_picture: string;
+    profile_picture: Uint8Array;
     description: string;
     skills: string[] | null;
     interests: string[] | null;
@@ -25,7 +25,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
 
             <div className={styles.profile_image_container}>
             {userData?.profile_picture ? (
-                <img className={styles.profile_image} src={userData?.profile_picture} />
+                <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
             ): (
                 <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
             )}

@@ -15,7 +15,7 @@ var databaseConnection *sql.DB
 
 type updateRequestData struct {
 	Username        string
-	ProfilePicture  string   `json:"profile_picture"`
+	ProfilePicture  []byte   `json:"profile_picture"`
 	Description     string   `json:"description"`
 	Skills          []string `json:"skills"`
 	Location        string   `json:"location"`
@@ -49,7 +49,7 @@ func CreateTables() bool {
 			CREATE TABLE IF NOT EXISTS profile_data (
 				profile_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
-				profile_picture TEXT,
+				profile_picture BLOB,
 				description VARCHAR(255),
 				skills TEXT,
 				location TEXT,

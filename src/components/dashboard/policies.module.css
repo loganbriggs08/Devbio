@@ -1,0 +1,17 @@
+.text {
+    font-family: "Quicksand";
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.title {
+    font-family: "Quicksand";
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.container {
+    margin-left: 25px;;
+}

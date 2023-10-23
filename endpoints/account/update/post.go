@@ -4,6 +4,7 @@ import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -12,7 +13,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 
 	var updateRequestData struct {
 		Username        string
-		ProfilePicture  string   `json:"profile_picture"`
+		ProfilePicture  []byte   `json:"profile_picture"`
 		Description     string   `json:"description"`
 		Skills          []string `json:"skills"`
 		Location        string   `json:"location"`
@@ -26,6 +27,8 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 		ReturnModule.InternalServerError(w, r)
 		return
 	}
+
+	fmt.Println(updateRequestData.ProfilePicture)
 
 	accountDataResult := database.GetAccountData(accountSession)
 	updateRequestData.Username = accountDataResult.Username

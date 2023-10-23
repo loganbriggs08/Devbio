@@ -16,7 +16,7 @@ type SessionCreated struct {
 
 type UserResponse struct {
 	Username        string   `json:"username"`
-	ProfilePicture  string   `json:"profile_picture"`
+	ProfilePicture  []byte   `json:"profile_picture"`
 	Description     string   `json:"description"`
 	Skills          []string `json:"skills"`
 	Interests       []string `json:"interests"`

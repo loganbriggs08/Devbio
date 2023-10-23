@@ -11,15 +11,23 @@ const DynamicDashboardComponent = dynamic(
   }
 );
 
+const DynamicFinishSetupComponent = dynamic(
+  () => import('@/components/finish_setup') as any,
+  {
+    ssr: false,
+  }
+);
+
 interface UserData {
   username: string;
-  profile_picture: string;
+  profile_picture: Uint8Array;
   description: string;
   skills: string[] | null;
   interests: string[] | null;
   location: string;
   spoken_languages: string[] | null;
   badges: string[];
+  is_setup: boolean;
   is_hirable: boolean;
   is_disabled: boolean;
 }
@@ -63,7 +71,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div>
-      {userData && (<DynamicDashboardComponent />)}
+      {userData?.is_setup ? (<DynamicDashboardComponent />) : userData && (<DynamicFinishSetupComponent />)}
     </div>
   );
 };

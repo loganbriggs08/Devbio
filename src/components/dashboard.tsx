@@ -3,10 +3,13 @@ import { useRouter } from 'next/navigation';
 import ProfileComponent from '@/components/profile'
 import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
+import { OurPolicies } from './dashboard/our_policies';
+import { PrivacySafety } from './dashboard/privacy_safety';
+import { Connections } from './dashboard/connections';
 
 interface UserData {
     username: string;
-    profile_picture: string;
+    profile_picture: Uint8Array;
     description: string;
     skills: string[] | null;
     interests: string[] | null;
@@ -20,6 +23,8 @@ interface UserData {
 const DashboardComponent = () => {
     const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [currentComponent, setCurrentComponent] = useState('profile');
+
 
     useEffect(() => {
         const cookies = document.cookie.split(';');
@@ -41,6 +46,21 @@ const DashboardComponent = () => {
             })
         }
     }, []);
+
+    const renderComponent = () => {
+        switch (currentComponent) {
+          case 'profile':
+            return <ProfileComponent userData={userData}/>
+          case 'policies':
+            return <OurPolicies />;
+          case 'privacy':
+            return <PrivacySafety/>;   
+          case 'connections':
+            return <Connections/>;  
+          default:
+            return <ProfileComponent userData={userData} />;
+        }
+      };
 
     const clearCookiesAndRedirect = (() => {
         const cookies = document.cookie.split(';');
@@ -65,7 +85,7 @@ const DashboardComponent = () => {
                 <div className={styles.sidebar}>
                     <div className={styles.user_info}>
                         {userData?.profile_picture ? (
-                            <img className={styles.profile_image} src={userData?.profile_picture} />
+                            <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
                         ): (
                             <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
                         )}
@@ -83,15 +103,15 @@ const DashboardComponent = () => {
                     <button className={styles.upgrade_button} onClick={pushToPremium}>Upgrade</button>
                     
                     <h1 className={styles.sidebar_section_header}>User Settings</h1>
-                    <button className={styles.sidebar_selected_button}>My Profile</button>
-                    <button className={styles.sidebar_button}>Privacy & Safety</button>
+                    <button className={styles.sidebar_selected_button} onClick={() => setCurrentComponent('profile')}>My Profile</button>
+                    <button className={styles.sidebar_button} onClick={() => setCurrentComponent('privacy')}>Privacy & Safety</button>
                     <button className={styles.sidebar_button}>Connections</button>
                     <div className={styles.divider_line}></div>
 
                     <h1 className={styles.sidebar_section_header}>Site Settings</h1>
                     <button className={styles.sidebar_button}>Appearance</button>
                     <button className={styles.sidebar_button}>Notifications</button>
-                    <button className={styles.sidebar_button}>Our Policies</button>
+                    <button className={styles.sidebar_button} onClick={() => setCurrentComponent('policies')}>Our Policies</button>
                     <div className={styles.divider_line}></div>
 
                     <h1 className={styles.sidebar_section_header}>Payments <span className={styles.coming_soon}>COMING SOON</span></h1>
@@ -105,9 +125,11 @@ const DashboardComponent = () => {
                     </div>
                 </div>
 
-                <div className={styles.content}>
-                    <ProfileComponent userData={userData}/>
-                </div>
+                {/* <div className={styles.content}> */}
+                    {/* <ProfileComponent userData={userData}/> */}
+                    <div className={styles.content}>{renderComponent()}</div>
+
+                {/* </div> */}
             </div>
         ) : (
             <div>
