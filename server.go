@@ -34,7 +34,8 @@ func main() {
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
 			http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
 
-			http.HandleFunc("/api/storage/", endpoints.ManageStorage)
+			http.HandleFunc("/api/storage", endpoints.ManageStorage)
+			http.HandleFunc("/api/storage/image/", endpoints.ManageStorage)
 
 			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 		} else {

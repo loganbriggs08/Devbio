@@ -91,7 +91,12 @@ const DashboardComponent = () => {
                         )}
 
                         <div className={styles.info_container}>
-                            <h1 className={styles.username_text_user_info}>{userData?.username}</h1>
+                            <h1 className={styles.username_text_user_info}>
+                                {userData?.username && userData?.username.length > 7
+                                    ? userData?.username.slice(0, 7) + ".."
+                                    : userData?.username}
+                            </h1>
+
                             {userData?.is_hirable ? (
                                 <p className={styles.location_text}>You are hireable.</p>
                             ) : (

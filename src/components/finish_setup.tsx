@@ -67,6 +67,7 @@ const FinishSetupComponent = () => {
       reader.onload = (event) => {
         if (event.target && event.target.result) {
           const bytes = new Uint8Array(event.target.result as ArrayBuffer);
+          console.log(bytes)
           setProfilePictureBytes(bytes);
           handleContinueToDashboard();
         }
