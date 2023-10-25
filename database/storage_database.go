@@ -55,6 +55,20 @@ func InsertOrUpdateProfileImage(username string, image []byte) error {
 	return nil
 }
 
+func GetProfileImageByUsername(username string) ([]byte, error) {
+	var image []byte
+
+	err := databaseStorageConnection.QueryRow("SELECT image FROM profile_images WHERE username = ?;", username).Scan(&image)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return image, nil
+}
+
 func DeleteProfileImage(username string) error {
 	_, err := databaseStorageConnection.Exec("DELETE FROM profile_images WHERE username = ?;", username)
 	if err != nil {
