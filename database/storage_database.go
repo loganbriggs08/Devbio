@@ -20,7 +20,7 @@ func InitializeStorageDatabase() bool {
 
 func CreateStorageTables() bool {
 	_, err := databaseStorageConnection.Exec(`
-		CREATE TABLE IF NOT EXISTS images (
+		CREATE TABLE IF NOT EXISTS profile_images (
 			username VARCHAR(40) PRIMARY KEY,
 			image BLOB
 		);
@@ -31,4 +31,35 @@ func CreateStorageTables() bool {
 	}
 
 	return true
+}
+
+func InsertOrUpdateProfileImage(username string, image []byte) error {
+	var existingImage []byte
+	err := databaseStorageConnection.QueryRow("SELECT image FROM profile_images WHERE username = ?;", username).Scan(&existingImage)
+
+	switch {
+	case err == sql.ErrNoRows:
+		_, err := databaseStorageConnection.Exec("INSERT INTO profile_images (username, image) VALUES (?, ?);", username, image)
+		if err != nil {
+			return err
+		}
+	case err != nil:
+		return err
+	default:
+		_, err := databaseStorageConnection.Exec("UPDATE profile_images SET image = ? WHERE username = ?;", image, username)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func DeleteProfileImage(username string) error {
+	_, err := databaseStorageConnection.Exec("DELETE FROM profile_images WHERE username = ?;", username)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
