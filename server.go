@@ -3,10 +3,9 @@ package main
 import (
 	"devbio/database"
 	"devbio/endpoints"
+	"github.com/pterm/pterm"
 	"log"
 	"net/http"
-
-	"github.com/pterm/pterm"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -25,15 +24,23 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	if database.InitializeDatabase() && database.CreateTables() {
-		pterm.Success.Println("Database has been initalized successfully.")
+	if database.InitializeStorageDatabase() && database.CreateStorageTables() {
+		pterm.Success.Println("Storage database has been initalized successfully.")
 
-		http.HandleFunc("/api/account", endpoints.ManageAccounts)
-		http.HandleFunc("/api/account/session", endpoints.ManageSessions)
-		http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
+		if database.InitializeDatabase() && database.CreateTables() {
+			pterm.Success.Println("Database has been initalized successfully.")
 
-		log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
+			http.HandleFunc("/api/account", endpoints.ManageAccounts)
+			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
+			http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
+
+			http.HandleFunc("/api/storage/", endpoints.ManageStorage)
+
+			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
+		} else {
+			pterm.Fatal.WithFatal(true).Println("Failed to initalize database successfully.")
+		}
 	} else {
-		pterm.Fatal.WithFatal(true).Println("Failed to initalize database successfully.")
+		pterm.Fatal.WithFatal(true).Println("Failed to initalize storage database successfully.")
 	}
 }
