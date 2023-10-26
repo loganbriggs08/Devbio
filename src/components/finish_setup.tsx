@@ -56,8 +56,9 @@ const FinishSetupComponent = () => {
     const selectedFile = e.target.files && e.target.files[0];
     if (selectedFile) {
       setProfilePictureFile(selectedFile);
-      saveProfilePicture();
       setStep(3);
+    } else {
+      ErrorToast("Please select a valid image file.");
     }
   };
 
@@ -67,20 +68,17 @@ const FinishSetupComponent = () => {
       reader.onload = (event) => {
         if (event.target && event.target.result) {
           const bytes = new Uint8Array(event.target.result as ArrayBuffer);
-          console.log(bytes)
           setProfilePictureBytes(bytes);
-          handleContinueToDashboard();
+          handleContinueToDashboard(bytes);
         }
       };
       reader.readAsArrayBuffer(profilePictureFile);
     }
   };
 
-  const handleContinueToDashboard = () => {
-    console.log(profilePictureBytes)
-
+  const handleContinueToDashboard = (bytes: any) => {
     const requestPayload = {
-      profile_picture: Array.from(profilePictureBytes || []),
+      profile_picture: Array.from(bytes),
       description: descriptionText || "A description for this user has not been set.",
       skills: [],
       location: '',

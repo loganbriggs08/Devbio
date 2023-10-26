@@ -3,8 +3,8 @@ package storage
 import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
-	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -23,7 +23,7 @@ func GetRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "image/jpeg")
-	w.Header().Set("Content-Length", fmt.Sprint(len(image)))
+	w.Header().Set("Content-Length", strconv.Itoa(100000000))
 
 	_, imageDatabaseError = w.Write(image)
 

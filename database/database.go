@@ -14,13 +14,14 @@ import (
 var databaseConnection *sql.DB
 
 type updateRequestData struct {
-	Username        string
-	ProfilePicture  []byte   `json:"profile_picture"`
-	Description     string   `json:"description"`
-	Skills          []string `json:"skills"`
-	Location        string   `json:"location"`
-	Interests       []string `json:"interests"`
-	SpokenLanguages []string `json:"spoken_languages"`
+	Username           string
+	ProfilePicture     []byte   `json:"profile_picture"`
+	Description        string   `json:"description"`
+	Skills             []string `json:"skills"`
+	Location           string   `json:"location"`
+	Interests          []string `json:"interests"`
+	SpokenLanguages    []string `json:"spoken_languages"`
+	ProfilePictureLink string   `json:"profile_picture_link"`
 }
 
 func InitializeDatabase() bool {
@@ -49,7 +50,7 @@ func CreateTables() bool {
 			CREATE TABLE IF NOT EXISTS profile_data (
 				profile_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
-				profile_picture BLOB,
+				profile_picture TEXT,
 				description VARCHAR(255),
 				skills TEXT,
 				location TEXT,
@@ -303,7 +304,7 @@ func UpdateProfileData(profileData updateRequestData) bool {
 	}
 
 	if count > 0 {
-		_, err = databaseConnection.Exec("UPDATE profile_data SET profile_picture = ?, description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.ProfilePicture, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+		_, err = databaseConnection.Exec("UPDATE profile_data SET profile_picture = ?, description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
@@ -317,7 +318,7 @@ func UpdateProfileData(profileData updateRequestData) bool {
 			return false
 		}
 	} else {
-		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.ProfilePicture, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
 
 		if err != nil {
 			fmt.Println(err)

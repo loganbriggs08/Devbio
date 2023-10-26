@@ -85,7 +85,7 @@ const DashboardComponent = () => {
                 <div className={styles.sidebar}>
                     <div className={styles.user_info}>
                         {userData?.profile_picture ? (
-                            <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
+                            <img className={styles.profile_image} src={`http://localhost:6969/api/storage/image/${userData?.username}`} />
                         ): (
                             <img className={styles.profile_image} src="https://cdn.discordapp.com/avatars/1052982721598738522/7e71686c3ef7a0614699aa704e98bd3d.png" />
                         )}
