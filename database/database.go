@@ -13,7 +13,7 @@ import (
 
 var databaseConnection *sql.DB
 
-type updateRequestData struct {
+type updateRequestSetupData struct {
 	Username           string
 	ProfilePicture     []byte   `json:"profile_picture"`
 	Description        string   `json:"description"`
@@ -22,6 +22,15 @@ type updateRequestData struct {
 	Interests          []string `json:"interests"`
 	SpokenLanguages    []string `json:"spoken_languages"`
 	ProfilePictureLink string   `json:"profile_picture_link"`
+}
+
+type updateRequestData struct {
+	Username        string
+	Description     string   `json:"description"`
+	Skills          []string `json:"skills"`
+	Location        string   `json:"location"`
+	Interests       []string `json:"interests"`
+	SpokenLanguages []string `json:"spoken_languages"`
 }
 
 func InitializeDatabase() bool {
@@ -276,7 +285,7 @@ func GetExploreData(username string) (structs.ExploreData, bool) {
 	return exploreData, false
 }
 
-func UpdateProfileData(profileData updateRequestData) bool {
+func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 	var count int
 	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM profile_data WHERE username = ?;", profileData.Username).Scan(&count)
 
@@ -319,6 +328,66 @@ func UpdateProfileData(profileData updateRequestData) bool {
 		}
 	} else {
 		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+
+		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+	}
+
+	return true
+}
+
+func UpdateProfileData(profileData updateRequestData) bool {
+	var count int
+	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM profile_data WHERE username = ?;", profileData.Username).Scan(&count)
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	skillsJSON, err := json.Marshal(profileData.Skills)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	interestsJSON, err := json.Marshal(profileData.Interests)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	spokenLanguagesJSON, err := json.Marshal(profileData.SpokenLanguages)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	if count > 0 {
+		_, err = databaseConnection.Exec("UPDATE profile_data SET description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+
+		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+	} else {
+		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
 
 		if err != nil {
 			fmt.Println(err)
