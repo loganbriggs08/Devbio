@@ -173,12 +173,15 @@ func GetAccountData(sessionToken string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT profile_picture, description, location FROM profile_data WHERE username = ?", username)
+	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ?", username)
 
 	row.Scan(
 		&userData.ProfilePicture,
 		&userData.Description,
 		&userData.Location,
+		&skillsString,
+		&interestsString,
+		&spokenLanguagesString,
 	)
 
 	if err != nil {
@@ -188,7 +191,7 @@ func GetAccountData(sessionToken string) structs.UserResponse {
 		log.Println("Error while scanning data:", err)
 		return userData
 	}
-
+	
 	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
 		log.Println("Error while unmarshaling badges:", err)
 	}
