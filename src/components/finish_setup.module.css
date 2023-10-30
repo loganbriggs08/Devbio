@@ -93,22 +93,6 @@
     text-decoration: none;
 }
 
-.continent_dropdown_menu {
-    width: 83%;
-    background-color: #1E1E20;
-    padding-left: 0.8rem;
-    margin-bottom: 1.5rem;
-    margin-top: 0.1rem;
-    border: 0px solid #F26B6E;
-    color: #fff;
-    height: 4rem;
-    border-radius: 0.4rem;
-    font-size: large;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
 .select_option {
     font-family: "Quicksand";
 }

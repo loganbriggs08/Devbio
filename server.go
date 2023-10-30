@@ -34,14 +34,14 @@ func main() {
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
 			http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
 
-			http.HandleFunc("/api/storage", endpoints.ManageStorage)
-			http.HandleFunc("/api/storage/image/", endpoints.ManageStorage)
+			http.HandleFunc("/api/storage/profile/icon/", endpoints.ManageIcon)
+			http.HandleFunc("/api/storage/profile/banner/", endpoints.ManageBanner)
 
 			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 		} else {
-			pterm.Fatal.WithFatal(true).Println("Failed to initalize database successfully.")
+			pterm.Fatal.WithFatal(true).Println("Failed to initialize database successfully.")
 		}
 	} else {
-		pterm.Fatal.WithFatal(true).Println("Failed to initalize storage database successfully.")
+		pterm.Fatal.WithFatal(true).Println("Failed to initialize storage database successfully.")
 	}
 }

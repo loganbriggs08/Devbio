@@ -1,0 +1,344 @@
+.container {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: -0.4%;
+    margin-top: -0.4%;
+    margin-bottom: -0.4%;
+}
+
+.settings_container {
+    width: 40%;
+    margin: 0 auto;
+    border-radius: 0.6rem;
+    background-color: #242424;
+}
+
+.profile_settings_text {
+    font-size: 1.8rem;
+    margin-bottom: 0px;
+    margin-top: 2rem;
+    margin-left: 3%;
+}
+
+.profile_description_text {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    margin-left: 3%;
+}
+
+.divider_line {
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 1rem; 
+    opacity: 0.3;
+}
+
+.header_text {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0px;
+    margin-left: 3%;
+}
+
+.description_text {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    margin-left: 3%;
+}
+
+.or_upload_banner_text {
+    margin-top: 1rem;
+    opacity: 0.9;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    margin-left: 3%; 
+}
+
+.colour_options {
+    display: flex;
+}
+
+.color_one {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 3%;
+    background-color: #7091F5;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+    border: none;
+}
+
+.color_one:hover {
+    cursor: pointer;
+}
+
+.color_two {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #FC6060;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_two:hover {
+    cursor: pointer;
+}
+
+.color_three {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #BC7AF9;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_three:hover {
+    cursor: pointer;
+}
+
+.color_four {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #00BD56;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_four:hover {
+    cursor: pointer;
+}
+
+.color_five {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #98ACF8;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_five:hover {
+    cursor: pointer;
+}
+
+.color_six {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #FF414D;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_six:hover {
+    cursor: pointer;
+}
+
+.color_seven {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #EE9322;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_seven:hover {
+    cursor: pointer;
+}
+
+.color_eight {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1.5%;
+    background-color: #EA6227;
+    border-radius: 50%;
+    border: none;
+}
+
+.color_eight:hover {
+    cursor: pointer;
+}
+
+.tick_icon {
+    color: #fff;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.upload_banner_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #313131;
+}
+
+.upload_banner_button:hover { 
+    cursor: pointer;
+}
+
+.upload_profile_picture {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #313131;
+}
+
+.upload_profile_picture:hover {
+    cursor: pointer;
+}
+
+.save_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #7091F5;
+}
+
+.save_button:hover { 
+    cursor: pointer;
+}
+
+.top_section_wrapper {
+    display: flex;
+}
+
+.profile_settings_descriptor {
+    flex: 3;
+    width: 80%;
+
+}
+
+.save_changes_wrapper {
+    flex: 1;
+    margin-top: auto;
+    margin-right: 3%;
+}
+
+.category_settings_wrapper {
+    display: flex;
+    margin-left: auto;
+    width: 40%;
+    margin: auto;
+    padding-bottom: 0.5%;
+}
+
+.settings_selection_button {
+    width: 100%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    background-color: #7091F5;
+}
+
+.settings_selection_button:hover {
+    cursor: pointer;
+}
+
+.center_seperator {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.account_description {
+    margin-left: 3%;
+    width: 92%;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 1.4rem;
+    background-color: #313131;
+    padding-left: 0.8rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
+    border: #7091F5;
+    color: #fff;
+    height: 4rem;
+    border-radius: 0.4rem;
+    font-size: large; 
+    margin-bottom: 2rem;
+}
+
+.account_description:focus {
+    outline: none;
+}
+
+.country_dropdown {
+    margin-left: 3%;
+    width: 92%;
+    height: 4rem;
+    background-color: #313131;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding-left: 0.8rem;
+    margin-bottom: 1rem;
+    margin-top: 0.1rem;
+    border: none;
+    color: #fff;
+    border-radius: 0.4rem;
+    font-size: large;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.country_dropdown option {
+    background-color: #313131;
+    color: #fff;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: large;
+}
+
+.country_dropdown:hover {
+    cursor: pointer;
+}

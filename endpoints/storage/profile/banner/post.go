@@ -1,4 +1,4 @@
-package storage
+package banner
 
 import (
 	"devbio/database"
@@ -11,7 +11,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 	accountSession := r.Header.Get("session")
 
 	var data struct {
-		ProfilePicture []byte `json:"profile_picture"`
+		ProfileBanner []byte `json:"profile_banner"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -24,7 +24,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 	accountDataResult := database.GetAccountData(accountSession)
 
 	if accountDataResult.Username != "" {
-		databaseQueryError := database.InsertOrUpdateProfileImage(accountDataResult.Username, data.ProfilePicture)
+		databaseQueryError := database.InsertOrUpdateBannerImage(accountDataResult.Username, data.ProfileBanner)
 
 		if databaseQueryError != nil {
 			ReturnModule.InternalServerError(w, r)

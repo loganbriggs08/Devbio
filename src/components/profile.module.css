@@ -45,10 +45,19 @@
 .section_header_text {
     font-size: 1.8rem;
     margin-bottom: 0.2rem;
+    margin-top: 0px;
 }
 
 .section_description_text {
     opacity: 0.8;
     font-size: 1.4rem;
     margin-top: 0px;
+}
+
+.item_row {
+    display: flex;
+}
+
+.location_holder {
+    margin-right: 5%;
 }

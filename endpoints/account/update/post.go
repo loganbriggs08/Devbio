@@ -29,7 +29,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		accountDataResult := database.GetAccountData(accountSession)
+		accountDataResult := database.GetAccountDataFromSession(accountSession)
 		updateRequestData.Username = accountDataResult.Username
 
 		if accountDataResult.Username != "" {
@@ -38,7 +38,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			if updateImageError != nil {
 				ReturnModule.InternalServerError(w, r)
 			}
-			updateRequestData.ProfilePictureLink = "http://localhost:6969/api/storage/image/" + accountDataResult.Username
+			updateRequestData.ProfilePictureLink = "http://localhost:6969/api/storage/profile/icon" + accountDataResult.Username
 
 			updateProfileResult := database.UpdateProfileSetupData(updateRequestData)
 

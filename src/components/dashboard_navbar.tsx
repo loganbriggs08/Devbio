@@ -46,7 +46,7 @@ const DashboardNavbarComponent: React.FC<DashboardNavbarComponentProps> = ({ use
             </a>
 
             <ul className={styles.navbar_ul}>
-                <li className={styles.navbar_li}><a className={styles.navbar_a} onClick={() => pushToProfile()}>View Profile</a></li>
+                <li className={styles.navbar_li}><a className={styles.navbar_a} onClick={() => pushToProfile()}>Profile</a></li>
                 <li className={styles.navbar_li}><a className={styles.navbar_a} href="/dashboard/customize">Customize</a></li>
                 <li className={styles.navbar_li}><a className={styles.navbar_premium_a} href="/premium">Premium</a></li>
 

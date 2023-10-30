@@ -1,4 +1,4 @@
-package storage
+package icon
 
 import (
 	"devbio/database"

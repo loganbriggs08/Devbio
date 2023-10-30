@@ -65,6 +65,8 @@
     font-family: "Quicksand";
     font-weight: bold;
     padding: 1rem;
+    padding-left: 1.7rem;
+    padding-right: 1.7rem;
     margin: none;
     border-radius: 0.3rem;
     opacity: 0.9;

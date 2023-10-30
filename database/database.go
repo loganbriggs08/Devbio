@@ -60,6 +60,8 @@ func CreateTables() bool {
 				profile_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
 				profile_picture TEXT,
+				banner_picture TEXT,
+				banner_color TEXT,
 				description VARCHAR(255),
 				skills TEXT,
 				location TEXT,
