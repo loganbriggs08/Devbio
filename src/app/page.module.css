@@ -14,7 +14,6 @@
 .top {
     height: 50vh;
     margin-top: 10rem;
-    margin-bottom: 25rem;
     background-color: #1E1E20;
 }
 
@@ -75,6 +74,7 @@
     min-width: 15%;
     display: inline-block;
     text-align: center;
+    margin-bottom: 10rem;
 }
 
 
@@ -83,7 +83,7 @@
 }
 
 .customizable_profiles {
-    margin-top: 10rem;
+    background-color: #252525;
 }
 
 .arrow_icon {

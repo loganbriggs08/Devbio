@@ -9,8 +9,8 @@ export const Connections: React.FC = () => {
         <div className={styles.container}>
             <ConnectionCard
                 connectionName="Example Connection"
-                icon="path_to_icon.png" // Replace with the path to your icon
-                ifConnectedBool={true} // Replace with the appropriate boolean value
+                icon="path_to_icon.png"
+                ifConnectedBool={true}
             />
         </div>
     );

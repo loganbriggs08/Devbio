@@ -2,6 +2,7 @@
     width: 40%;
     border-radius: 0.4rem;
     background-color: #272829;
+    margin-bottom: 2rem;
 }
 
 .profile_top {
@@ -38,5 +39,16 @@
     margin-top: 0px;
     margin-right: 5%;
     opacity: 0.8;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+}
+
+.section_header_text {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+}
+
+.section_description_text {
+    opacity: 0.8;
+    font-size: 1.4rem;
+    margin-top: 0px;
 }

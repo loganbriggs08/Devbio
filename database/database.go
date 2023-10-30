@@ -135,7 +135,7 @@ func CreateAccount(username, password string) bool {
 	return true
 }
 
-func GetAccountData(sessionToken string) structs.UserResponse {
+func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 	var userData structs.UserResponse
 	var badgesString, skillsString, interestsString, spokenLanguagesString string
 
@@ -191,7 +191,64 @@ func GetAccountData(sessionToken string) structs.UserResponse {
 		log.Println("Error while scanning data:", err)
 		return userData
 	}
-	
+
+	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
+		log.Println("Error while unmarshaling badges:", err)
+	}
+	if err := json.Unmarshal([]byte(skillsString), &userData.Skills); err != nil {
+		log.Println("Error while unmarshaling skills:", err)
+	}
+	if err := json.Unmarshal([]byte(interestsString), &userData.Interests); err != nil {
+		log.Println("Error while unmarshaling interests:", err)
+	}
+	if err := json.Unmarshal([]byte(spokenLanguagesString), &userData.SpokenLanguages); err != nil {
+		log.Println("Error while unmarshaling spoken languages:", err)
+	}
+
+	return userData
+}
+
+func GetAccountData(username string) structs.UserResponse {
+	var userData structs.UserResponse
+	var badgesString, skillsString, interestsString, spokenLanguagesString string
+
+	row := databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
+
+	err := row.Scan(
+		&userData.Username,
+		&badgesString,
+		&userData.IsSetup,
+		&userData.IsHirable,
+		&userData.IsDisabled,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return userData
+		}
+		log.Println("Error while scanning data:", err)
+		return userData
+	}
+
+	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ?", username)
+
+	row.Scan(
+		&userData.ProfilePicture,
+		&userData.Description,
+		&userData.Location,
+		&skillsString,
+		&interestsString,
+		&spokenLanguagesString,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return userData
+		}
+		log.Println("Error while scanning data:", err)
+		return userData
+	}
+
 	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
 		log.Println("Error while unmarshaling badges:", err)
 	}

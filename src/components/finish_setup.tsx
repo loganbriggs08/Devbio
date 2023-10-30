@@ -96,6 +96,7 @@ const FinishSetupComponent = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'type': 'setup',
           session: sessionCookie.split('=')[1],
         },
         body: JSON.stringify(requestPayload),

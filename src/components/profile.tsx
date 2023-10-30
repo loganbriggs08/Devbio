@@ -15,7 +15,7 @@ interface UserData {
 }
 
 interface ProfileComponentProps {
-    userData: UserData;
+    userData: UserData | null;
 }
 
 const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
@@ -41,6 +41,16 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
                         <p className={styles.description_text}>A description for this user has not been set.</p>
                     )}
 
+                    {userData?.skills && userData.skills.length > 0 ? (
+                        <div>
+                            <h1 className={styles.section_header_text}>Skills</h1>
+                            <p className={styles.section_description_text}>
+                                {userData.skills.join(', ')}.
+                            </p>
+                        </div>
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
             </div>
         </div>

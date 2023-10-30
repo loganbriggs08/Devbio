@@ -122,8 +122,8 @@
 .profile_image {
     flex: 1;
     border-radius: 50%;
-    width: 60%;
-    height: 60;
+    width: 5.5rem;
+    height: 5.5rem;
     margin-right: 1rem;
 }
 
