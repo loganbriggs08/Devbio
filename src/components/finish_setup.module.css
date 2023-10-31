@@ -33,7 +33,7 @@
     font-family: "Quicksand";
     font-weight: 500;
     font-size: 2.5rem;
-    background-color: #1E1E20;
+    background-color: #313131;
     padding-left: 0.8rem;
     margin-bottom: 0.2rem;
     margin-top: 0.2rem;
@@ -70,19 +70,6 @@
     cursor: pointer;
 }
 
-.unique_code_div {
-    width: 83%;
-    margin: 0 auto;
-    padding: 0.1rem;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    border-radius: 0.5rem;
-    background-color: #1E1E20;
-}
-
-.unique_code_div:hover {
-    cursor: pointer;
-}
 
 .no_account {
     opacity: 0.8;
