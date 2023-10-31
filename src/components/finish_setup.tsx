@@ -190,7 +190,7 @@ const FinishSetupComponent = () => {
             draggable
             pauseOnHover
             theme="dark"
-            toastStyle={{ backgroundColor: '#1E1E20' }}
+            toastStyle={{ backgroundColor: "#1E1E20", fontFamily: "Quicksand" }}
           />
     </div>
   );

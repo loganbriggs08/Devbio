@@ -532,7 +532,7 @@
     flex: 0 0 31%;
     background-color: #313131;
     position: relative;
-    transition: background-color 0.8s;
+    transition: background-color 0.3s;
 }
 
 .interest_button:hover {

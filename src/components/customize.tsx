@@ -198,6 +198,23 @@ const DashboardComponent = () => {
         }
     };
 
+    const handleAddInterest = () => {
+        if (interestsInput.trim() !== '' && interests.length < 20) {
+            if (interestsInput.length <= 100) {
+                setInterests([...interests, interestsInput]);
+                setinterestsInput('');
+            } else {
+                setinterestsInput('');
+                ErrorToast("Each interest can be no longer than 100 characters.")
+            }
+        }
+    };
+
+    const handleDeleteInterest = (interestToDelete: any) => {
+        const updatedInterests = interests.filter((interest) => interest !== interestToDelete);
+        setInterests(updatedInterests);
+    };
+    
     const ErrorToast = (message: string) => {
 		toast.error(message, {  
 			position: "bottom-right",
@@ -445,7 +462,7 @@ const DashboardComponent = () => {
                                     onChange={(e) => setinterestsInput(e.target.value)}
                                 />
 
-                                <button className={styles.add_button}>Add</button>
+                                <button className={styles.add_button} onClick={handleAddInterest}>Add</button>
                             </div>
 
                             <div className={styles.interests_wrapper}>
@@ -454,13 +471,12 @@ const DashboardComponent = () => {
                                     <button
                                         key={index}
                                         className={styles.interest_button}
-                                        onClick={() => handleLanguageClick(interest)}
+                                        onClick={() => handleDeleteInterest(interest)}
                                     >
                                         {interest}
                                     </button>
                                     ))}
                             </div>
-
                         </div>
                     ) : (
                         <div></div>
@@ -477,7 +493,7 @@ const DashboardComponent = () => {
                         draggable
                         pauseOnHover
                         theme="dark"
-                        toastStyle={{ backgroundColor: "#1E1E20" }}
+                        toastStyle={{ backgroundColor: "#1E1E20", fontFamily: "Quicksand" }}
                     />
                 </div>
             ) : (
