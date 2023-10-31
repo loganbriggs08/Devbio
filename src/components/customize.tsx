@@ -3,477 +3,99 @@ import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
 import DashboardNavbarComponent from '@/components/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
-
-const countries: string[] = [
-    "Afghanistan",
-    "Albania",
-    "Algeria",
-    "Andorra",
-    "Angola",
-    "Antigua and Barbuda",
-    "Argentina",
-    "Armenia",
-    "Australia",
-    "Austria",
-    "Azerbaijan",
-    "Bahamas",
-    "Bahrain",
-    "Bangladesh",
-    "Barbados",
-    "Belarus",
-    "Belgium",
-    "Belize",
-    "Benin",
-    "Bhutan",
-    "Bolivia",
-    "Bosnia and Herzegovina",
-    "Botswana",
-    "Brazil",
-    "Brunei",
-    "Bulgaria",
-    "Burkina Faso",
-    "Burundi",
-    "Cabo Verde",
-    "Cambodia",
-    "Cameroon",
-    "Canada",
-    "Central African Republic",
-    "Chad",
-    "Chile",
-    "China",
-    "Colombia",
-    "Comoros",
-    "Congo",
-    "Costa Rica",
-    "Cote d'Ivoire",
-    "Croatia",
-    "Cuba",
-    "Cyprus",
-    "Czech Republic",
-    "Democratic Republic of the Congo",
-    "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "East Timor",
-    "Ecuador",
-    "Egypt",
-    "El Salvador",
-    "Equatorial Guinea",
-    "Eritrea",
-    "Estonia",
-    "Eswatini",
-    "Ethiopia",
-    "Fiji",
-    "Finland",
-    "France",
-    "Gabon",
-    "Gambia",
-    "Georgia",
-    "Germany",
-    "Ghana",
-    "Greece",
-    "Grenada",
-    "Guatemala",
-    "Guinea",
-    "Guinea-Bissau",
-    "Guyana",
-    "Haiti",
-    "Honduras",
-    "Hungary",
-    "Iceland",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Iraq",
-    "Ireland",
-    "Israel",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Jordan",
-    "Kazakhstan",
-    "Kenya",
-    "Kiribati",
-    "Kosovo",
-    "Kuwait",
-    "Kyrgyzstan",
-    "Laos",
-    "Latvia",
-    "Lebanon",
-    "Lesotho",
-    "Liberia",
-    "Libya",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Macedonia",
-    "Madagascar",
-    "Malawi",
-    "Malaysia",
-    "Maldives",
-    "Mali",
-    "Malta",
-    "Marshall Islands",
-    "Mauritania",
-    "Mauritius",
-    "Mexico",
-    "Micronesia",
-    "Moldova",
-    "Monaco",
-    "Mongolia",
-    "Montenegro",
-    "Morocco",
-    "Mozambique",
-    "Myanmar",
-    "Namibia",
-    "Nauru",
-    "Nepal",
-    "Netherlands",
-    "New Zealand",
-    "Nicaragua",
-    "Niger",
-    "Nigeria",
-    "North Korea",
-    "Norway",
-    "Oman",
-    "Pakistan",
-    "Palau",
-    "Palestine",
-    "Panama",
-    "Papua New Guinea",
-    "Paraguay",
-    "Peru",
-    "Philippines",
-    "Poland",
-    "Portugal",
-    "Qatar",
-    "Romania",
-    "Russia",
-    "Rwanda",
-    "Saint Kitts and Nevis",
-    "Saint Lucia",
-    "Saint Vincent and the Grenadines",
-    "Samoa",
-    "San Marino",
-    "Sao Tome and Principe",
-    "Saudi Arabia",
-    "Senegal",
-    "Serbia",
-    "Seychelles",
-    "Sierra Leone",
-    "Singapore",
-    "Slovakia",
-    "Slovenia",
-    "Solomon Islands",
-    "Somalia",
-    "South Africa",
-    "South Korea",
-    "South Sudan",
-    "Spain",
-    "Sri Lanka",
-    "Sudan",
-    "Suriname",
-    "Sweden",
-    "Switzerland",
-    "Syria",
-    "Taiwan",
-    "Tajikistan",
-    "Tanzania",
-    "Thailand",
-    "Togo",
-    "Tonga",
-    "Trinidad and Tobago",
-    "Tunisia",
-    "Turkey",
-    "Turkmenistan",
-    "Tuvalu",
-    "Uganda",
-    "Ukraine",
-    "United Arab Emirates",
-    "United Kingdom",
-    "United States",
-    "Uruguay",
-    "Uzbekistan",
-    "Vanuatu",
-    "Vatican City",
-    "Venezuela",
-    "Vietnam",
-    "Yemen",
-    "Zambia",
-    "Zimbabwe"
-];
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const languages: string[] = [
     "English",
-    "Chinese",
-    "Hindi",
-    "Spanish",
-    "Arabic",
-    "Bengali",
-    "Russian",
-    "Portuguese",
-    "Japanese",
     "German",
-    "French",
-    "Korean",
-    "Italian",
-    "Dutch",
-    "Swedish",
-    "Greek",
-    "Turkish",
-    "Polish",
-    "Vietnamese",
-    "Thai",
-    "Hebrew",
-    "Finnish",
     "Danish",
-    "Norwegian",
-    "Swahili",
-    "Czech",
-    "Hungarian",
-    "Romanian",
-    "Ukrainian",
-    "Slovak",
+    "Spanish",
+    "French",
     "Croatian",
-    "Serbian",
-    "Bulgarian",
-    "Macedonian",
+    "Italian",
     "Lithuanian",
-    "Latvian",
-    "Estonian",
-    "Icelandic",
-    "Faroese",
-    "Irish",
-    "Welsh",
-    "Scottish Gaelic",
-    "Basque",
-    "Catalan",
-    "Galician",
-    "Breton",
-    "Luxembourgish",
-    "Maltese",
-    "Slovenian",
-    "Albanian",
-    "Moldovan",
-    "Georgian",
-    "Armenian",
-    "Azerbaijani",
-    "Kazakh",
-    "Kyrgyz",
-    "Uzbek",
-    "Turkmen",
-    "Tajik",
-    "Tatar",
-    "Bashkir",
-    "Chuvash",
-    "Chechen",
-    "Ingush",
-    "Abkhaz",
-    "Ossetian",
-    "Dargin",
-    "Kumyk",
-    "Nogai",
-    "Karachay",
-    "Balkar",
-    "Kabardian",
-    "Adyghe",
-    "Lezgian",
-    "Rutul",
-    "Tsakhur",
-    "Avar",
-    "Lak",
-    "Dargwa",
-    "Kubachi",
-    "Tabasaran",
-    "Agul",
-    "Rutul",
-    "Udi",
-    "Nakh",
-    "Aghul",
-    "Tsakhur",
-    "Rutul",
-    "Rutul",
-    "Archi",
-    "Lak",
-    "Bagvalal",
-    "Tsez",
-    "Hunzib",
-    "Khwarshi",
-    "Bezhta",
-    "Botlikh",
-    "Tindi",
-    "Karata",
-    "Tindi",
-    "Andi",
-    "Ginukh",
-    "Gunzib",
-    "Mukhomor",
-    "Khinalug",
-    "Lak",
-    "Lak",
-    "Tsez",
-    "Bats",
-    "Udi",
-    "Hinukh",
-    "Khwarshi",
-    "Bezhta",
-    "Khwarshi",
-    "Laz",
-    "Mingrelian",
-    "Svan",
-    "Abkhaz",
-    "Abaza",
-    "Ubykh",
-    "Rohingya",
-    "Sylheti",
-    "Khasi",
-    "Garo",
-    "Bodo",
-    "Karbi",
-    "Kuki",
-    "Kachin",
-    "Chin",
-    "Mizo",
-    "Manipur",
-    "Meitei",
-    "Naga",
-    "Assamese",
-    "Odia",
-    "Maithili",
-    "Bhojpuri",
-    "Santali",
-    "Nepali",
-    "Konkani",
-    "Sindhi",
-    "Dhivehi",
-    "Sinhala",
-    "Burmese",
-    "Karen",
-    "Chin",
-    "Zomi",
-    "Hakha Chin",
-    "Asho Chin",
-    "Pa'O",
-    "Lahu",
-    "Kachin",
-    "Wa",
-    "Akha",
-    "Palaung",
-    "Shan",
-    "Lisu",
-    "Karen",
-    "Tibetan",
-    "Dzongkha",
-    "Sikkimese",
-    "Nepali",
-    "Bodo",
-    "Assamese",
-    "Gujarati",
-    "Sindhi",
-    "Konkani",
-    "Marathi",
-    "Kannada",
-    "Telugu",
-    "Tamil",
-    "Malayalam",
-    "Sinhala",
-    "Divehi",
-    "Konkani",
-    "Kannada",
-    "Tulu",
-    "Telugu",
-    "Tamil",
-    "Malayalam",
-    "Assamese",
-    "Oriya",
-    "Maithili",
-    "Urdu",
-    "Punjabi",
-    "Sindhi",
-    "Balochi",
-    "Pashto",
-    "Khowar",
-    "Shina",
-    "Sindhi",
-    "Saraiki",
-    "Balochi",
-    "Brahui",
-    "Kashmiri",
-    "Sindhi",
-    "Punjabi",
-    "Haryanvi",
-    "Bengali",
-    "Oriya",
-    "Assamese",
-    "Santali",
-    "Bishnupriya Manipuri",
-    "Meitei",
-    "Naga",
-    "Khasi",
-    "Garo",
-    "Bodo",
-    "Karbi",
-    "Kuki",
-    "Mizo",
-    "Rohingya",
-    "Sylheti",
-    "Sinhala",
-    "Tamil",
-    "Pali",
-    "Sanskrit",
-    "Prakrit",
-    "Avestan",
-    "Old Persian",
-    "Middle Persian",
-    "Kurdish",
-    "Pashto",
-    "Dari",
-    "Tajik",
-    "Talysh",
-    "Balochi",
-    "Pamiri",
-    "Wakhi",
-    "Shughni",
-    "Rushani",
-    "Yagnobi",
-    "Khwarezmian",
-    "Chorasmian",
-    "Khotanese",
-    "Sogdian",
-    "Bactrian",
-    "Khowar",
-    "Shina",
-    "Phalura",
-    "Kohistani",
-    "Savi",
-    "Kalasha",
-    "Dameli",
-    "Yidgha",
-    "Burushaski",
-    "Wakhi",
-    "Sarikoli",
-    "Wu",
-    "Shanghainese",
-    "Cantonese",
-    "Hakka",
-    "Min Nan",
-    "Xiang",
-    "Gan",
-    "Pinghua",
-    "Mandarin",
-    "Min Dong",
-    "Jin"
+    "Hungarian",
+    "Dutch",
+    "Norwegian",
+    "Polish",
+    "Portuguese",
+    "Romainian",
+    "Swedish",
+    "Vietnamese",
+    "Turkish",
+    "Czech",
+    "Greek",
+    "Bulgarian",
+    "Russian",
+    "Ukrainian",
+    "Hindi",
+    "Thai",
+    "Chinese",
+    "Japanese",
+    "Korean"
+];
+
+const skills: string[] = [
+    "JavaScript",
+    "Python",
+    "Java",
+    "C++",
+    "C#",
+    "Ruby",
+    "Swift",
+    "Kotlin",
+    "PHP",
+    "Go",
+    "TypeScript",
+    "Rust",
+    "Scala",
+    "Perl",
+    "Haskell",
+    "Lua",
+    "Objective-C",
+    "Dart",
+    "Elixir",
+    "R",
+    "Clojure",
+    "Groovy",
+    "SQL",
+    "Assembly",
+    "HTML/CSS",
+    "Shell Scripting",
+    "VHDL",
+    "Verilog",
+    "Matlab",
+    "Fortran",
+    "COBOL",
+    "PL/SQL",
+    "Ada",
+    "Lisp",
+    "Prolog",
+    "COOL",
+    "D",
+    "F#",
+    "Racket",
+    "Erlang",
+    "Julia",
+    "Scratch",
+    "Bash",
+    "PowerShell",
+    "ABAP",
+    "VBScript",
+    "Pascal",
+    "Photoshop",
+    "Figma"
 ];
 
 interface UserData {
     username: string;
     profile_picture: Uint8Array;
     description: string;
-    skills: string[] | null;
-    interests: string[] | null;
+    skills: string[];
+    interests: string[];
     location: string;
-    spoken_languages: string[] | null;
+    spoken_languages: string[];
     badges: string[];
     is_hirable: boolean;
     is_disabled: boolean;
@@ -481,9 +103,13 @@ interface UserData {
 
 const DashboardComponent = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
-    const [selectedColour, setSelectedColor] = useState<number | null>(null);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
+
+    const [selectedColour, setSelectedColor] = useState<number | null>(null);
     const [selectedLanguages, setSelectedLanguages] = useState<any[]>([]);
+    const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
+    const [skillsSearchInput, setSkillsSearchInput] = useState("");
+
 
     useEffect(() => {
         const cookies = document.cookie.split(';');
@@ -502,10 +128,98 @@ const DashboardComponent = () => {
 
             .then((data: UserData) => {
                 setUserData(data);
+                setSelectedLanguages(data.spoken_languages)
+                setSelectedSkills(data.skills)
             })
         }
     }, []);
 
+    const handleSaveChanges = () => {
+        if (!userData) {
+          return;
+        }
+      
+        const sessionCookie = document.cookie.split(';').find((cookie) =>
+          cookie.trim().startsWith('session=')
+        );
+      
+        if (!sessionCookie) {
+          return;
+        }
+      
+        const updatedData = {
+          profile_picture: userData.profile_picture,
+          description: userData.description,
+          skills: selectedSkills,
+          location: userData.location,
+          interests: userData.interests,
+          spoken_languages: selectedLanguages,
+        };
+      
+        fetch('http://localhost:6969/api/account/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            session: sessionCookie.split('=')[1],
+          },
+          body: JSON.stringify(updatedData),
+        })
+          .then((response) => {
+            if (response.status === 401) {
+              throw new Error('Invalid session');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            SuccessToast("Profile has been updated Successfully.")
+          })
+          .catch((error) => {
+            ErrorToast("Profile could not be updated.")
+          });
+      };
+      
+
+    const handleLanguageClick = (language: string) => {
+        if (selectedLanguages.includes(language)) {
+          setSelectedLanguages(selectedLanguages.filter((item) => item !== language));
+        } else if (selectedLanguages.length < 6) {
+          setSelectedLanguages([...selectedLanguages, language]);
+        }
+    };
+
+    const handleSkillClick = (skill: string) => {
+        if (selectedSkills.includes(skill)) {
+          setSelectedSkills(selectedSkills.filter((item) => item !== skill));
+        } else if (selectedLanguages.length < 25) {
+          setSelectedSkills([...selectedSkills, skill]);
+        }
+    };
+
+    const ErrorToast = (message: string) => {
+		toast.error(message, {  
+			position: "bottom-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "dark",
+		});
+	}
+
+    const SuccessToast = (message: string) => {
+		toast.success(message, {  
+			position: "bottom-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "dark",
+		});
+	}
   
   return (
     <div>
@@ -515,8 +229,8 @@ const DashboardComponent = () => {
             <button onClick={() => setSelectedSettingsMenu(1)} className={styles.settings_selection_button}>Profile Settings</button>
             <div className={styles.center_seperator}></div>
             <button onClick={() => setSelectedSettingsMenu(2)} className={styles.settings_selection_button}>Customization Settings</button>
-            {/* <div className={styles.center_seperator}></div>
-            <button onClick={() => setSelectedSettingsMenu(3)} className={styles.settings_selection_button}>Notification Settings</button> */}
+            <div className={styles.center_seperator}></div>
+            <button onClick={() => console.log("Clicked")} className={styles.settings_selection_button}>Connections</button>
         </div>
 
         <div className={styles.container}>
@@ -531,7 +245,7 @@ const DashboardComponent = () => {
                                 </div>
 
                                 <div className={styles.save_changes_wrapper}>
-                                    <button className={styles.save_button}>Save Changes</button>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
                                 </div>
                             </div>
 
@@ -579,26 +293,6 @@ const DashboardComponent = () => {
                             
                             <div className={styles.divider_line}></div>
 
-                            <h1 className={styles.header_text}>Profile Picture</h1>
-                            <p className={styles.description_text}>Choose a special image to use for your Profile Picture</p>
-
-                            <button className={styles.upload_profile_picture}>Upload Picture</button>
-                        </div>
-                    ): (
-                        <div className={styles.settings_container}>
-                            <div className={styles.top_section_wrapper}>
-                                <div className={styles.profile_settings_descriptor}>
-                                    <h1 className={styles.profile_settings_text}>Customization Settings</h1>
-                                    <p className={styles.profile_description_text}>Easily customize your profile even more</p>
-                                </div>
-
-                                <div className={styles.save_changes_wrapper}>
-                                    <button className={styles.save_button}>Save Changes</button>
-                                </div>
-                            </div>
-
-                            <div className={styles.divider_line}></div>
-
                             <h1 className={styles.header_text}>Account Description</h1>
                             <p className={styles.description_text}>What would you like your Account Description to be?</p>
 
@@ -607,27 +301,133 @@ const DashboardComponent = () => {
                                 type="text"
                                 placeholder="Account Description"
                             />
+                            
+                            <div className={styles.divider_line}></div>
+
+                            <h1 className={styles.header_text}>Profile Picture</h1>
+                            <p className={styles.description_text}>Choose a special image to use for your Profile Picture</p>
+
+                            <button className={styles.upload_profile_picture}>Upload Picture</button>
+                        </div>
+                    ) : selectedSettingsMenu === 2 ? (
+                        <div className={styles.settings_container}>
+                            <div className={styles.top_section_wrapper}>
+                                <div className={styles.profile_settings_descriptor}>
+                                    <h1 className={styles.profile_settings_text}>Customization Settings</h1>
+                                    <p className={styles.profile_description_text}>Easily customize your profile even more</p>
+                                </div>
+
+                                <div className={styles.save_changes_wrapper}>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
+                                </div>
+                            </div>
 
                             <div className={styles.divider_line}></div>
 
-                            <h1 className={styles.header_text}>More Customization</h1>
-                            <p className={styles.description_text}>More customization can be done in the dropdowns below</p>
+                            <h1 className={styles.header_text}>Customize Languages</h1>
+                            <p className={styles.description_text}>Set the languages you are fluent in - <a className={styles.blue_text}>Shows on Profile</a></p>
 
-                            <select
-                                className={styles.country_dropdown}
-                            >
+                            <button className={styles.select_country_button} onClick={() => setSelectedSettingsMenu(3)}>Customize Languages</button>
 
-                            <option>Select a Country</option>
-                                {countries && countries.map((country, index) => (
-                                    <option key={country} value={country}>
-                                        {country}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className={styles.divider_line}></div>
 
+                            <h1 className={styles.header_text}>Customize Skills</h1>
+                            <p className={styles.description_text}>Set the skills that you have - <a className={styles.blue_text}>Shows on Profile</a></p>
 
+                            <button className={styles.select_country_button} onClick={() => setSelectedSettingsMenu(4)}>Customize Skills</button>
                         </div>
+                    ) : selectedSettingsMenu === 3 ? (
+                        <div className={styles.settings_container}>
+                            <div className={styles.top_section_wrapper}>
+                                <div className={styles.profile_settings_descriptor}>
+                                    <h1 className={styles.profile_settings_text}>Select Language(s)</h1>
+                                    <p className={styles.profile_description_text}>Select the language(s) that you are fluent in.</p>
+                                </div>
+
+                                <div className={styles.save_changes_wrapper}>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.divider_line}></div>
+
+                            <div className={styles.languages_wrapper}>
+                                {languages &&
+                                    languages.map((language, index) => (
+                                    <button
+                                        key={index}
+                                        className={
+                                        selectedLanguages.includes(language)
+                                            ? styles.language_button_selected
+                                            : styles.language_button
+                                        }
+                                        onClick={() => handleLanguageClick(language)}
+                                    >
+                                        {language}
+                                    </button>
+                                    ))}
+                            </div>
+                        </div>
+                    ) : selectedSettingsMenu === 4 ? (
+                        <div className={styles.settings_container}>
+                            <div className={styles.top_section_wrapper}>
+                                <div className={styles.profile_settings_descriptor}>
+                                    <h1 className={styles.profile_settings_text}>Select Skills</h1>
+                                    <p className={styles.profile_description_text}>Select the skills that you have or are improving.</p>
+                                </div>
+
+                                <div className={styles.save_changes_wrapper}>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.divider_line}></div>
+
+                            <input
+                                className={styles.account_description}
+                                type="text"
+                                placeholder="Search for Skills..."
+                                value={skillsSearchInput}
+                                onChange={(e) => setSkillsSearchInput(e.target.value)}
+                            />
+
+                            <div className={styles.skills_wrapper}>
+                                {skills
+                                    .filter((skill) =>
+                                        skill.toLowerCase().includes(skillsSearchInput.toLowerCase())
+                                    )
+                                    .map((skill, index) => (
+                                        <button
+                                            key={index}
+                                            className={
+                                                selectedSkills.includes(skill)
+                                                    ? styles.skill_button_selected
+                                                    : styles.skill_button
+                                            }
+                                            onClick={() => handleSkillClick(skill)}
+                                        >
+                                            {skill}
+                                        </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div></div>
                     )}
+
+                    <ToastContainer
+                        position="bottom-right"
+                        autoClose={3000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
+                        toastStyle={{ backgroundColor: "#1E1E20" }}
+                    />
                 </div>
             ) : (
                 <div>
