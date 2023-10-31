@@ -4,6 +4,7 @@ import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -38,7 +39,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			if updateImageError != nil {
 				ReturnModule.InternalServerError(w, r)
 			}
-			updateRequestData.ProfilePictureLink = "http://localhost:6969/api/storage/profile/icon" + accountDataResult.Username
+			updateRequestData.ProfilePictureLink = "http://localhost:6969/api/storage/profile/icon/" + accountDataResult.Username
 
 			updateProfileResult := database.UpdateProfileSetupData(updateRequestData)
 
@@ -67,7 +68,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		accountDataResult := database.GetAccountData(accountSession)
+		accountDataResult := database.GetAccountDataFromSession(accountSession)
 		updateRequestData.Username = accountDataResult.Username
 
 		if accountDataResult.Username != "" {
@@ -79,6 +80,8 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 				ReturnModule.InternalServerError(w, r)
 			}
 		} else {
+
+			fmt.Println("Heres the issue")
 			ReturnModule.MethodNotAllowed(w, r)
 		}
 	}
