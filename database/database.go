@@ -103,6 +103,12 @@ func CreateTables() bool {
 			used_boosts INT,
 		    FOREIGN KEY (username) REFERENCES profile_data(username)
 		);
+
+		CREATE TABLE IF NOT EXISTS notifications (
+			recipient VARCHAR(40),
+			is_for_everyone BOOLEAN,
+			message VARCHAR(255)
+		);
 	`)
 
 	if err != nil {
