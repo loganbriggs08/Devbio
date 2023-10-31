@@ -463,3 +463,101 @@
 .skill_button_selected:hover {
     cursor: pointer;
 }
+
+.interest_adder_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.interest_input {
+    margin-left: 3%;
+    flex: 0 0 75%;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 1.4rem;
+    background-color: #313131;
+    padding-left: 0.8rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
+    border: #7091F5;
+    color: #fff;
+    height: 4rem;
+    border-radius: 0.4rem;
+    font-size: large; 
+    margin-right: 1rem;
+    margin-bottom: 2rem;
+}
+
+.interest_input:focus {
+    outline: none;
+}
+
+.add_button {
+    color: #FFF;
+    margin-top: 0.2rem;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    height: 4rem;
+    flex: 0 0 15%;
+    background-color: #7091F5;
+}
+
+.add_button:hover {
+    cursor: pointer;
+}
+
+.interests_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 2%;
+    margin-bottom: 1.5rem;
+}
+
+.interest_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 1rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    flex: 0 0 31%;
+    background-color: #313131;
+    position: relative;
+    transition: background-color 0.8s;
+}
+
+.interest_button:hover {
+    background-color: #FC6060;
+}
+
+.interest_button::before {
+    content: "Click to Delete";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 0.3rem;
+    opacity: 0;
+    background-color: #FC6060;
+    transition: opacity 0.3s;
+}
+
+.interest_button:hover::before {
+    opacity: 1;
+}
+

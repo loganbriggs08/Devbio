@@ -109,6 +109,8 @@ const DashboardComponent = () => {
     const [selectedLanguages, setSelectedLanguages] = useState<any[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
     const [skillsSearchInput, setSkillsSearchInput] = useState("");
+    const [interestsInput, setinterestsInput] = useState("");
+    const [interests, setInterests] = useState<any[]>([]);
 
 
     useEffect(() => {
@@ -130,6 +132,7 @@ const DashboardComponent = () => {
                 setUserData(data);
                 setSelectedLanguages(data.spoken_languages)
                 setSelectedSkills(data.skills)
+                setInterests(data.interests)
             })
         }
     }, []);
@@ -152,7 +155,7 @@ const DashboardComponent = () => {
           description: userData.description,
           skills: selectedSkills,
           location: userData.location,
-          interests: userData.interests,
+          interests: interests,
           spoken_languages: selectedLanguages,
         };
       
@@ -422,8 +425,8 @@ const DashboardComponent = () => {
                         <div className={styles.settings_container}>
                             <div className={styles.top_section_wrapper}>
                                 <div className={styles.profile_settings_descriptor}>
-                                    <h1 className={styles.profile_settings_text}>Select Skills</h1>
-                                    <p className={styles.profile_description_text}>Select the skills that you have or are improving.</p>
+                                    <h1 className={styles.profile_settings_text}>Add your Interests</h1>
+                                    <p className={styles.profile_description_text}>Add all the things that interest you.</p>
                                 </div>
 
                                 <div className={styles.save_changes_wrapper}>
@@ -433,33 +436,31 @@ const DashboardComponent = () => {
 
                             <div className={styles.divider_line}></div>
 
-                            <input
-                                className={styles.account_description}
-                                type="text"
-                                placeholder="Search for Skills..."
-                                value={skillsSearchInput}
-                                onChange={(e) => setSkillsSearchInput(e.target.value)}
-                            />
+                            <div className={styles.interest_adder_wrapper}>
+                                <input
+                                    className={styles.interest_input}
+                                    type="text"
+                                    placeholder="Add an interest here..."
+                                    value={interestsInput}
+                                    onChange={(e) => setinterestsInput(e.target.value)}
+                                />
 
-                            <div className={styles.skills_wrapper}>
-                                {skills
-                                    .filter((skill) =>
-                                        skill.toLowerCase().includes(skillsSearchInput.toLowerCase())
-                                    )
-                                    .map((skill, index) => (
-                                        <button
-                                            key={index}
-                                            className={
-                                                selectedSkills.includes(skill)
-                                                    ? styles.skill_button_selected
-                                                    : styles.skill_button
-                                            }
-                                            onClick={() => handleSkillClick(skill)}
-                                        >
-                                            {skill}
-                                        </button>
-                                ))}
+                                <button className={styles.add_button}>Add</button>
                             </div>
+
+                            <div className={styles.interests_wrapper}>
+                                {interests &&
+                                    interests.map((interest, index) => (
+                                    <button
+                                        key={index}
+                                        className={styles.interest_button}
+                                        onClick={() => handleLanguageClick(interest)}
+                                    >
+                                        {interest}
+                                    </button>
+                                    ))}
+                            </div>
+
                         </div>
                     ) : (
                         <div></div>
