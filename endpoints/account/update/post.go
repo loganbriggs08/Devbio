@@ -165,6 +165,12 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		for _, interest := range updateRequestData.Interests {
+			if len(interest) > 50 {
+				continue
+			}
+		}
+
 		if accountDataResult.Username != "" {
 			updateProfileResult := database.UpdateProfileData(updateRequestData)
 
