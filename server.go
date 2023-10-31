@@ -34,6 +34,8 @@ func main() {
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
 			http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
 
+			http.HandleFunc("/api/notifications", endpoints.ManageNotifications)
+
 			http.HandleFunc("/api/storage/profile/icon/", endpoints.ManageIcon)
 			http.HandleFunc("/api/storage/profile/banner/", endpoints.ManageBanner)
 
