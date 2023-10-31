@@ -325,16 +325,23 @@ const DashboardComponent = () => {
                             <div className={styles.divider_line}></div>
 
                             <h1 className={styles.header_text}>Customize Languages</h1>
-                            <p className={styles.description_text}>Set the languages you are fluent in - <a className={styles.blue_text}>Shows on Profile</a></p>
+                            <p className={styles.description_text}>Set the languages you are fluent in - <a className={styles.red_text}>Shows on Profile</a></p>
 
                             <button className={styles.select_country_button} onClick={() => setSelectedSettingsMenu(3)}>Customize Languages</button>
 
                             <div className={styles.divider_line}></div>
 
                             <h1 className={styles.header_text}>Customize Skills</h1>
-                            <p className={styles.description_text}>Set the skills that you have - <a className={styles.blue_text}>Shows on Profile</a></p>
+                            <p className={styles.description_text}>Set the skills that you have - <a className={styles.red_text}>Shows on Profile</a></p>
 
                             <button className={styles.select_country_button} onClick={() => setSelectedSettingsMenu(4)}>Customize Skills</button>
+
+                            <div className={styles.divider_line}></div>
+
+                            <h1 className={styles.header_text}>Customize Interests</h1>
+                            <p className={styles.description_text}>Set your interests and or hobbies - <a className={styles.red_text}>Shows on Profile</a></p>
+
+                            <button className={styles.select_country_button} onClick={() => setSelectedSettingsMenu(5)}>Customize Interests</button>
                         </div>
                     ) : selectedSettingsMenu === 3 ? (
                         <div className={styles.settings_container}>
@@ -369,6 +376,49 @@ const DashboardComponent = () => {
                             </div>
                         </div>
                     ) : selectedSettingsMenu === 4 ? (
+                        <div className={styles.settings_container}>
+                            <div className={styles.top_section_wrapper}>
+                                <div className={styles.profile_settings_descriptor}>
+                                    <h1 className={styles.profile_settings_text}>Select Skills</h1>
+                                    <p className={styles.profile_description_text}>Select the skills that you have or are improving.</p>
+                                </div>
+
+                                <div className={styles.save_changes_wrapper}>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.divider_line}></div>
+
+                            <input
+                                className={styles.account_description}
+                                type="text"
+                                placeholder="Search for Skills..."
+                                value={skillsSearchInput}
+                                onChange={(e) => setSkillsSearchInput(e.target.value)}
+                            />
+
+                            <div className={styles.skills_wrapper}>
+                                {skills
+                                    .filter((skill) =>
+                                        skill.toLowerCase().includes(skillsSearchInput.toLowerCase())
+                                    )
+                                    .map((skill, index) => (
+                                        <button
+                                            key={index}
+                                            className={
+                                                selectedSkills.includes(skill)
+                                                    ? styles.skill_button_selected
+                                                    : styles.skill_button
+                                            }
+                                            onClick={() => handleSkillClick(skill)}
+                                        >
+                                            {skill}
+                                        </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : selectedSettingsMenu === 5 ? (
                         <div className={styles.settings_container}>
                             <div className={styles.top_section_wrapper}>
                                 <div className={styles.profile_settings_descriptor}>
