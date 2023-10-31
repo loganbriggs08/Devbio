@@ -11,6 +11,7 @@
     width: 40%;
     margin: 0 auto;
     border-radius: 0.6rem;
+    margin-bottom: 5rem;
     background-color: #242424;
 }
 
@@ -340,5 +341,125 @@
 }
 
 .country_dropdown:hover {
+    cursor: pointer;
+}
+
+.select_country_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #313131;
+}
+
+.select_country_button:hover {
+    cursor: pointer;
+}
+
+.languages_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 2%;
+    margin-bottom: 1.5rem;
+}
+
+.language_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 1rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    flex: 0 0 31%;
+    background-color: #313131;
+}
+
+.language_button:hover {
+    cursor: pointer
+}
+
+.language_button_selected {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 1rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    flex: 0 0 31%;
+    background-color: #FC6060;
+}
+
+.language_button_selected:hover {
+    cursor: pointer;
+}
+
+.blue_text {
+    color: #FC6060;
+    font-weight: 600;
+}
+
+.skills_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 2%;
+    margin-bottom: 1.5rem;
+}
+
+.skill_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 1rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    flex: 0 0 31%;
+    background-color: #313131;
+}
+
+.skill_button:hover {
+    cursor: pointer
+}
+
+.skill_button_selected {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 1rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    flex: 0 0 31%;
+    background-color: #FC6060;
+}
+
+.skill_button_selected:hover {
     cursor: pointer;
 }
