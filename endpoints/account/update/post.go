@@ -4,7 +4,6 @@ import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -80,8 +79,6 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 				ReturnModule.InternalServerError(w, r)
 			}
 		} else {
-
-			fmt.Println("Heres the issue")
 			ReturnModule.MethodNotAllowed(w, r)
 		}
 	}
