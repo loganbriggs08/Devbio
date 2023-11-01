@@ -1,0 +1,20 @@
+.on_top_of_notification {
+    margin-top: -1%;
+}
+
+.notifications_wrapper {
+    background-color: #7091F5;
+    width: 101%;
+    padding: 0.3rem;
+    margin-left: -1%;
+    text-align: center;
+}
+
+.notification_text {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.bold_text {
+    font-weight: bold;
+}
