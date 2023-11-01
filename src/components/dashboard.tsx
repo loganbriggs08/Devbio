@@ -2,6 +2,7 @@ import styles from './dashboard.module.css';
 import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
 import DashboardNavbarComponent from './dashboard_navbar';
+import { NotificationComponent } from './notification';
 
 interface UserData {
     username: string;
@@ -42,6 +43,7 @@ const DashboardComponent = () => {
   
   return (
     <div>
+        <NotificationComponent />
         <DashboardNavbarComponent userData={userData}/>
 
         <div className={styles.container}>
