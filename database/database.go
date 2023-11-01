@@ -52,6 +52,7 @@ func CreateTables() bool {
 			is_setup BOOLEAN,
 			is_hireable BOOLEAN,
 			is_disabled BOOLEAN,
+			is_staff BOOLEAN,
 			password_hash VARCHAR(255),
 			password_salt VARCHAR(25)
 		);
