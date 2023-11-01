@@ -275,7 +275,7 @@ func GetAccountData(username string) structs.UserResponse {
 
 func AccountExists(username string) bool {
 	var count int
-	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM accounts WHERE username = ?;", username).Scan(&count)
+	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM accounts WHERE LOWER(username) = LOWER(?);", username).Scan(&count)
 
 	if err != nil {
 		return false
