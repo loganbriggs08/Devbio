@@ -45,3 +45,7 @@ type ExploreData struct {
 type ExploreResponse struct {
 	ExploreData []ExploreData
 }
+
+type NotificationsResponse struct {
+	Notifications []string `json:"notifications"`
+}

@@ -1,11 +1,6 @@
 import styles from './dashboard.module.css';
-import { useRouter } from 'next/navigation';
-import ProfileComponent from '@/components/profile'
 import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
-import { OurPolicies } from './dashboard/our_policies';
-import { PrivacySafety } from './dashboard/privacy_safety';
-import { Connections } from './dashboard/connections';
 import DashboardNavbarComponent from './dashboard_navbar';
 
 interface UserData {
@@ -22,7 +17,6 @@ interface UserData {
 }
 
 const DashboardComponent = () => {
-    const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
@@ -45,10 +39,6 @@ const DashboardComponent = () => {
             })
         }
     }, []);
-
-    const pushToPremium = () => {
-        router.push('/premium');
-    };
   
   return (
     <div>
@@ -57,7 +47,7 @@ const DashboardComponent = () => {
         <div className={styles.container}>
             {userData ? (
                 <div style={{ display: 'flex', width: '100%'}}>
-                    <h1>Over View</h1>
+                    <h1>OverView</h1>
                 </div>
             ) : (
                 <div>

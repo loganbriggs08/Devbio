@@ -12,7 +12,7 @@
     width: 35%;
     padding: 2rem;
     border-radius: 0.5rem;
-    background-color: #252525;
+    background-color: #242424;
 }
 
 .header_text {
@@ -30,7 +30,10 @@
 }
 
 .password_input {
-    background-color: #1E1E20;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 2.5rem;
+    background-color: #313131;
     padding-left: 0.8rem;
     margin-bottom: 1rem;
     margin-top: 0.4rem;
@@ -47,7 +50,10 @@
 }
 
 .tiktok_username_input {
-    background-color: #1E1E20;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 2.5rem;
+    background-color: #313131;
     padding-left: 0.8rem;
     margin-bottom: 0.2rem;
     margin-top: 0.2rem;

@@ -146,3 +146,23 @@ func Success(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(ResponseWriterError)
 	}
 }
+
+func Notifications(w http.ResponseWriter, r *http.Request, notifications []string) {
+	NotificationsResponse := structs.NotificationsResponse{
+		Notifications: notifications,
+	}
+
+	NotificationsResponseMarshal, ErrorResponseError := json.Marshal(NotificationsResponse)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(NotificationsResponseMarshal)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}

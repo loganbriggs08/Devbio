@@ -5,6 +5,7 @@ import (
 	"devbio/modules"
 	"devbio/structs"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 
@@ -472,4 +473,78 @@ func UpdateProfileData(profileData updateRequestData) bool {
 	}
 
 	return true
+}
+
+func GetIsStaff(sessionToken string) bool {
+	var username string
+
+	query := "SELECT username FROM sessions WHERE session_token = ?"
+	row := databaseConnection.QueryRow(query, sessionToken)
+
+	if err := row.Scan(&username); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			fmt.Println("Session not found.")
+			return false
+		}
+		fmt.Println("Error while retrieving username:", err)
+		return false
+	}
+
+	var isStaff bool
+	row = databaseConnection.QueryRow("SELECT is_staff FROM accounts WHERE username = ?", username)
+
+	if err := row.Scan(&isStaff); err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("User not found.")
+			return false
+		}
+		fmt.Println("Error while retrieving is_staff:", err)
+		return false
+	}
+
+	return isStaff
+}
+
+func CreateNotification(recipient string, forEveryone bool, message string) bool {
+	_, databaseError := databaseConnection.Exec("INSERT INTO notifications (recipient, is_for_everyone, message) VALUES(?, ?, ?)", recipient, forEveryone, message)
+
+	if databaseError == nil {
+		return true
+	} else {
+		return false
+	}
+}
+
+func GetNotifications(username string) []string {
+	var notifications []string
+
+	userRows, userError := databaseConnection.Query("SELECT message FROM notifications WHERE recipient = ?", username)
+	if userError != nil {
+		return notifications
+	}
+	defer userRows.Close()
+
+	for userRows.Next() {
+		var message string
+		if err := userRows.Scan(&message); err != nil {
+			return notifications
+		}
+		notifications = append(notifications, message)
+	}
+
+	everyoneRows, everyoneError := databaseConnection.Query("SELECT message FROM notifications WHERE is_for_everyone = 1")
+	if everyoneError != nil {
+		return notifications
+	}
+	defer everyoneRows.Close()
+
+	for everyoneRows.Next() {
+		var message string
+		if err := everyoneRows.Scan(&message); err != nil {
+			return notifications
+		}
+		notifications = append(notifications, message)
+	}
+
+	return notifications
 }
