@@ -1,6 +1,7 @@
 'use client'
-import { useRouter } from 'next/navigation';
+
 import styles from './card.module.css';
+import { useRouter } from 'next/navigation';
 
 type CardProps = {
     title: string;
@@ -36,7 +37,7 @@ export const Card: React.FC<CardProps> = ({ title, item1, item2, item3, item4, i
             <p>{item4}</p>
             <p>{item5}</p>
             <p>{item6}</p>
-            <button className={styles.purchaseButton}>Purchase</button>
+            <button className={styles.purchaseButton} onClick={() => navigation.push("/dashboard/premium")}>Purchase</button>
         </div>
     );
 }; 
