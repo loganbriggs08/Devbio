@@ -104,6 +104,7 @@ interface UserData {
 
 const CustomizeComponent = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
 
     const [selectedColour, setSelectedColor] = useState<number | null>(null);
@@ -113,6 +114,8 @@ const CustomizeComponent = () => {
     const [interestsInput, setinterestsInput] = useState("");
     const [interests, setInterests] = useState<any[]>([]);
     const [accountDescriptionInput, setAccountDescriptionInput] = useState("")
+    const [profilePictureFile, setProfilePictureFile] = useState<File | null>(null);
+    const [profilePictureBytes, setProfilePictureBytes] = useState<Uint8Array | null>(null);
 
 
     useEffect(() => {
@@ -122,7 +125,7 @@ const CustomizeComponent = () => {
             cookie.trim().startsWith('session=')
         );
 
-        if (sessionCookie) { fetch('http://localhost:6969/api/account', { method: 'GET', headers: {'Content-Type': 'application/json', session: sessionCookie.split('=')[1],},})
+        if (sessionCookie) { fetch('http://localhost:6969/api/account', { method: 'GET', headers: {'Content-Type': 'application/json', 'session': sessionCookie.split('=')[1]},})
             .then((response) => {
             if (response.status === 401) {
                 throw new Error('Invalid session');
@@ -140,27 +143,22 @@ const CustomizeComponent = () => {
         }
     }, []);
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUploadAndSave = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files && e.target.files[0];
         if (selectedFile) {
             setProfilePictureFile(selectedFile);
-            setStep(3);
-        } else {
-            ErrorToast("Please select a valid image file.");
-        }
-        };
-
-        const saveProfilePicture = () => {
-        if (profilePictureFile) {
+    
             const reader = new FileReader();
             reader.onload = (event) => {
-            if (event.target && event.target.result) {
-                const bytes = new Uint8Array(event.target.result as ArrayBuffer);
-                setProfilePictureBytes(bytes);
-                handleContinueToDashboard(bytes);
-            }
+                if (event.target && event.target.result) {
+                    const bytes = new Uint8Array(event.target.result as ArrayBuffer);
+                    setProfilePictureBytes(bytes);
+                    setProfilePictureUpdated(true);
+                }
             };
-            reader.readAsArrayBuffer(profilePictureFile);
+            reader.readAsArrayBuffer(selectedFile);
+        } else {
+            ErrorToast("Please select a valid image file.");
         }
     };
 
@@ -178,12 +176,12 @@ const CustomizeComponent = () => {
         }
       
         const updatedData = {
-          profile_picture: userData.profile_picture,
-          description: accountDescriptionInput,
-          skills: selectedSkills,
-          location: userData.location,
-          interests: interests,
-          spoken_languages: selectedLanguages,
+            profile_picture: profilePictureUpdated && profilePictureBytes ? Array.from(profilePictureBytes) : userData.profile_picture,
+            description: accountDescriptionInput,
+            skills: selectedSkills,
+            location: userData.location,
+            interests: interests,
+            spoken_languages: selectedLanguages,
         };
       
         fetch('http://localhost:6969/api/account/update', {
@@ -191,6 +189,7 @@ const CustomizeComponent = () => {
           headers: {
             'Content-Type': 'application/json',
             session: sessionCookie.split('=')[1],
+            'type': 'setup'
           },
           body: JSON.stringify(updatedData),
         })
@@ -357,7 +356,16 @@ const CustomizeComponent = () => {
                             <h1 className={styles.header_text}>Profile Picture</h1>
                             <p className={styles.description_text}>Choose a special image to use for your Profile Picture</p>
 
-                            <button className={styles.upload_profile_picture}>Upload Picture</button>
+                            <label htmlFor="imageUpload" className={styles.uploadButton}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUploadAndSave}
+                                    id="imageUpload"
+                                    className={styles.fileInput}
+                                />
+                                Upload Profile Picture
+                            </label>
                         </div>
                     ) : selectedSettingsMenu === 2 ? (
                         <div className={styles.settings_container}>

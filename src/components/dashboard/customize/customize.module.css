@@ -560,3 +560,33 @@
 .interest_button:hover::before {
     opacity: 1;
 }
+
+.uploadButton {
+    font-family: "Quicksand";
+    font-weight: 500;
+    background-color: #313131;
+    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+    border: none;
+    color: #fff;
+    width: 94%;
+    height: 3.5rem;
+    border-radius: 0.4rem;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 3%;
+    margin-bottom: 2rem;
+}
+
+.fileInput {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
