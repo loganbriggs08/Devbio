@@ -32,8 +32,8 @@ export const NotificationComponent: React.FC = () => {
                 return response.json();
             })
             .then((data: Notifications) => {
-                setNotificationsData(data);
                 if (data.notifications.length > 0) {
+                    setNotificationsData(data);
                     setShownNotificationIndex(0);
 
                     const interval = setInterval(() => {
@@ -46,12 +46,16 @@ export const NotificationComponent: React.FC = () => {
         }
     }, []);
 
+    if (!notificationsData || notificationsData.notifications.length === 0) {
+        return null;
+    }
+
     return (
         <>
             <div className={styles.on_top_of_notification}></div>
 
             <div className={styles.notifications_wrapper}>
-                <p className={styles.notification_text}><a className={styles.bold_text}>Notification:</a> {notificationsData?.notifications[shownNotificationIndex]}</p>
+                <p className={styles.notification_text}><a className={styles.bold_text}>Notification:</a> {notificationsData.notifications[shownNotificationIndex]}</p>
             </div>
         </>
     );

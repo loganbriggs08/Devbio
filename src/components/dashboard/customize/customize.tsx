@@ -5,7 +5,7 @@ import DashboardNavbarComponent from '@/components/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { NotificationComponent } from './notification';
+import { NotificationComponent } from '@/components/notification';
 
 const languages: string[] = [
     "English",
@@ -102,7 +102,7 @@ interface UserData {
     is_disabled: boolean;
 }
 
-const DashboardComponent = () => {
+const CustomizeComponent = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
 
@@ -139,6 +139,30 @@ const DashboardComponent = () => {
             })
         }
     }, []);
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files && e.target.files[0];
+        if (selectedFile) {
+            setProfilePictureFile(selectedFile);
+            setStep(3);
+        } else {
+            ErrorToast("Please select a valid image file.");
+        }
+        };
+
+        const saveProfilePicture = () => {
+        if (profilePictureFile) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+            if (event.target && event.target.result) {
+                const bytes = new Uint8Array(event.target.result as ArrayBuffer);
+                setProfilePictureBytes(bytes);
+                handleContinueToDashboard(bytes);
+            }
+            };
+            reader.readAsArrayBuffer(profilePictureFile);
+        }
+    };
 
     const handleSaveChanges = () => {
         if (!userData) {
@@ -513,4 +537,4 @@ const DashboardComponent = () => {
   );
 };
 
-export default DashboardComponent;
+export default CustomizeComponent;
