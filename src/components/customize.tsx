@@ -5,6 +5,7 @@ import DashboardNavbarComponent from '@/components/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { NotificationComponent } from './notification';
 
 const languages: string[] = [
     "English",
@@ -111,6 +112,7 @@ const DashboardComponent = () => {
     const [skillsSearchInput, setSkillsSearchInput] = useState("");
     const [interestsInput, setinterestsInput] = useState("");
     const [interests, setInterests] = useState<any[]>([]);
+    const [accountDescriptionInput, setAccountDescriptionInput] = useState("")
 
 
     useEffect(() => {
@@ -133,6 +135,7 @@ const DashboardComponent = () => {
                 setSelectedLanguages(data.spoken_languages)
                 setSelectedSkills(data.skills)
                 setInterests(data.interests)
+                setAccountDescriptionInput(data.description)
             })
         }
     }, []);
@@ -152,7 +155,7 @@ const DashboardComponent = () => {
       
         const updatedData = {
           profile_picture: userData.profile_picture,
-          description: userData.description,
+          description: accountDescriptionInput,
           skills: selectedSkills,
           location: userData.location,
           interests: interests,
@@ -172,7 +175,7 @@ const DashboardComponent = () => {
               throw new Error('Invalid session');
             }
             return response.json();
-          })
+          })        
           .then((data) => {
             SuccessToast("Profile has been updated Successfully.")
           })
@@ -243,6 +246,7 @@ const DashboardComponent = () => {
   
   return (
     <div>
+        <NotificationComponent />
         <DashboardNavbarComponent userData={userData}/>
 
         <div className={styles.category_settings_wrapper}>
@@ -320,6 +324,8 @@ const DashboardComponent = () => {
                                 className={styles.account_description}
                                 type="text"
                                 placeholder="Account Description"
+                                value={accountDescriptionInput}
+                                onChange={(e) => setAccountDescriptionInput(e.target.value)}
                             />
                             
                             <div className={styles.divider_line}></div>
