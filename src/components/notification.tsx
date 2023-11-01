@@ -37,7 +37,6 @@ export const NotificationComponent: React.FC = () => {
                     setShownNotificationIndex(0);
 
                     const interval = setInterval(() => {
-                        console.log("called")
                         setShownNotificationIndex((prevIndex) => (prevIndex + 0.5) % data.notifications.length);
                     }, 7500);
 

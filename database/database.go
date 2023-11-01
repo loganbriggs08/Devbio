@@ -494,7 +494,7 @@ func GetIsStaff(sessionToken string) bool {
 	row = databaseConnection.QueryRow("SELECT is_staff FROM accounts WHERE username = ?", username)
 
 	if err := row.Scan(&isStaff); err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			fmt.Println("User not found.")
 			return false
 		}
