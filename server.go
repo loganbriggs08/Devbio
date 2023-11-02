@@ -39,9 +39,7 @@ func main() {
 			http.HandleFunc("/api/storage/profile/icon/", endpoints.ManageIcon)
 			http.HandleFunc("/api/storage/profile/banner/", endpoints.ManageBanner)
 
-			http.HandleFunc("/api/subscriptions/websocket", endpoints.ManageWebhook)
-			http.HandleFunc("/api/subscriptions/portal-session", endpoints.ManagePortalSession)
-			http.HandleFunc("/api/subscriptions/checkout-session", endpoints.ManageCheckoutSession)
+			http.HandleFunc("/api/subscriptions/subscribe", endpoints.ManageSubscribe)
 
 			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 		} else {
