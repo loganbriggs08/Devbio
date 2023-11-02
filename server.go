@@ -25,10 +25,10 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 func main() {
 	if database.InitializeStorageDatabase() && database.CreateStorageTables() {
-		pterm.Success.Println("Storage database has been initalized successfully.")
+		pterm.Success.Println("Storage database has been initialized successfully.")
 
 		if database.InitializeDatabase() && database.CreateTables() {
-			pterm.Success.Println("Database has been initalized successfully.")
+			pterm.Success.Println("Database has been initialized successfully.")
 
 			http.HandleFunc("/api/account", endpoints.ManageAccounts)
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
@@ -38,6 +38,10 @@ func main() {
 
 			http.HandleFunc("/api/storage/profile/icon/", endpoints.ManageIcon)
 			http.HandleFunc("/api/storage/profile/banner/", endpoints.ManageBanner)
+
+			http.HandleFunc("/api/subscriptions/websocket", endpoints.ManageWebhook)
+			http.HandleFunc("/api/subscriptions/portal-session", endpoints.ManagePortalSession)
+			http.HandleFunc("/api/subscriptions/checkout-session", endpoints.ManageCheckoutSession)
 
 			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 		} else {
