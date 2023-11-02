@@ -16,6 +16,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/pterm/pterm v0.12.69 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/stripe/stripe-go/v76 v76.2.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/term v0.11.0 // indirect
