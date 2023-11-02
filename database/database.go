@@ -87,6 +87,13 @@ func CreateTables() bool {
 			FOREIGN KEY (username) REFERENCES accounts(username)
 		);
 
+		CREATE TABLE IF NOT EXISTS subscriptions (
+		    username VARCHAR(40),
+		    subscription_type VARCHAR(100),
+		    subscription_date DATETIME,
+		    FOREIGN KEY (username) REFERENCES accounts(username)
+		);
+
 		CREATE TABLE IF NOT EXISTS explore (
 		    username VARCHAR(40),
 			rank INT,
