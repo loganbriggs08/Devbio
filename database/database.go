@@ -73,7 +73,7 @@ func CreateTables() bool {
 			);
 
 			CREATE TABLE IF NOT EXISTS connections (
-				connection_id INT AUTO_INCREMENT PRIMARY KEY,
+				connection_type VARCHAR(100),
 				username VARCHAR(40),
 				account_username VARCHAR(40),
 				connection_date DATETIME,

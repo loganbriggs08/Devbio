@@ -277,7 +277,7 @@ const CustomizeComponent = () => {
             <div className={styles.center_seperator}></div>
             <button onClick={() => setSelectedSettingsMenu(2)} className={styles.settings_selection_button}>Customization Settings</button>
             <div className={styles.center_seperator}></div>
-            <button onClick={() => console.log("Clicked")} className={styles.settings_selection_button}>Connections</button>
+            <button onClick={() => setSelectedSettingsMenu(6)} className={styles.settings_selection_button}>Connections</button>
         </div>
 
         <div className={styles.container}>
@@ -515,6 +515,23 @@ const CustomizeComponent = () => {
                                     </button>
                                     ))}
                             </div>
+                        </div>
+                    ) : selectedSettingsMenu === 6 ? (
+                        <div className={styles.settings_container}>
+                            <div className={styles.top_section_wrapper}>
+                                <div className={styles.profile_settings_descriptor}>
+                                    <h1 className={styles.profile_settings_text}>Connections</h1>
+                                    <p className={styles.profile_description_text}>Connect external accounts to your Profile.</p>
+                                </div>
+
+                                <div className={styles.save_changes_wrapper}>
+                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.divider_line}></div>
+
+
                         </div>
                     ) : (
                         <div></div>
