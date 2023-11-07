@@ -166,3 +166,23 @@ func Notifications(w http.ResponseWriter, r *http.Request, notifications []strin
 		log.Fatal(ResponseWriterError)
 	}
 }
+
+func Connections(w http.ResponseWriter, r *http.Request, connections []structs.Connection) {
+	ConnectionResponse := structs.ConnectionsResponse{
+		Connections: connections,
+	}
+
+	ConnectionResponseMarshal, ErrorResponseError := json.Marshal(ConnectionResponse)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(ConnectionResponseMarshal)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}

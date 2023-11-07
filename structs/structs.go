@@ -57,3 +57,7 @@ type Connection struct {
 	ConnectionType  string
 	ConnectionDate  string
 }
+
+type ConnectionsResponse struct {
+	Connections []Connection
+}
