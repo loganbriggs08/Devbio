@@ -49,3 +49,11 @@ type ExploreResponse struct {
 type NotificationsResponse struct {
 	Notifications []string `json:"notifications"`
 }
+
+type Connection struct {
+	IsShown         bool
+	Username        string
+	AccountUsername string
+	ConnectionType  string
+	ConnectionDate  string
+}

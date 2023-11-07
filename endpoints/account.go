@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"devbio/endpoints/account"
+	"devbio/endpoints/account/connections"
 	"devbio/endpoints/account/session"
 	"devbio/endpoints/account/statistics"
 	"devbio/endpoints/account/update"
@@ -40,6 +41,14 @@ func ManageUpdate(w http.ResponseWriter, r *http.Request) {
 func ManageStatistics(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		statistics.GetRequest(w, r)
+	} else {
+		ReturnModule.MethodNotAllowed(w, r)
+	}
+}
+
+func ManageConnections(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		connections.GetRequest(w, r)
 	} else {
 		ReturnModule.MethodNotAllowed(w, r)
 	}

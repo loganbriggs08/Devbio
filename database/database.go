@@ -74,6 +74,7 @@ func CreateTables() bool {
 			CREATE TABLE IF NOT EXISTS connections (
 				connection_type VARCHAR(100),
 				username VARCHAR(40),
+				is_shown BOOLEAN,
 				account_username VARCHAR(40),
 				connection_date DATETIME,
 				FOREIGN KEY (username) REFERENCES profile_data(username),
@@ -560,4 +561,34 @@ func GetNotifications(username string) []string {
 	}
 
 	return notifications
+}
+
+func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
+	var connections []structs.Connection
+
+	accountData := GetAccountDataFromSession(sessionToken)
+
+	if accountData.Username == "" {
+		return connections
+	}
+
+	connectionRows, databaseError := databaseConnection.Query("SELECT connection_type, username, is_shown, account_username, connection_date FROM connections WHERE username = ?", accountData.Username)
+
+	if databaseError != nil {
+		return connections
+	}
+
+	for connectionRows.Next() {
+		var currentParsedConnection structs.Connection
+
+		rowScanError := connectionRows.Scan(&currentParsedConnection.ConnectionType, &currentParsedConnection.Username, &currentParsedConnection.IsShown, &currentParsedConnection.AccountUsername, &currentParsedConnection.ConnectionDate)
+
+		if rowScanError != nil {
+			return connections
+		}
+
+		connections = append(connections, currentParsedConnection)
+	}
+
+	return connections
 }
