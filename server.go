@@ -33,6 +33,7 @@ func main() {
 			http.HandleFunc("/api/account", endpoints.ManageAccounts)
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)
 			http.HandleFunc("/api/account/update", endpoints.ManageUpdate)
+			http.HandleFunc("/api/account/statistics", endpoints.ManageStatistics)
 
 			http.HandleFunc("/api/notifications", endpoints.ManageNotifications)
 

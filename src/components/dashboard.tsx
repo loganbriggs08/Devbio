@@ -48,8 +48,28 @@ const DashboardComponent = () => {
 
         <div className={styles.container}>
             {userData ? (
-                <div style={{ display: 'flex', width: '100%'}}>
-                    <h1>OverView</h1>
+                <div style={{width: '100%'}}>
+                    <div className={styles.dashboard_wrapper}>
+                        <h1 className={styles.dashboard_text}>Dashboard</h1>
+                        <p></p>
+
+                        <div className={styles.statistics_wrapper}>
+                            <div className={styles.statistic_card_1}>
+                                <h1 className={styles.header_text}>Profile Views</h1>
+                                <p className={styles.description_text}>13,041</p>
+                            </div>
+
+                            <div className={styles.statistic_card_2}>
+                                <h1 className={styles.header_text}>Profile Views</h1>
+                                <p className={styles.description_text}>13,041</p>
+                            </div>
+
+                            <div className={styles.statistic_card_3}>
+                                <h1 className={styles.header_text}>Profile Views</h1>
+                                <p className={styles.description_text}>13,041</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div>

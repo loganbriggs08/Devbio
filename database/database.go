@@ -59,7 +59,6 @@ func CreateTables() bool {
 		);
 			
 			CREATE TABLE IF NOT EXISTS profile_data (
-				profile_id INT AUTO_INCREMENT PRIMARY KEY,
 				username VARCHAR(40),
 				profile_picture TEXT,
 				banner_picture TEXT,
@@ -117,6 +116,13 @@ func CreateTables() bool {
 			recipient VARCHAR(40),
 			is_for_everyone BOOLEAN,
 			message VARCHAR(255)
+		);
+
+		CREATE TABLE IF NOT EXISTS statistics (
+			USERNAME VARCHAR(255),
+			profile_views TEXT,
+			profile_views_countries TEXT,
+			FOREIGN KEY (username) REFERENCES profile_data(username) 
 		);
 	`)
 
