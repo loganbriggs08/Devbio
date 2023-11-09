@@ -51,11 +51,11 @@ type NotificationsResponse struct {
 }
 
 type Connection struct {
-	IsShown         bool
-	Username        string
-	AccountUsername string
-	ConnectionType  string
-	ConnectionDate  string
+	IsShown         bool   `json:"is_shown"`
+	Username        string `json:"username"`
+	AccountUsername string `json:"account_username"`
+	ConnectionType  string `json:"connection_type"`
+	ConnectionDate  string `json:"connection_date"`
 }
 
 type ConnectionsResponse struct {
