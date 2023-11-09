@@ -102,8 +102,17 @@ interface UserData {
     is_disabled: boolean;
 }
 
+interface Connections {
+    is_shown: boolean;
+    username: string;
+    account_username: string;
+    connection_type: string;
+    connection_date: string;
+}
+
 const CustomizeComponent = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [connectionsData, setConnectionsData] = useState<Connections[] | null>(null);
     const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
 
@@ -141,6 +150,19 @@ const CustomizeComponent = () => {
                 setAccountDescriptionInput(data.description)
             })
         }
+
+        if (sessionCookie) { fetch('http://localhost:6969/api/account/connections', { method: 'GET', headers: {'Content-Type': 'application/json', 'session': sessionCookie.split('=')[1]},})
+            .then((response) => {
+            if (response.status === 401) {
+                throw new Error('Invalid session');
+            }
+            return response.json();
+            })
+
+            .then((data: Connections[]) => {
+                setConnectionsData(data)
+            })
+    }
     }, []);
 
     const handleImageUploadAndSave = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -530,7 +552,17 @@ const CustomizeComponent = () => {
                             </div>
 
                             <div className={styles.divider_line}></div>
-
+                            
+                            {connectionsData && connectionsData.length > 0 ? (
+                                connectionsData.map((interest, index) => (
+                                    <p key={index}>{interest?.account_username}</p>
+                                ))
+                                ) : (
+                                    <div>
+                                        <p className={styles.no_connections}>You don't currently have any connections 🥲</p>
+                                        <button className={styles.add_connection_button}>Add Connection</button>
+                                    </div>
+                                )}
 
                         </div>
                     ) : (

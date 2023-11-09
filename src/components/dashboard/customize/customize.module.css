@@ -560,7 +560,23 @@
     opacity: 1;
 }
 
-.uploadButton {
+.fileInput {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.no_connections {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-left: 3%;
+}
+
+.add_connection_button {
     font-family: "Quicksand";
     font-weight: 500;
     background-color: #313131;
@@ -580,12 +596,6 @@
     margin-bottom: 2rem;
 }
 
-.fileInput {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
+.add_connection_button:hover {
+    cursor: pointer;
 }
