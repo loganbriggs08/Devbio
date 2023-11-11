@@ -1,3 +1,4 @@
+import since from "since-time-ago";
 import styles from './customize.module.css';
 import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
@@ -9,7 +10,6 @@ import { CgWebsite } from 'react-icons/cg'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification';
-import { ConnectionCard } from '../connections/connection_card';
 
 const languages: string[] = [
     "English",
@@ -106,17 +106,17 @@ interface UserData {
     is_disabled: boolean;
 }
 
-interface Connections {
+interface Connection {
     is_shown: boolean;
     username: string;
     account_username: string;
     connection_type: string;
-    connection_date: Date;
+    connection_date: string;
 }
 
 const CustomizeComponent = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
-    const [connectionsData, setConnectionsData] = useState<Connections[] | null>(null);
+    const [connectionsData, setConnectionsData] = useState<Connection[] | null>([]);
     const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
 
@@ -163,11 +163,22 @@ const CustomizeComponent = () => {
             return response.json();
             })
 
-            .then((data: Connections[]) => {
-                setConnectionsData(data)
-            })
+            .then((data: { Connections: Connection[] }) => {
+                const updatedConnections = data.Connections.map(connection => {
+                  const timestampString = connection.connection_date;
+                  const timestamp = new Date(timestampString);
+                  const relativeTime = since(timestamp);
+              
+                  return {
+                    ...connection,
+                    connection_date: relativeTime,
+                  };
+                });
+              
+                setConnectionsData(updatedConnections);
+            });
     }
-    }, []);
+    }, [connectionsData]);
 
     const handleImageUploadAndSave = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files && e.target.files[0];
@@ -554,7 +565,7 @@ const CustomizeComponent = () => {
                             <div className={styles.divider_line}></div>
 
                             <div className={styles.connection_button_row}>
-                                <button className={styles.add_connection_button} onClick={() => {window.open("https://github.com/login/oauth/authorize?client_id=f1320042a60d446803c0&scope=read:user,read:project&redirect_uri=http://localhost:6969/callback/github")}}><AiFillGithub /></button>
+                                <button className={styles.add_connection_button} onClick={() => {window.open("https://github.com/login/oauth/authorize?client_id=f1320042a60d446803c0&scope=read:user,read:project&redirect_uri=http://localhost:3000/callback/github")}}><AiFillGithub /></button>
                                 <div className={styles.small_divider}></div>
                                 <button className={styles.add_connection_button}><RiSpotifyFill className={styles.spotify_green}/></button>
                                 <div className={styles.small_divider}></div>
@@ -573,11 +584,33 @@ const CustomizeComponent = () => {
                             
                             {connectionsData && connectionsData.length > 0 ? (
                                 connectionsData.map((connection, index) => (
-                                    <p key={index}>{connection.account_username}</p>
+                                    <div className={styles.connection_card}>
+                                        <div className={styles.connection_card_top}>
+                                            {connection.connection_type.toLowerCase() === "github" ? (
+                                                <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                            ) : (
+                                                <div></div>
+                                            )}
+
+                                            {connection.connection_type.toLowerCase() === "spotify" ? (
+                                                <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
+                                            ) : (
+                                                <div></div>
+                                            )}
+
+                                            <h1 className={styles.account_username_text}>{connection.account_username}</h1>
+                                            <h1 className={styles.account_type_text}>- {connection.connection_type}</h1>
+                                        </div>
+
+                                        <div className={styles.connection_card_middle}>
+                                            <p className={styles.connection_date_text}>{connection.connection_type} account was connected {connection.connection_date}.</p>
+                                            <button className={styles.remove_account_button}>Remove Account</button>
+                                        </div>
+                                    </div>
                                 ))
-                                ): (
-                                    <div></div>
-                                )}
+                            ) : (
+                                <div></div>
+                            )}
                         </div>
                     ) : (
                         <div></div>

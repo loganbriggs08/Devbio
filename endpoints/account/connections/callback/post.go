@@ -4,9 +4,10 @@ import (
 	"devbio/database"
 	"devbio/modules/github"
 	ReturnModule "devbio/modules/return_module"
-	"github.com/joho/godotenv"
 	"net/http"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func PostRequest(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 		ReturnModule.MethodNotAllowed(w, r)
 	} else {
 		if authenticationType == "github" {
-			accessToken, exchangeError := github.ExchangeCodeForAccessToken(envFile["GITHUB_CLIENT_ID"], envFile["GITHUB_CLIENT_SECRET"], code, "http://localhost:6969/callback/github")
+			accessToken, exchangeError := github.ExchangeCodeForAccessToken(envFile["GITHUB_CLIENT_ID"], envFile["GITHUB_CLIENT_SECRET"], code, "http://localhost:3000/callback/github")
 
 			if exchangeError != nil {
 				ReturnModule.InternalServerError(w, r)
