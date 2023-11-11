@@ -3,9 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/loading';
 import DashboardNavbarComponent from '@/components/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
+import { AiFillGithub } from 'react-icons/ai'
+import { RiSpotifyFill } from 'react-icons/ri'
+import { CgWebsite } from 'react-icons/cg'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification';
+import { ConnectionCard } from '../connections/connection_card';
 
 const languages: string[] = [
     "English",
@@ -107,7 +111,7 @@ interface Connections {
     username: string;
     account_username: string;
     connection_type: string;
-    connection_date: string;
+    connection_date: Date;
 }
 
 const CustomizeComponent = () => {
@@ -545,25 +549,35 @@ const CustomizeComponent = () => {
                                     <h1 className={styles.profile_settings_text}>Connections</h1>
                                     <p className={styles.profile_description_text}>Connect external accounts to your Profile.</p>
                                 </div>
-
-                                <div className={styles.save_changes_wrapper}>
-                                    <button className={styles.save_button} onClick={handleSaveChanges}>Save Changes</button>
-                                </div>
                             </div>
 
                             <div className={styles.divider_line}></div>
+
+                            <div className={styles.connection_button_row}>
+                                <button className={styles.add_connection_button} onClick={() => {window.open("https://github.com/login/oauth/authorize?client_id=f1320042a60d446803c0&scope=read:user,read:project&redirect_uri=http://localhost:6969/callback/github")}}><AiFillGithub /></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.add_connection_button}><RiSpotifyFill className={styles.spotify_green}/></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                                <div className={styles.small_divider}></div>
+                                <button className={styles.not_used_connection_button}></button>
+                            </div>
                             
                             {connectionsData && connectionsData.length > 0 ? (
-                                connectionsData.map((interest, index) => (
-                                    <p key={index}>{interest?.account_username}</p>
+                                connectionsData.map((connection, index) => (
+                                    <p key={index}>{connection.account_username}</p>
                                 ))
-                                ) : (
-                                    <div>
-                                        <p className={styles.no_connections}>You don't currently have any connections 🥲</p>
-                                        <button className={styles.add_connection_button}>Add Connection</button>
-                                    </div>
+                                ): (
+                                    <div></div>
                                 )}
-
                         </div>
                     ) : (
                         <div></div>

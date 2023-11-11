@@ -579,23 +579,59 @@
 .add_connection_button {
     font-family: "Quicksand";
     font-weight: 500;
+    font-size: 2rem;
     background-color: #313131;
     margin-bottom: 0.3rem;
     margin-top: 0.1rem;
     border: none;
     color: #fff;
-    width: 94%;
+    width: 100%;
     height: 3.5rem;
     border-radius: 0.4rem;
-    font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin-left: 3%;
     margin-bottom: 2rem;
 }
 
 .add_connection_button:hover {
     cursor: pointer;
+}
+
+.not_used_connection_button {
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 2rem;
+    background-color: #313131;
+    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+    border: none;
+    color: #fff;
+    width: 100%;
+    height: 3.5rem;
+    border-radius: 0.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.not_used_connection_button {
+    cursor: default;
+}
+
+.connection_button_row {
+    display: flex;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.small_divider {
+    margin-left: 1rem;
+}
+
+.spotify_green {
+    color: #1ED760;
 }

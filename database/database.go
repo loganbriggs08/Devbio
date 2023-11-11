@@ -7,9 +7,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
-
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 var databaseConnection *sql.DB
@@ -120,10 +119,16 @@ func CreateTables() bool {
 		);
 
 		CREATE TABLE IF NOT EXISTS statistics (
-			USERNAME VARCHAR(255),
+			USERNAME VARCHAR(40),
 			profile_views TEXT,
 			profile_views_countries TEXT,
 			FOREIGN KEY (username) REFERENCES profile_data(username) 
+		);
+
+		CREATE TABLE IF NOT EXISTS github_access_tokens (
+		    username VARCHAR(40),
+		    access_token VARCHAR(255),
+		    FOREIGN KEY (username) REFERENCES profile_data(username)
 		);
 	`)
 
@@ -321,7 +326,7 @@ func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
 	err := databaseConnection.QueryRow("SELECT password_hash, password_salt FROM accounts WHERE username = ?", username).Scan(&passwordHashAndSalt.HashedPassword, &passwordHashAndSalt.RandomSalt)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return passwordHashAndSalt
 		} else {
 			log.Fatal(err)
@@ -591,4 +596,60 @@ func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
 	}
 
 	return connections
+}
+
+func AddGithubAccessToken(username string, accessToken string) bool {
+	row := databaseConnection.QueryRow("SELECT username FROM github_access_tokens WHERE username = ?", username)
+
+	var existingUsername string
+	if err := row.Scan(&existingUsername); err == sql.ErrNoRows {
+		_, insertError := databaseConnection.Exec("INSERT INTO github_access_tokens (username, access_token) VALUES (?, ?)", username, accessToken)
+
+		if insertError != nil {
+			fmt.Println(insertError)
+			return false
+		}
+
+		return true
+	} else if err != nil {
+		return false
+	}
+
+	_, updateError := databaseConnection.Exec("UPDATE github_access_tokens SET access_token = ? WHERE username = ?", accessToken, username)
+
+	if updateError != nil {
+		fmt.Println(updateError)
+		return false
+	}
+
+	return true
+}
+
+func AddConnection(connectionType string, username string, isShown bool, accountUsername string, connectionDate string) bool {
+	row := databaseConnection.QueryRow("SELECT username FROM connections WHERE connection_type = ? AND username = ?", connectionType, username)
+
+	var existingUsername string
+
+	if err := row.Scan(&existingUsername); errors.Is(err, sql.ErrNoRows) {
+		_, insertError := databaseConnection.Exec("INSERT INTO connections (connection_type, username, is_shown, account_username, connection_date) VALUES (?, ?, ?, ?, ?)", connectionType, username, isShown, accountUsername, connectionDate)
+
+		if insertError != nil {
+			fmt.Println(insertError)
+			return false
+		}
+
+		return true
+	} else if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	_, updateError := databaseConnection.Exec("UPDATE connections SET account_username = ?, connection_date = ? WHERE connection_type = ? AND username = ?", accountUsername, connectionDate, connectionType, username)
+
+	if updateError != nil {
+		fmt.Println(updateError)
+		return false
+	}
+
+	return true
 }
