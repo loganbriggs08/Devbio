@@ -48,12 +48,6 @@ export default function Home() {
             <div className={styles.top}>
                 <div className={styles.centered}>
                     <div className={styles.get_started_header}>
-                        {/* <div className={styles.header_example_image}>
-                            <a href="/dashboard">
-                                <img src="https://cdn.discordapp.com/attachments/1124442686192095345/1164661366305595452/Profiles3.png" alt="Example image of a profile made with devbio.me" />
-                            </a>
-                        </div> */}
-
                         <h1 className={styles.top_text}>
                             Create <span className={styles.accentText}>
                                 <span ref={wordRef}>{words[wordIndex]}</span>

@@ -9,12 +9,11 @@ type CardProps = {
 export const ConnectionCard: React.FC<CardProps> = ({ connectionName, icon, ifConnectedBool }) => {
     return (
         <div className={styles.container}>
-            <div className={styles.icon}>
-                {ifConnectedBool ? <img src={icon} alt="icon" /> : null}
-            </div>
-            <h1 className={styles.title}>
-                {connectionName}
-            </h1>
+            {ifConnectedBool ? (
+                <h1>Connected</h1>
+            ) : (
+                <div></div>
+            )}
         </div>
     );
 };
