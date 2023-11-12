@@ -9,6 +9,7 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"time"
 )
 
 var databaseConnection *sql.DB
@@ -132,10 +133,9 @@ func CreateTables() bool {
 		);
 
 		CREATE TABLE IF NOT EXISTS ratelimits (
-		    username VARCHAR(40),
-		    request_count BIGINT,
-		    
-		    FOREIGN KEY (username) REFERENCES profile_data(username)
+		    session_token VARCHAR(40),
+		    requests_in_last_3_minutes BIGINT,
+		    requests_start_time DATETIME
 		);
 	`)
 
@@ -669,4 +669,48 @@ func DeleteConnection(username string, connectionType string) bool {
 	} else {
 		return true
 	}
+}
+
+func IsRatelimited(sessionToken string) (bool, error) {
+	if sessionToken == "" {
+		return false, nil
+	}
+
+	var requestsInLast3Minutes int64
+	var requestsStartTime time.Time
+
+	err := databaseConnection.QueryRow("SELECT requests_in_last_3_minutes, requests_start_time FROM ratelimits WHERE session_token = ?", sessionToken).
+		Scan(&requestsInLast3Minutes, &requestsStartTime)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		_, err = databaseConnection.Exec("INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES (?, 1, CURRENT_TIMESTAMP)", sessionToken)
+		if err != nil {
+			return false, err
+		}
+		return false, nil
+	} else if err != nil {
+		return false, err
+	}
+
+	elapsedTime := time.Since(requestsStartTime)
+
+	if elapsedTime > 3*time.Minute {
+		_, err := databaseConnection.Exec("UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = ?", sessionToken)
+		if err != nil {
+			return false, err
+		}
+		return false, nil
+	}
+
+	if requestsInLast3Minutes > 120 {
+		return true, nil
+	}
+
+	_, err = databaseConnection.Exec("UPDATE ratelimits SET requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = ?", sessionToken)
+
+	if err != nil {
+		return false, err
+	}
+
+	return false, nil
 }

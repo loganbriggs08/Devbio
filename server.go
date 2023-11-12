@@ -3,6 +3,7 @@ package main
 import (
 	"devbio/database"
 	"devbio/endpoints"
+	ReturnModule "devbio/modules/return_module"
 	"github.com/pterm/pterm"
 	"log"
 	"net/http"
@@ -11,6 +12,12 @@ import (
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		pterm.Success.Println(r.Method, "Request received at", r.URL.Path)
+
+		isRateLimited, _ := database.IsRatelimited(r.Header.Get("session"))
+
+		if isRateLimited {
+			ReturnModule.MethodNotAllowed(w, r)
+		}
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
@@ -24,7 +31,6 @@ func corsMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
 func main() {
 	if database.InitializeStorageDatabase() && database.CreateStorageTables() {
 		pterm.Success.Println("Storage database has been initialized successfully.")
