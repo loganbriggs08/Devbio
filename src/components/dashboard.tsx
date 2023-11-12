@@ -49,7 +49,7 @@ const DashboardComponent = () => {
         <div className={styles.container}>
             {userData ? (
                 <div style={{width: '100%'}}>
-                    <div className={styles.dashboard_wrapper}>
+                    {/* <div className={styles.dashboard_wrapper}>
                         <h1 className={styles.dashboard_text}>Dashboard</h1>
                         <p></p>
 
@@ -69,7 +69,7 @@ const DashboardComponent = () => {
                                 <p className={styles.description_text}>13,041</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             ) : (
                 <div>
