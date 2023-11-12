@@ -202,6 +202,28 @@
     cursor: pointer;
 }
 
+.uploadButton {
+    font-family: "Quicksand";
+    font-weight: 500;
+    background-color: #313131;
+    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+    border: none;
+    color: #fff;
+    width: 94%;
+    height: 3.5rem;
+    border-radius: 0.4rem;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+}
+
 .remove_account_button {
     width: 100%;
     margin-bottom: 2rem;

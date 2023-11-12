@@ -24,7 +24,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
             <div className={styles.profile_top}></div>
 
             <div className={styles.profile_image_container}>
-                <img className={styles.profile_image} src={`http://localhost:6969/api/storage/profile/icon/${userData?.username}`} />
+                <img className={styles.profile_image} alt="Users profile picture" src={`http://localhost:6969/api/storage/profile/icon/${userData?.username}`}/>
                 <button className={styles.send_message_button}>Send Message</button>
             </div>
 
