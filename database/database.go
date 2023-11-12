@@ -130,6 +130,13 @@ func CreateTables() bool {
 		    access_token VARCHAR(255),
 		    FOREIGN KEY (username) REFERENCES profile_data(username)
 		);
+
+		CREATE TABLE IF NOT EXISTS ratelimits (
+		    username VARCHAR(40),
+		    request_count BIGINT,
+		    
+		    FOREIGN KEY (username) REFERENCES profile_data(username)
+		);
 	`)
 
 	if err != nil {
@@ -652,4 +659,14 @@ func AddConnection(connectionType string, username string, isShown bool, account
 	}
 
 	return true
+}
+
+func DeleteConnection(username string, connectionType string) bool {
+	_, databaseExecError := databaseConnection.Exec("DELETE FROM connections WHERE username = ? AND connection_type = ?", username, connectionType)
+
+	if databaseExecError != nil {
+		return false
+	} else {
+		return true
+	}
 }

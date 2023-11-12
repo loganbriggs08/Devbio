@@ -655,15 +655,6 @@
     color: #1ED760;
 }
 
-.connection_card {
-    padding: 0.5rem;
-    margin-left: 3%;
-    margin-right: 3%;
-    margin-bottom: 2rem;
-    border-radius: 0.3rem;
-    background-color: #313131;
-}
-
 .connection_card_top {
     display: flex;
 }
@@ -681,16 +672,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem
-}
-
-.account_type_text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    opacity: 0.8;
-    margin-left: 0.4rem;
+    font-size: 1.3rem
 }
 
 .connection_card_middle {
@@ -698,9 +680,69 @@
     margin-right: 2%;
 }
 
-.connection_date_text {
-    margin-top: 0px;
-    font-size: 1.2rem;
+.connection_card {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+    background-color: #313131;
+}
+
+.connection_card:hover {
+    cursor: pointer;
+}
+
+.white_color {
+    color: #ffff;
+}
+
+.white_color:hover {
+    opacity: 0.8;
+}
+
+.unlink_button {
+    border: none;
+    font-size: 1.5rem;
+    background-color: transparent;
+}
+
+.unlink_button:hover {
+    cursor: pointer;
+}
+
+.account_linked_since_text {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 0.2rem;
+    background-color: #7091F5;
+}
+
+.account_type_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    opacity: 1;
     font-weight: 500;
-    opacity: 0.9;
+}
+
+.connection_component_end {
+    display: flex;
+    margin-left: auto;
+    margin-right: 3%;
+}
+
+.one_rem_spacer {
+    margin-right: 1rem;
+}
+
+.connection_type_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-left: 0.4rem;
+    opacity: 0.8;
 }

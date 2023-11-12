@@ -6,7 +6,7 @@ import DashboardNavbarComponent from '@/components/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
 import { AiFillGithub } from 'react-icons/ai'
 import { RiSpotifyFill } from 'react-icons/ri'
-import { CgWebsite } from 'react-icons/cg'
+import { RxCross2 } from 'react-icons/rx'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification';
@@ -130,22 +130,28 @@ const CustomizeComponent = () => {
     const [profilePictureFile, setProfilePictureFile] = useState<File | null>(null);
     const [profilePictureBytes, setProfilePictureBytes] = useState<Uint8Array | null>(null);
 
+    const cookies = document.cookie.split(';');
+
+    const sessionCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith('session=')
+    );
+
 
     useEffect(() => {
-        const cookies = document.cookie.split(';');
-
-        const sessionCookie = cookies.find((cookie) =>
-            cookie.trim().startsWith('session=')
-        );
-
-        if (sessionCookie) { fetch('http://localhost:6969/api/account', { method: 'GET', headers: {'Content-Type': 'application/json', 'session': sessionCookie.split('=')[1]},})
-            .then((response) => {
-            if (response.status === 401) {
-                throw new Error('Invalid session');
-            }
-            return response.json();
+        if (sessionCookie) { 
+            fetch('http://localhost:6969/api/account', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'session': sessionCookie.split('=')[1],
+                },
             })
-
+            .then((response) => {
+                if (response.status === 401) {
+                    throw new Error('Invalid session');
+                }
+                return response.json();
+            })
             .then((data: UserData) => {
                 setUserData(data);
                 setSelectedLanguages(data.spoken_languages)
@@ -153,32 +159,73 @@ const CustomizeComponent = () => {
                 setInterests(data.interests)
                 setAccountDescriptionInput(data.description)
             })
-        }
-
-        if (sessionCookie) { fetch('http://localhost:6969/api/account/connections', { method: 'GET', headers: {'Content-Type': 'application/json', 'session': sessionCookie.split('=')[1]},})
-            .then((response) => {
-            if (response.status === 401) {
-                throw new Error('Invalid session');
-            }
-            return response.json();
-            })
-
-            .then((data: { Connections: Connection[] }) => {
-                const updatedConnections = data.Connections.map(connection => {
-                  const timestampString = connection.connection_date;
-                  const timestamp = new Date(timestampString);
-                  const relativeTime = since(timestamp);
-              
-                  return {
-                    ...connection,
-                    connection_date: relativeTime,
-                  };
-                });
-              
-                setConnectionsData(updatedConnections);
+            .catch((error) => {
+                console.error('Error fetching account data:', error);
             });
-    }
-    }, [connectionsData]);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (sessionCookie && (!connectionsData || connectionsData.length === 0)) {
+          fetch('http://localhost:6969/api/account/connections', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'session': sessionCookie.split('=')[1],
+            },
+          })
+            .then((response) => {
+              if (response.status === 401) {
+                throw new Error('Invalid session');
+              }
+              return response.json();
+            })
+            .then((data: { Connections: Connection[] }) => {
+              const updatedConnections = data.Connections.map((connection) => {
+                const timestampString = connection.connection_date;
+                const timestamp = new Date(timestampString);
+                const relativeTime = since(timestamp);
+      
+                return {
+                  ...connection,
+                  connection_date: relativeTime,
+                };
+              });
+      
+              setConnectionsData(updatedConnections);
+            })
+            .catch((error) => {
+              console.error('Error fetching connections:', error);
+            });
+        }
+      }, [sessionCookie, connectionsData]);
+
+      const deleteConnection = (connection_type: string) => {
+        fetch('http://localhost:6969/api/account/connections', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            session: sessionCookie ? sessionCookie.split('=')[1] : "",
+            type: connection_type,
+          },
+        })
+        .then((response) => {
+          if (response.status === 401) {
+            throw new Error('Invalid session');
+          }
+          return response.json();
+        })        
+        .then((data) => {
+            SuccessToast("Connection has been unlinked successfully.");
+      
+            setConnectionsData((prevConnections) =>
+                (prevConnections ?? []).filter((connection) => connection.connection_type !== connection_type)
+            );
+        })
+        .catch((error) => {
+          ErrorToast("Failed to unlink connection from account.");
+        });
+      };
 
     const handleImageUploadAndSave = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files && e.target.files[0];
@@ -584,29 +631,37 @@ const CustomizeComponent = () => {
                             
                             {connectionsData && connectionsData.length > 0 ? (
                                 connectionsData.map((connection, index) => (
-                                    <div className={styles.connection_card}>
-                                        <div className={styles.connection_card_top}>
-                                            {connection.connection_type.toLowerCase() === "github" ? (
-                                                <h1 className={styles.connection_icon}><AiFillGithub /></h1>
-                                            ) : (
-                                                <div></div>
-                                            )}
+                                    <a className={styles.connection_card_wrapper}>
+                                        <div className={styles.connection_card}>
+                                            <div className={styles.connection_card_top}>
+                                                {connection.connection_type.toLowerCase() === "github" ? (
+                                                    <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                                ) : (
+                                                    <div></div>
+                                                )}
 
-                                            {connection.connection_type.toLowerCase() === "spotify" ? (
-                                                <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
-                                            ) : (
-                                                <div></div>
-                                            )}
+                                                {connection.connection_type.toLowerCase() === "spotify" ? (
+                                                    <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
+                                                ) : (
+                                                    <div></div>
+                                                )}
 
-                                            <h1 className={styles.account_username_text}>{connection.account_username}</h1>
-                                            <h1 className={styles.account_type_text}>- {connection.connection_type}</h1>
+                                                <h1 className={styles.account_username_text}>{connection.account_username}</h1>
+                                                <h1 className={styles.connection_type_text}>- {connection.connection_type}</h1>
+                                                
+
+                                                <div className={styles.connection_component_end}>
+                                                    <div className={styles.account_linked_since_text}>
+                                                        <h1 className={styles.account_type_text}>LINKED {connection.connection_date.toLocaleUpperCase()}</h1>
+                                                    </div>
+
+                                                    <a className={styles.one_rem_spacer}></a>
+
+                                                    <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div className={styles.connection_card_middle}>
-                                            <p className={styles.connection_date_text}>{connection.connection_type} account was connected {connection.connection_date}.</p>
-                                            <button className={styles.remove_account_button}>Remove Account</button>
-                                        </div>
-                                    </div>
+                                    </a>
                                 ))
                             ) : (
                                 <div></div>

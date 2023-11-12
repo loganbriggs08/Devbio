@@ -50,6 +50,8 @@ func ManageStatistics(w http.ResponseWriter, r *http.Request) {
 func ManageConnections(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		connections.GetRequest(w, r)
+	} else if r.Method == "DELETE" {
+		connections.DeleteRequest(w, r)
 	} else {
 		ReturnModule.MethodNotAllowed(w, r)
 	}
