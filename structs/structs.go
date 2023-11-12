@@ -45,3 +45,19 @@ type ExploreData struct {
 type ExploreResponse struct {
 	ExploreData []ExploreData
 }
+
+type NotificationsResponse struct {
+	Notifications []string `json:"notifications"`
+}
+
+type Connection struct {
+	IsShown         bool   `json:"is_shown"`
+	Username        string `json:"username"`
+	AccountUsername string `json:"account_username"`
+	ConnectionType  string `json:"connection_type"`
+	ConnectionDate  string `json:"connection_date"`
+}
+
+type ConnectionsResponse struct {
+	Connections []Connection
+}

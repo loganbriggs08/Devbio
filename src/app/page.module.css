@@ -14,20 +14,19 @@
 .top {
     height: 50vh;
     margin-top: 10rem;
-    margin-bottom: 25rem;
     background-color: #1E1E20;
 }
 
 .description_text {
   margin-top: 0.2rem;
-  opacity: 1;
+  opacity: 0.9;
   font-size: 1.4rem;
-  font-weight: 100;
+  font-weight: 400;
   margin-bottom: 2rem;
 }
 
 .top_text {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 0.3rem;
 }
 
@@ -67,7 +66,7 @@
     font-size: 1.4rem;
     font-family: "Quicksand";
     margin-top: 0.3rem;
-    font-weight: 600;
+    font-weight: 500;
     padding: 1rem 2rem;
     margin-left: 0.5rem;
     border-radius: 0.3rem;
@@ -83,7 +82,7 @@
 }
 
 .customizable_profiles {
-    margin-top: 10rem;
+    background-color: #252525;
 }
 
 .arrow_icon {
@@ -114,15 +113,35 @@
 
 .profile_example_image img:hover {
     cursor: pointer;
+    transform: scale(1.025);
 }
 
-.profile_example_image img:hover {
+.profile_example_image_top {
+    margin-top: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    width: 45%;
+    height: 45%;
+}
+
+.profile_example_image_top img {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.profile_example_image_top img:hover {
+    cursor: pointer;
     transform: scale(1.025);
 }
 
 .customizable_profiles {
     display: flex;
     align-items: center;
+    margin-top: 20rem;
 }
   
 .customizable_profiles_text {
@@ -138,6 +157,3 @@
     display: flex;
     align-items: center;
 }
-
-  
-  

@@ -1,0 +1,140 @@
+.settings_container {
+    width: 40%;
+    margin: 0 auto;
+    border-radius: 0.6rem;
+    margin-bottom: 5rem;
+    background-color: #242424;
+}
+
+.top_section_wrapper {
+    display: flex;
+}
+
+.profile_settings_descriptor {
+    flex: 3;
+    width: 80%;
+}
+
+.profile_settings_text {
+    font-size: 1.8rem;
+    margin-bottom: 0px;
+    margin-top: 2rem;
+    margin-left: 3%;
+}
+
+.profile_description_text {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    margin-left: 3%;
+}
+
+.save_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #7091F5;
+}
+
+.save_button:hover { 
+    cursor: pointer;
+}
+
+.divider_line {
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 1rem; 
+    opacity: 0.3;
+}
+
+.premium_div_wrapper {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.premium_div {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 2rem;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    background-color: #1E1E20;
+    transition: transform 0.2s;
+}
+
+.premium_text {
+    font-size: 1.8rem;
+    margin-left: 2%;
+    margin-bottom: 0px;
+}
+
+.premium_description_text {
+    font-size: 1.4rem;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 0.2rem;
+}
+
+.bottom_spacing {
+    padding-bottom: 1rem;
+}
+
+.gold_text {
+    color: #FFB000;
+    margin-left: 0.1rem;
+    margin-right: 1%;
+}
+
+.spacer {
+    margin-right: 1%;
+}
+
+.purchase_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #7091F5;
+}
+
+.purchase_button:hover { 
+    cursor: pointer;
+}
+
+.pricing_text {
+    margin-top: 0px;
+}
+
+.price_wrapper {
+    font-size: 1.4rem;
+}
+
+.per_month_text {
+    font-size: 1.4rem;
+    opacity: 0.8;
+    margin-left: 0.1rem;
+}

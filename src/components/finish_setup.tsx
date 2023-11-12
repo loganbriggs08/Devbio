@@ -56,8 +56,9 @@ const FinishSetupComponent = () => {
     const selectedFile = e.target.files && e.target.files[0];
     if (selectedFile) {
       setProfilePictureFile(selectedFile);
-      saveProfilePicture();
       setStep(3);
+    } else {
+      ErrorToast("Please select a valid image file.");
     }
   };
 
@@ -68,18 +69,16 @@ const FinishSetupComponent = () => {
         if (event.target && event.target.result) {
           const bytes = new Uint8Array(event.target.result as ArrayBuffer);
           setProfilePictureBytes(bytes);
-          handleContinueToDashboard();
+          handleContinueToDashboard(bytes);
         }
       };
       reader.readAsArrayBuffer(profilePictureFile);
     }
   };
 
-  const handleContinueToDashboard = () => {
-    console.log(profilePictureBytes)
-
+  const handleContinueToDashboard = (bytes: any) => {
     const requestPayload = {
-      profile_picture: Array.from(profilePictureBytes || []),
+      profile_picture: Array.from(bytes),
       description: descriptionText || "A description for this user has not been set.",
       skills: [],
       location: '',
@@ -97,6 +96,7 @@ const FinishSetupComponent = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'type': 'setup',
           session: sessionCookie.split('=')[1],
         },
         body: JSON.stringify(requestPayload),
@@ -190,7 +190,7 @@ const FinishSetupComponent = () => {
             draggable
             pauseOnHover
             theme="dark"
-            toastStyle={{ backgroundColor: '#1E1E20' }}
+            toastStyle={{ backgroundColor: "#1E1E20", fontFamily: "Quicksand" }}
           />
     </div>
   );
