@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { LoadingComponent } from '@/components/other/loading';
 import DashboardNavbarComponent from './dashboard_navbar';
 import { NotificationComponent } from '../notification/notification';
+import { useRouter } from 'next/navigation';
 
 interface UserData {
     username: string;
@@ -18,7 +19,9 @@ interface UserData {
 }
 
 const DashboardComponent = () => {
+    const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [selectedMenu, setSelectedMenu] = useState<string>("statistics")
 
     useEffect(() => {
         const cookies = document.cookie.split(';');
@@ -49,6 +52,46 @@ const DashboardComponent = () => {
         <div className={styles.container}>
             {userData ? (
                 <div style={{width: '100%'}}>
+                    <h1>Dashboard</h1>
+
+                    <div className={styles.selectable_tabs}>
+                        {selectedMenu === "statistics" ? (
+                            <div>
+                                <a className={styles.selected_tab_text} onClick={() => {setSelectedMenu("statistics")}}>Statistics</a>
+                                <div className={styles.divider_line}></div>  
+                            </div>
+                        ) : (
+                            <a className={styles.tab_text} onClick={() => {setSelectedMenu("statistics")}}>Statistics</a>
+                        )}
+
+                        {selectedMenu === "messages" ? (
+                            <div>
+                                <a className={styles.selected_tab_text} onClick={() => {setSelectedMenu("messages")}}>Messages</a>
+                                <div className={styles.divider_line}></div>  
+                            </div>
+                        ) : (
+                            <a className={styles.tab_text} onClick={() => {setSelectedMenu("messages")}}>Messages</a>
+                        )}
+
+                        {selectedMenu === "customize" ? (
+                            <div>
+                                <a className={styles.selected_tab_text} onClick={() => {router.push("/dashboard/customize")}}>Customize</a>
+                                <div className={styles.divider_line}></div>  
+                            </div>
+                        ) : (
+                            <a className={styles.tab_text} onClick={() => {router.push("/dashboard/customize")}}>Customize</a>
+                        )}
+
+                        {selectedMenu === "premium" ? (
+                            <div>
+                                <a className={styles.selected_tab_text} onClick={() => {router.push("/dashboard/premium")}}><a className={styles.gold_text}>Premium</a></a>
+                                <div className={styles.divider_line}></div>  
+                            </div>
+                        ) : (
+                            <a className={styles.tab_text} onClick={() => {router.push("/dashboard/premium")}}><a className={styles.gold_text}>Premium</a></a>
+                        )}
+                    </div>
+
                     {/* <div className={styles.dashboard_wrapper}>
                         <h1 className={styles.dashboard_text}>Dashboard</h1>
                         <p></p>

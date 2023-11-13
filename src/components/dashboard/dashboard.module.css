@@ -45,3 +45,34 @@
     font-weight: 600;
     font-size: 2.25rem;
 }
+
+.tab_text {
+    opacity: 0.6;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-right: 1rem;
+}
+
+.selected_tab_text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-right: 1rem;
+}
+
+.selectable_tabs {
+    display: flex;
+}
+
+.selected_tab_text:hover, .tab_text:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.gold_text {
+    opacity: 0.6;
+    color: #FFB000;
+}
+
+.gold_text:hover {
+    opacity: 1;
+}
