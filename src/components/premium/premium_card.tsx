@@ -1,6 +1,6 @@
 'use client'
 
-import styles from './card.module.css';
+import styles from './premium_card.module.css';
 import { useRouter } from 'next/navigation';
 
 type CardProps = {

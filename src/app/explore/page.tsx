@@ -1,8 +1,8 @@
 import styles from "./explore.module.css"
-import { NavbarComponent } from '@/components/navbar'
+import { NavbarComponent } from '@/components/other/navbar'
 
 
-export default function Premium() {
+export default function Explore() {
     return (
         <div>
             <div className={styles.center}>

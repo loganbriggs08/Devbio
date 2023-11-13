@@ -1,8 +1,8 @@
 import styles from './dashboard.module.css';
 import React, { useState, useEffect } from 'react';
-import { LoadingComponent } from '@/components/loading';
+import { LoadingComponent } from '@/components/other/loading';
 import DashboardNavbarComponent from './dashboard_navbar';
-import { NotificationComponent } from './notification';
+import { NotificationComponent } from '../notification/notification';
 
 interface UserData {
     username: string;

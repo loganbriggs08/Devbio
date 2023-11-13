@@ -70,7 +70,8 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
                             <div></div>
                         )}
                         
-                    </div> */}
+                    </div> */
+                    }
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styles from "./get-started.module.css";
 import { useRouter } from 'next/navigation';
-import { NavbarComponent } from '@/components/navbar';
+import { NavbarComponent } from '@/components/other/navbar';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 

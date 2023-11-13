@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const DynamicPremiumComponent = dynamic(
-  () => import('@/components/premium') as any,
+  () => import('@/components/dashboard/premium/premium') as any,
   {
     ssr: false,
   }
 );
 
 const DynamicFinishSetupComponent = dynamic(
-  () => import('@/components/finish_setup') as any,
+  () => import('@/components/other/finish_setup') as any,
   {
     ssr: false,
   }

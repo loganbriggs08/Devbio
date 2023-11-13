@@ -31,3 +31,6 @@ func (c *Client) write() {
 		}
 	}
 }
+
+// dm := newDm()
+// go dm.run()

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LoadingComponent } from '@/components/loading';
+import { LoadingComponent } from '@/components/other/loading';
 import { ToastContainer, toast } from 'react-toastify';
-import styles from '@/components/finish_setup.module.css';
+import styles from '@/components/other/finish_setup.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 

@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const DynamicDashboardComponent = dynamic(
-  () => import('@/components/dashboard/dashboard') as any,
+const DynamicCustomizeComponent = dynamic(
+  () => import('@/components/dashboard/messages/messages') as any,
   {
     ssr: false,
   }
@@ -32,7 +32,7 @@ interface UserData {
   is_disabled: boolean;
 }
 
-const DashboardPage: React.FC = () => {
+const MessagesPage: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
 
@@ -71,9 +71,9 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div>
-      {userData?.is_setup ? (<DynamicDashboardComponent />) : userData && (<DynamicFinishSetupComponent />)}
+      {userData?.is_setup ? (<DynamicCustomizeComponent />) : userData && (<DynamicFinishSetupComponent />)}
     </div>
   );
 };
 
-export default DashboardPage;
+export default MessagesPage;

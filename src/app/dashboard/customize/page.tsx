@@ -12,7 +12,7 @@ const DynamicCustomizeComponent = dynamic(
 );
 
 const DynamicFinishSetupComponent = dynamic(
-  () => import('@/components/finish_setup') as any,
+  () => import('@/components/other/finish_setup') as any,
   {
     ssr: false,
   }

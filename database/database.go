@@ -248,8 +248,7 @@ func GetAccountData(username string) structs.UserResponse {
 	var userData structs.UserResponse
 	var badgesString, skillsString, interestsString, spokenLanguagesString string
 
-	row := databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
-
+	row := databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ? COLLATE NOCASE", username)
 	err := row.Scan(
 		&userData.Username,
 		&badgesString,
@@ -266,7 +265,7 @@ func GetAccountData(username string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ?", username)
+	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ? COLLATE NOCASE", username)
 
 	row.Scan(
 		&userData.ProfilePicture,

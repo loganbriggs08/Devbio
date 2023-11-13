@@ -1,15 +1,15 @@
 import since from "since-time-ago";
 import styles from './customize.module.css';
 import React, { useState, useEffect } from 'react';
-import { LoadingComponent } from '@/components/loading';
-import DashboardNavbarComponent from '@/components/dashboard_navbar';
+import { LoadingComponent } from '@/components/other/loading';
+import DashboardNavbarComponent from '@/components/dashboard/dashboard_navbar';
 import { BsCheckLg } from 'react-icons/bs'
 import { AiFillGithub } from 'react-icons/ai'
 import { RiSpotifyFill } from 'react-icons/ri'
 import { RxCross2 } from 'react-icons/rx'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { NotificationComponent } from '@/components/notification';
+import { NotificationComponent } from '@/components/notification/notification';
 
 const languages: string[] = [
     "English",
@@ -631,37 +631,35 @@ const CustomizeComponent = () => {
                             
                             {connectionsData && connectionsData.length > 0 ? (
                                 connectionsData.map((connection, index) => (
-                                    <a className={styles.connection_card_wrapper}>
-                                        <div className={styles.connection_card}>
-                                            <div className={styles.connection_card_top}>
-                                                {connection.connection_type.toLowerCase() === "github" ? (
-                                                    <h1 className={styles.connection_icon}><AiFillGithub /></h1>
-                                                ) : (
-                                                    <div></div>
-                                                )}
+                                    <div className={styles.connection_card}>
+                                        <div className={styles.connection_card_top}>
+                                            {connection.connection_type.toLowerCase() === "github" ? (
+                                                <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                            ) : (
+                                                <div></div>
+                                            )}
 
-                                                {connection.connection_type.toLowerCase() === "spotify" ? (
-                                                    <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
-                                                ) : (
-                                                    <div></div>
-                                                )}
+                                            {connection.connection_type.toLowerCase() === "spotify" ? (
+                                                <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
+                                            ) : (
+                                                <div></div>
+                                            )}
 
-                                                <h1 className={styles.account_username_text}>{connection.account_username}</h1>
-                                                <h1 className={styles.connection_type_text}>- {connection.connection_type}</h1>
-                                                
+                                            <h1 className={styles.account_username_text}>{connection.account_username}</h1>
+                                            <h1 className={styles.connection_type_text}>- {connection.connection_type}</h1>
+                                            
 
-                                                <div className={styles.connection_component_end}>
-                                                    <div className={styles.account_linked_since_text}>
-                                                        <h1 className={styles.account_type_text}>LINKED {connection.connection_date.toLocaleUpperCase()}</h1>
-                                                    </div>
-
-                                                    <a className={styles.one_rem_spacer}></a>
-
-                                                    <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
+                                            <div className={styles.connection_component_end}>
+                                                <div className={styles.account_linked_since_text}>
+                                                    <h1 className={styles.account_type_text}>LINKED {connection.connection_date.toLocaleUpperCase()}</h1>
                                                 </div>
+
+                                                <a className={styles.one_rem_spacer}></a>
+
+                                                <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 ))
                             ) : (
                                 <div></div>

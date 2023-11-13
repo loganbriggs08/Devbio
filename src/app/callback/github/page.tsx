@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { LoadingComponent } from '@/components/loading';
+import { LoadingComponent } from '@/components/other/loading';
 
 const GithubLinkComponent = () => {
   const nextRouter = useRouter();

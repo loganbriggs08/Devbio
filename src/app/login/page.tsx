@@ -6,7 +6,7 @@ import styles from "./login.module.css";
 import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { NavbarComponent } from '@/components/navbar';
+import { NavbarComponent } from '@/components/other/navbar';
 
 const LoginComponent = () => {
     const router = useRouter();

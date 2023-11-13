@@ -1,6 +1,6 @@
 import styles from "./premium.module.css"
-import { NavbarComponent } from '@/components/navbar'
-import { Card } from '@/components/card'
+import { NavbarComponent } from '@/components/other/navbar'
+import { Card } from '@/components/premium/premium_card'
 
 
 export default function Premium() {

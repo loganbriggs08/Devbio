@@ -4,7 +4,7 @@ import styles from './page.module.css'
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfileComponent from '@/components/profile'
-import { LoadingComponent } from '@/components/loading';
+import { LoadingComponent } from '@/components/other/loading';
 
 interface UserData {
     username: string;
