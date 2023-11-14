@@ -84,3 +84,27 @@
 .three_rem_seperator {
     margin-top: 3rem;
 }
+
+.profile_views_graph {
+    width: 50%;
+    margin-left: 5.3%;
+    padding-top: 0.5rem;
+    border-radius: 0.4rem;
+    background-color: #242424;
+}
+
+.header_text_graph {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    margin-bottom: 0px;
+}
+
+.description_text_graph {
+    text-align: center;
+    opacity: 0.8;
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+}

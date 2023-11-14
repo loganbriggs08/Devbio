@@ -6,6 +6,7 @@ import { LoadingComponent } from '@/components/other/loading';
 import DashboardNavbarComponent from './dashboard_navbar';
 import { NotificationComponent } from '../notification/notification';
 import { useRouter } from 'next/navigation';
+import ViewsGraph from '@/components/graphs/profile_views'
 
 interface UserData {
     username: string;
@@ -26,6 +27,7 @@ const DashboardComponent = () => {
     const [totalProfileViews, setTotalProfileViews] = useState<number>(0);
     const [totalConnectionsClicked, setTotalConnectionsClicked] = useState<number>(0);
     const [clickThroughPercentage, setClickThroughPercentage] = useState<number>(0);
+    const [profileViewsArray, setProfileViewsArray] = useState<number[]>([]);
     const [selectedMenu, setSelectedMenu] = useState<string>("statistics")
 
     useEffect(() => {
@@ -73,32 +75,32 @@ const DashboardComponent = () => {
             .then((data) => {
                 let profileViews = 0;
                 let connectionsClicked = 0;
+                let profileViewsArrayCurrent: number[] = [];
 
                 if (data.statistics && data.statistics.length > 0) {
                     const stat = data.statistics[0];
-
-                    if (stat.profile_views) {
-                        const views = JSON.parse(stat.profile_views);
-
-                        Object.values(views).forEach((value) => {
-                            if (typeof value === 'number') {
-                                profileViews += value;
-                            }
-                        });
-                    }
-
-                    if (stat.connections_clicked) {
-                        const clicks = JSON.parse(stat.connections_clicked);
-                        Object.values(clicks).forEach((value) => {
-                            if (typeof value === 'number') {
-                                connectionsClicked += value;
-                            }
-                        });
-                    }
+                
+                    const profileViewsObject = JSON.parse(stat.profile_views ?? "{}") as Record<string, number>;
+                    profileViews += Object.values(profileViewsObject).reduce(
+                        (sum, value) => (typeof value === 'number' ? sum + value : sum),
+                        0
+                    );
+                
+                    const connectionsClickedObject = JSON.parse(stat.connections_clicked ?? "{}") as Record<string, number>;
+                    connectionsClicked += Object.values(connectionsClickedObject).reduce(
+                        (sum, value) => (typeof value === 'number' ? sum + value : sum),
+                        0
+                    );
+                
+                    profileViewsArrayCurrent = Object.values(profileViewsObject).filter(
+                        (value) => typeof value === 'number'
+                    );
                 }
 
                 setTotalProfileViews(profileViews);
                 setTotalConnectionsClicked(connectionsClicked);
+                setProfileViewsArray(profileViewsArrayCurrent);
+                console.log(profileViewsArray)
                 setClickThroughPercentage(parseFloat(((connectionsClicked / profileViews) * 100).toFixed(2)));
 
             })
@@ -179,7 +181,10 @@ const DashboardComponent = () => {
                                 <div className={styles.three_rem_seperator}></div>
 
                                 <div className={styles.profile_views_graph}>
-                                    <h1 className={styles.header_text}>Profile Views Graph</h1>
+                                    <h1 className={styles.header_text_graph}>Profile Views Graph</h1>
+                                    <p className={styles.description_text_graph}>View and monitor your profile views.</p>
+
+                                    <ViewsGraph views={profileViewsArray}/>
                                 </div>
                             </div>
                         ) : (
