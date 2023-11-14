@@ -61,3 +61,13 @@ type Connection struct {
 type ConnectionsResponse struct {
 	Connections []Connection
 }
+
+type Statistics struct {
+	Username           string `json:"username"`
+	ProfileViews       string `json:"profile_views"`
+	ConnectionsClicked string `json:"connections_clicked"`
+}
+
+type StatisticsResponse struct {
+	Statistics []Statistics `json:"statistics"`
+}

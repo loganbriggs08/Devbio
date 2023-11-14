@@ -186,3 +186,23 @@ func Connections(w http.ResponseWriter, r *http.Request, connections []structs.C
 		log.Fatal(ResponseWriterError)
 	}
 }
+
+func Statistics(w http.ResponseWriter, r *http.Request, statistics []structs.Statistics) {
+	StatisticsResponse := structs.StatisticsResponse{
+		Statistics: statistics,
+	}
+
+	StatisticResponseMarshal, ErrorResponseError := json.Marshal(StatisticsResponse)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(StatisticResponseMarshal)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}

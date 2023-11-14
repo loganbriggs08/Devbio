@@ -120,9 +120,9 @@ func CreateTables() bool {
 		);
 
 		CREATE TABLE IF NOT EXISTS statistics (
-			USERNAME VARCHAR(40),
+			username VARCHAR(40),
 			profile_views TEXT,
-			profile_views_countries TEXT,
+			connections_clicked TEXT,
 			FOREIGN KEY (username) REFERENCES profile_data(username) 
 		);
 
@@ -712,4 +712,154 @@ func IsRatelimited(sessionToken string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func UpdateStatistics(username string, connectionClicked bool) bool {
+	accountData := GetAccountData(username)
+
+	if accountData.Username == "" {
+		fmt.Println("Account doesn't exist")
+		return false
+	}
+
+	currentDate := time.Now().Format("2006-01-02")
+
+	var statistics structs.Statistics
+	err := databaseConnection.QueryRow("SELECT profile_views, connections_clicked FROM statistics WHERE username=?", username).
+		Scan(&statistics.ProfileViews, &statistics.ConnectionsClicked)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		fmt.Println("Error fetching statistics:", err)
+		return false
+	}
+
+	updateJSONData(&statistics.ProfileViews, currentDate)
+
+	if connectionClicked {
+		updateJSONData(&statistics.ConnectionsClicked, currentDate)
+	}
+
+	if err := updateOrInsertStatistics(username, statistics.ProfileViews, statistics.ConnectionsClicked); err != nil {
+		fmt.Println("Error updating statistics:", err)
+		return false
+	}
+
+	return true
+}
+
+func updateOrInsertStatistics(username string, profileViews, connectionsClicked string) error {
+	var existingUsername string
+	err := databaseConnection.QueryRow("SELECT username FROM statistics WHERE username=?", username).Scan(&existingUsername)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		_, err := databaseConnection.Exec("INSERT INTO statistics (username, profile_views, connections_clicked) VALUES (?, ?, ?)",
+			username, profileViews, connectionsClicked)
+		return err
+	} else if err != nil {
+		return err
+	}
+
+	_, err = databaseConnection.Exec("UPDATE statistics SET profile_views=?, connections_clicked=? WHERE username=?",
+		profileViews, connectionsClicked, username)
+
+	return err
+}
+
+func updateJSONData(jsonStr *string, currentDate string) {
+	var jsonData map[string]int
+
+	if *jsonStr == "" {
+		jsonData = make(map[string]int)
+	} else {
+		err := json.Unmarshal([]byte(*jsonStr), &jsonData)
+		if err != nil {
+			fmt.Println("Error decoding JSON:", err)
+			return
+		}
+	}
+
+	jsonData[currentDate]++
+
+	if len(jsonData) > 365 {
+		oldestDate := currentDate
+		for date := range jsonData {
+			if date < oldestDate {
+				oldestDate = date
+			}
+		}
+
+		delete(jsonData, oldestDate)
+	}
+
+	updatedJSON, err := json.Marshal(jsonData)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		return
+	}
+
+	*jsonStr = string(updatedJSON)
+}
+
+func GetStatisticsForLastNDays(username string, n int) ([]structs.Statistics, error) {
+	if n > 365 {
+		return nil, fmt.Errorf("You can't fetch over 365 days of data")
+	}
+
+	var statistics structs.Statistics
+	err := databaseConnection.QueryRow("SELECT profile_views, connections_clicked FROM statistics WHERE username=?", username).
+		Scan(&statistics.ProfileViews, &statistics.ConnectionsClicked)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, fmt.Errorf("Error fetching statistics: %v", err)
+	}
+
+	var result []structs.Statistics
+	for i := n - 1; i >= 0; i-- {
+		date := time.Now().AddDate(0, 0, -i).Format("2006-01-02")
+		statistics.ProfileViews = updateJSONDataForDate(statistics.ProfileViews, date)
+		statistics.ConnectionsClicked = updateJSONDataForDate(statistics.ConnectionsClicked, date)
+
+		result = append(result, structs.Statistics{
+			Username:           username,
+			ProfileViews:       statistics.ProfileViews,
+			ConnectionsClicked: statistics.ConnectionsClicked,
+		})
+	}
+
+	return result, nil
+}
+
+func updateJSONDataForDate(jsonStr string, currentDate string) string {
+	var jsonData map[string]int
+
+	if jsonStr == "" {
+		jsonData = make(map[string]int)
+	} else {
+		err := json.Unmarshal([]byte(jsonStr), &jsonData)
+		if err != nil {
+			fmt.Println("Error decoding JSON:", err)
+			return jsonStr
+		}
+	}
+
+	jsonData[currentDate]++
+
+	if len(jsonData) > 365 {
+		oldestDate := currentDate
+		for date := range jsonData {
+			if date < oldestDate {
+				oldestDate = date
+			}
+		}
+
+		delete(jsonData, oldestDate)
+	}
+
+	updatedJSON, err := json.Marshal(jsonData)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		return jsonStr
+	}
+
+	return string(updatedJSON)
 }

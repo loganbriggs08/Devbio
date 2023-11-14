@@ -42,6 +42,8 @@ func ManageUpdate(w http.ResponseWriter, r *http.Request) {
 func ManageStatistics(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		statistics.GetRequest(w, r)
+	} else if r.Method == "POST" {
+		statistics.PostRequest(w, r)
 	} else {
 		ReturnModule.MethodNotAllowed(w, r)
 	}

@@ -1,11 +1,11 @@
 .dashboard_text {
-    margin-left: 5%;
+    margin-left: 5.3%;
 }
 
 .statistics_wrapper {
     display: flex;
     width: 80%;
-    margin-left: 5%;
+    margin-left: 5.3%;
     justify-content: space-between;
 }
 
@@ -25,7 +25,6 @@
 
 .statistic_card_3 {
     flex: 1;
-    margin-left: 2%;
     margin-right: 2%;
     border-radius: 0.4rem;
     background-color: #242424;
@@ -33,7 +32,7 @@
 
 .header_text {
     margin-bottom: 0.3rem;
-    margin-left: 5%;
+    margin-left: 5.3%;
     opacity: 0.9;
     font-weight: 600;
     font-size: 1.5rem;
@@ -41,7 +40,7 @@
 
 .description_text {
     margin-top: 0px;
-    margin-left: 5%;
+    margin-left: 5.3%;
     font-weight: 600;
     font-size: 2.25rem;
 }
@@ -61,6 +60,7 @@
 
 .selectable_tabs {
     display: flex;
+    margin-left: 5.3%;
 }
 
 .selected_tab_text:hover, .tab_text:hover {
@@ -75,4 +75,12 @@
 
 .gold_text:hover {
     opacity: 1;
+}
+
+.one_rem_seperator {
+    margin-top: 1rem;
+}
+
+.three_rem_seperator {
+    margin-top: 3rem;
 }
