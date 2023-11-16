@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 
 interface Props {
   views: number[];
+  connectionImpressions: number[]; // Add Connection Impressions data
 }
 
 interface State {
@@ -61,7 +62,7 @@ interface State {
   }[];
 }
 
-class ViewsGraph extends Component<Props, State> {
+class ProfileActivityGraph extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -81,6 +82,11 @@ class ViewsGraph extends Component<Props, State> {
           name: 'views',
           data: props.views,
           color: "#7091F5"
+        },
+        {
+          name: 'connectionImpressions',
+          data: props.connectionImpressions,
+          color: "#79AC78"
         }
       ],
       options: {
@@ -94,7 +100,7 @@ class ViewsGraph extends Component<Props, State> {
         },
         yaxis: {
           labels: {
-            show: false,
+            show: true,
           },
         },
         xaxis: {
@@ -115,7 +121,7 @@ class ViewsGraph extends Component<Props, State> {
         },
         grid: {
           padding: {
-            left: -25,
+            left: 10,
             right: 0,
           },
           xaxis: {
@@ -138,7 +144,7 @@ class ViewsGraph extends Component<Props, State> {
 
   render() {
     return (
-      <div id="chart">
+      <div>
         <Chart
           options={this.state.options}
           series={this.state.series}
@@ -150,4 +156,4 @@ class ViewsGraph extends Component<Props, State> {
   }
 }
 
-export default ViewsGraph;
+export default ProfileActivityGraph;

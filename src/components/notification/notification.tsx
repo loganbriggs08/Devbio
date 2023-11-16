@@ -32,14 +32,14 @@ export const NotificationComponent: React.FC = () => {
                 return response.json();
             })
             .then((data: Notifications) => {
-                if (data.notifications.length > 0) {
+                if (data.notifications && data.notifications.length > 0) {
                     setNotificationsData(data);
                     setShownNotificationIndex(0);
-
+            
                     const interval = setInterval(() => {
                         setShownNotificationIndex((prevIndex) => (prevIndex + 0.5) % data.notifications.length);
                     }, 7500);
-
+            
                     return () => clearInterval(interval);
                 }
             })

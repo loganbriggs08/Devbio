@@ -6,7 +6,7 @@ import { LoadingComponent } from '@/components/other/loading';
 import DashboardNavbarComponent from './dashboard_navbar';
 import { NotificationComponent } from '../notification/notification';
 import { useRouter } from 'next/navigation';
-import ViewsGraph from '@/components/graphs/profile_views'
+import ProfileActivityGraph from '@/components/graphs/profile_activity'
 
 interface UserData {
     username: string;
@@ -28,7 +28,9 @@ const DashboardComponent = () => {
     const [totalConnectionsClicked, setTotalConnectionsClicked] = useState<number>(0);
     const [clickThroughPercentage, setClickThroughPercentage] = useState<number>(0);
     const [profileViewsArray, setProfileViewsArray] = useState<number[]>([]);
+    const [connectionImpressionsArray, setConnectionImpressionsArray] = useState<number[]>([]);
     const [selectedMenu, setSelectedMenu] = useState<string>("statistics")
+    const [selectedDays, setSelectedDays] = useState<number>(7);
 
     useEffect(() => {
         const cookies = document.cookie.split(';');
@@ -73,41 +75,32 @@ const DashboardComponent = () => {
                 return response.json();
             })
             .then((data) => {
-                let profileViews = 0;
-                let connectionsClicked = 0;
-                let profileViewsArrayCurrent: number[] = [];
-
                 if (data.statistics && data.statistics.length > 0) {
                     const stat = data.statistics[0];
-                
+        
                     const profileViewsObject = JSON.parse(stat.profile_views ?? "{}") as Record<string, number>;
-                    profileViews += Object.values(profileViewsObject).reduce(
-                        (sum, value) => (typeof value === 'number' ? sum + value : sum),
-                        0
-                    );
-                
                     const connectionsClickedObject = JSON.parse(stat.connections_clicked ?? "{}") as Record<string, number>;
-                    connectionsClicked += Object.values(connectionsClickedObject).reduce(
-                        (sum, value) => (typeof value === 'number' ? sum + value : sum),
-                        0
-                    );
-                
-                    profileViewsArrayCurrent = Object.values(profileViewsObject).filter(
-                        (value) => typeof value === 'number'
-                    );
+        
+                    const keys = Object.keys(profileViewsObject).slice(-selectedDays);
+        
+                    const profileViewsArrayCurrent = keys.map((key) => profileViewsObject[key]).filter((value) => typeof value === 'number');
+                    const profileViews = profileViewsArrayCurrent.reduce((sum, value) => sum + value, 0);
+                    
+                    const connectionsClickedArrayCurrent = keys.map((key) => connectionsClickedObject[key]).filter((value) => typeof value === 'number');
+                    const connectionsClicked = connectionsClickedArrayCurrent.reduce((sum, value) => sum + value, 0);
+        
+                    setTotalProfileViews(profileViews);
+                    setTotalConnectionsClicked(connectionsClicked);
+                    setProfileViewsArray(profileViewsArrayCurrent);
+                    setConnectionImpressionsArray(connectionsClickedArrayCurrent);
+
+                    setClickThroughPercentage(parseFloat(((connectionsClicked / profileViews) * 100).toFixed(2)));
                 }
-
-                setTotalProfileViews(profileViews);
-                setTotalConnectionsClicked(connectionsClicked);
-                setProfileViewsArray(profileViewsArrayCurrent);
-                console.log(profileViewsArray)
-                setClickThroughPercentage(parseFloat(((connectionsClicked / profileViews) * 100).toFixed(2)));
-
             })
             .catch((error) => {
-                console.error('Error fetching statistics:', error);
+                console.error(error);
             });
-    }, []);
+    }, [selectedDays]);
 
     return (
         <div>
@@ -115,9 +108,40 @@ const DashboardComponent = () => {
             <DashboardNavbarComponent userData={userData} />
 
             <div className={styles.container}>
-                {userData ? (
+                {userData && totalConnectionsClicked && clickThroughPercentage && profileViewsArray ? (
                     <div style={{ width: '100%' }}>
-                        <h1 className={styles.dashboard_text}>Dashboard</h1>
+                        <div className={styles.header_holder}>
+                            <h1 className={styles.dashboard_text}>Dashboard</h1>
+
+                            <div className={styles.selectable_days_tabs}>
+                                {selectedDays === 7 ? (
+                                    <div>
+                                        <a className={styles.selected_days_tab_text} onClick={() => {setSelectedDays(7)}}>[7 Days</a>
+                                        <div className={styles.divider_line}></div>  
+                                    </div>
+                                ) : (
+                                    <a className={styles.days_tab_text} onClick={() => {setSelectedDays(7)}}>[7 Days</a>
+                                )}
+
+                                {selectedDays === 14 ? (
+                                    <div>
+                                        <a className={styles.selected_days_tab_text} onClick={() => {setSelectedDays(14)}}>14 Days</a>
+                                        <div className={styles.divider_line}></div>  
+                                    </div>
+                                ) : (
+                                    <a className={styles.days_tab_text} onClick={() => {setSelectedDays(14)}}>14 Days</a>
+                                )}
+
+                                {selectedDays === 30 ? (
+                                    <div>
+                                        <a className={styles.selected_days_tab_text} onClick={() => {setSelectedDays(30)}}>30 Days]</a>
+                                        <div className={styles.divider_line}></div>  
+                                    </div>
+                                ) : (
+                                    <a className={styles.days_tab_text} onClick={() => {setSelectedDays(30)}}>30 Days]</a>
+                                )}
+                            </div>
+                        </div>
 
                         <div className={styles.selectable_tabs}>
                             {selectedMenu === "statistics" ? (
@@ -180,11 +204,27 @@ const DashboardComponent = () => {
 
                                 <div className={styles.three_rem_seperator}></div>
 
-                                <div className={styles.profile_views_graph}>
-                                    <h1 className={styles.header_text_graph}>Profile Views Graph</h1>
-                                    <p className={styles.description_text_graph}>View and monitor your profile views.</p>
+                                <div className={styles.row}>
+                                    <div className={styles.profile_views_graph}>
+                                        <h1 className={styles.header_text_graph}>Profile Activity Graph</h1>
+                                        <p className={styles.description_text_graph}>View and monitor your profile activity.</p>
 
-                                    <ViewsGraph views={profileViewsArray}/>
+                                        <div className={styles.block_content_wrapper}>
+                                            <div className={styles.row}>
+                                                <div className={styles.block_wrapper}>
+                                                    <div className={styles.blue_block}></div>
+                                                    <p className={styles.block_text}>Profile Views</p>
+                                                </div>
+
+                                                <div className={styles.block_wrapper}>
+                                                    <div className={styles.green_block}></div>
+                                                    <p className={styles.block_text}>Connection Impressions</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ProfileActivityGraph views={profileViewsArray} connectionImpressions={connectionImpressionsArray}/>
+                                    </div>
                                 </div>
                             </div>
                         ) : (
