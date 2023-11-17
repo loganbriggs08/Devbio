@@ -23,10 +23,6 @@ interface DashboardNavbarComponentProps {
 const DashboardNavbarComponent: React.FC<DashboardNavbarComponentProps> = ({ userData }) => {    const navigation = useRouter()
     const router = useRouter();
 
-    const pushToProfile = () => {
-        navigation.push('/u/' + userData?.username)
-    }
-
     const clearCookiesAndRedirect = (() => {
         const cookies = document.cookie.split(';');
 
@@ -46,8 +42,8 @@ const DashboardNavbarComponent: React.FC<DashboardNavbarComponentProps> = ({ use
             </a>
 
             <ul className={styles.navbar_ul}>
-                <li className={styles.navbar_li}><a className={styles.navbar_a} onClick={() => pushToProfile()}>Profile</a></li>
-                <li className={styles.navbar_li}><a className={styles.navbar_a} href="/dashboard/customize">Customize</a></li>
+                <li className={styles.navbar_li}><a className={styles.navbar_a} href="/dashboard/statistics">Statistics</a></li>
+                <li className={styles.navbar_li}><a className={styles.navbar_a} href="/dashboard">User Settings</a></li>
                 <li className={styles.navbar_li}><a className={styles.navbar_premium_a} href="/dashboard/premium">Premium</a></li>
 
                 <a href="/dashboard">

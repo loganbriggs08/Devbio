@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const DynamicCustomizeComponent = dynamic(
-  () => import('@/components/dashboard/customize/customize') as any,
+const DynamicStatisticsComponent = dynamic(
+  () => import('@/components/dashboard/statistics/statistics') as any,
   {
     ssr: false,
   }
@@ -32,7 +32,7 @@ interface UserData {
   is_disabled: boolean;
 }
 
-const CustomizePage: React.FC = () => {
+const StatisticsPage: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
 
@@ -71,9 +71,9 @@ const CustomizePage: React.FC = () => {
 
   return (
     <div>
-      {userData?.is_setup ? (<DynamicCustomizeComponent />) : userData && (<DynamicFinishSetupComponent />)}
+      {userData?.is_setup ? (<DynamicStatisticsComponent />) : userData && (<DynamicFinishSetupComponent />)}
     </div>
   );
 };
 
-export default CustomizePage;
+export default StatisticsPage;
