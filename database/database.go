@@ -802,7 +802,7 @@ func updateJSONData(jsonStr *string, currentDate string) {
 
 func GetStatisticsForLastNDays(username string, n int) ([]structs.Statistics, error) {
 	if n > 365 {
-		return nil, fmt.Errorf("You can't fetch over 365 days of data")
+		return nil, fmt.Errorf("you can't fetch over 365 days of data")
 	}
 
 	var statistics structs.Statistics

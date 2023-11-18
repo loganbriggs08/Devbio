@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Chart from "react-apexcharts";
 
 interface Props {
-  views: number[];
+  connectionImpressions: number[];
 }
 
 interface State {
@@ -25,13 +25,13 @@ interface State {
         show: boolean;
       };
       type: "datetime";
-      categories: string[];
+      categories: (string | number)[];
     };
     dataLabels: {
       enabled: boolean;
     };
     stroke: {
-      curve: "smooth" | "straight" | "stepline";
+      curve: "smooth";
     };
     legend: {
       show: boolean;
@@ -43,7 +43,7 @@ interface State {
       };
       xaxis: {
         lines: {
-          show: boolean;  
+          show: boolean;
         };
       };
       yaxis: {
@@ -52,7 +52,9 @@ interface State {
         };
       };
     };
-    tooltip: {};
+    tooltip: {
+      enabled: false;
+    };
   };
   series: {
     name: string;
@@ -61,27 +63,17 @@ interface State {
   }[];
 }
 
-class ProfileActivityGraph extends Component<Props, State> {
+class ConnectionActivityGraph extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
-    const categories: string[] = [];
-    const now: any = new Date();
-
-    const startDate = new Date(now - props.views.length * 24 * 60 * 60 * 1000);
-
-    for (let i = 0; i < props.views.length; i++) {
-      const timestamp = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
-      categories.push(timestamp.toISOString().split('T')[0]);
-    }
 
     this.state = {
       series: [
         {
-          name: 'views',
-          data: props.views,
-          color: "#7091F5"
-        }
+          name: 'connection_impressions',
+          data: props.connectionImpressions,
+          color: "#7091F5",
+        },
       ],
       options: {
         chart: {
@@ -102,7 +94,7 @@ class ProfileActivityGraph extends Component<Props, State> {
             show: true,
           },
           type: "datetime",
-          categories: categories,
+          categories: this.generateCategories(props.connectionImpressions.length),
         },
         dataLabels: {
           enabled: false,
@@ -136,6 +128,18 @@ class ProfileActivityGraph extends Component<Props, State> {
     };
   }
 
+  generateCategories(length: number): (string | number)[] {
+    const categories: (string | number)[] = [];
+    const now: any = new Date();
+
+    for (let i = length - 1; i >= 0; i--) {
+      const timestamp = new Date(now - i * 24 * 60 * 60 * 1000);
+      categories.push(timestamp.toISOString().split("T")[0]);
+    }
+
+    return categories;
+  }
+
   render() {
     return (
       <div>
@@ -150,4 +154,4 @@ class ProfileActivityGraph extends Component<Props, State> {
   }
 }
 
-export default ProfileActivityGraph;
+export default ConnectionActivityGraph;
