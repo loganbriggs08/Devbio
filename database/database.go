@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"github.com/pterm/pterm"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -184,7 +184,6 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 		if err == sql.ErrNoRows {
 			return userData
 		}
-		log.Println("Error while retrieving username:", err)
 		return userData
 	}
 
@@ -206,7 +205,6 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 		if err == sql.ErrNoRows {
 			return userData
 		}
-		log.Println("Error while scanning data:", err)
 		return userData
 	}
 
@@ -222,24 +220,23 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return userData
 		}
-		log.Println("Error while scanning data:", err)
 		return userData
 	}
 
 	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
-		log.Println("Error while unmarshaling badges:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(skillsString), &userData.Skills); err != nil {
-		log.Println("Error while unmarshaling skills:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(interestsString), &userData.Interests); err != nil {
-		log.Println("Error while unmarshaling interests:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(spokenLanguagesString), &userData.SpokenLanguages); err != nil {
-		log.Println("Error while unmarshaling spoken languages:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 
 	return userData
@@ -262,7 +259,6 @@ func GetAccountData(username string) structs.UserResponse {
 		if err == sql.ErrNoRows {
 			return userData
 		}
-		log.Println("Error while scanning data:", err)
 		return userData
 	}
 
@@ -281,21 +277,20 @@ func GetAccountData(username string) structs.UserResponse {
 		if err == sql.ErrNoRows {
 			return userData
 		}
-		log.Println("Error while scanning data:", err)
 		return userData
 	}
 
 	if err := json.Unmarshal([]byte(badgesString), &userData.Badges); err != nil {
-		log.Println("Error while unmarshaling badges:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(skillsString), &userData.Skills); err != nil {
-		log.Println("Error while unmarshaling skills:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(interestsString), &userData.Interests); err != nil {
-		log.Println("Error while unmarshaling interests:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 	if err := json.Unmarshal([]byte(spokenLanguagesString), &userData.SpokenLanguages); err != nil {
-		log.Println("Error while unmarshaling spoken languages:", err)
+		pterm.Error.Println("Unmarshalling Error occurred during database retrieval")
 	}
 
 	return userData
