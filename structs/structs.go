@@ -42,6 +42,10 @@ type ExploreData struct {
 	Boosts          int     `json:"boosts"`
 }
 
+type ExploreDatsResponse struct {
+	ExploreData []ExploreData `json:"explore_data"`
+}
+
 type ExploreResponse struct {
 	ExploreData []ExploreData
 }

@@ -1,19 +1,27 @@
+'use client'
 import styles from "./explore.module.css"
-import { NavbarComponent } from '@/components/other/navbar'
+import React, { useState, useEffect } from 'react';
+import Profile from '@/components/explore/Profile';
+
+const ProfileGrid = () => {
+  const [profiles, setProfiles] = useState([]);
 
 
-export default function Explore() {
     return (
         <div>
             <div className={styles.center}>
                 <div className={styles.top_text}>
                     <h1>Expand Your <span className={styles.colored_text}>Devs</span> Team</h1>
                     <h4>Discover highly skilled <span className={styles.colored_text}>devs</span></h4>
-                </div>
-                <div className={styles.filters}>
-                    <input type="text" placeholder="Find Devs" />
+                
+                
+                    <ProfileGrid/>
+
+                
                 </div>
             </div>
         </div>
     )
 }
+
+export default ProfileGrid

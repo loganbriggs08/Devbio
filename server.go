@@ -4,9 +4,10 @@ import (
 	"devbio/database"
 	"devbio/endpoints"
 	ReturnModule "devbio/modules/return_module"
-	"github.com/pterm/pterm"
 	"log"
 	"net/http"
+
+	"github.com/pterm/pterm"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -37,6 +38,8 @@ func main() {
 
 		if database.InitializeDatabase() && database.CreateTables() {
 			pterm.Success.Println("Database has been initialized successfully.")
+
+			http.HandleFunc("/api/explore", endpoints.ManageExplore)
 
 			http.HandleFunc("/api/account", endpoints.ManageAccounts)
 			http.HandleFunc("/api/account/session", endpoints.ManageSessions)

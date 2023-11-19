@@ -7,9 +7,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var databaseConnection *sql.DB
@@ -360,7 +361,6 @@ func GetAllUsers() ([]string, bool) {
 	}
 
 	if err != nil {
-		fmt.Println(err)
 		return userList, true
 	}
 
@@ -370,14 +370,31 @@ func GetAllUsers() ([]string, bool) {
 func GetExploreData(username string) (structs.ExploreData, bool) {
 	var exploreData structs.ExploreData
 
-	err := databaseConnection.QueryRow("SELECT * FROM explore WHERE username = ?", username).Scan(&exploreData.Rank, &exploreData.Username, &exploreData.AvgRating, &exploreData.YearsExperience, &exploreData.Commits, &exploreData.OpenProjects, &exploreData.Boosts)
+	err := databaseConnection.QueryRow("SELECT * FROM explore WHERE username = ?", username).
+		Scan(&exploreData.Rank, &exploreData.Username, &exploreData.AvgRating, &exploreData.YearsExperience, &exploreData.Commits, &exploreData.OpenProjects, &exploreData.Boosts)
 
-	if err != nil {
-		fmt.Println(err)
-		return exploreData, true
+	return exploreData, err != nil
+}
+
+func GetProfiles() ([]structs.ExploreData, bool) {
+	var users []string
+	var profiles []structs.ExploreData
+
+	users, _ = GetAllUsers()
+
+	for i := 0; i < len(users); i++ {
+		username := users[i]
+		exploreData, err := GetExploreData(username)
+
+		if err {
+			fmt.Println(err)
+			return profiles, false
+		}
+
+		profiles = append(profiles, exploreData)
 	}
 
-	return exploreData, false
+	return profiles, true
 }
 
 func UpdateProfileSetupData(profileData updateRequestSetupData) bool {

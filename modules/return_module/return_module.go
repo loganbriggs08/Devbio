@@ -127,6 +127,26 @@ func AccountData(w http.ResponseWriter, r *http.Request, accountDataStruct struc
 	}
 }
 
+func ProfilesData(w http.ResponseWriter, r *http.Request, exploreDataStruct []structs.ExploreData) {
+	ExploreResponse := structs.ExploreDatsResponse{
+		ExploreData: exploreDataStruct,
+	}
+
+	ExploreDataResponseMarshal, ErrorResponseError := json.Marshal(ExploreResponse)
+
+	if ErrorResponseError != nil {
+		log.Fatal(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(ExploreDataResponseMarshal)
+
+	if ResponseWriterError != nil {
+		log.Fatal(ResponseWriterError)
+	}
+}
+
 func Success(w http.ResponseWriter, r *http.Request) {
 	SuccessResponse := structs.SuccessResponse{
 		Success: true,

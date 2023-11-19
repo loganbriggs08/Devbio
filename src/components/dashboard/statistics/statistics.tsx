@@ -236,12 +236,12 @@ const StatisticsComponent = () => {
                                     )}
                                 </div>
 
-                                <div className={styles.connections_activity}>
+                                {/* <div className={styles.connections_activity}>
                                     <h1 className={styles.header_text_graph}>Connection Activity</h1>
                                     <p className={styles.description_text_graph}>View and monitor your connection activity.</p>
 
                                     
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         
