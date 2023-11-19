@@ -3,7 +3,7 @@ package ReturnModule
 import (
 	"devbio/structs"
 	"encoding/json"
-	"log"
+	"github.com/pterm/pterm"
 	"net/http"
 )
 
@@ -16,7 +16,7 @@ func CustomError(w http.ResponseWriter, r *http.Request, ErrorMessage string, Er
 	ErrorResponseMarshal, ErrorResponseError := json.Marshal(ErrorResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(ErrorCode)
@@ -24,7 +24,7 @@ func CustomError(w http.ResponseWriter, r *http.Request, ErrorMessage string, Er
 	_, ResponseWriterError := w.Write(ErrorResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -37,7 +37,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	ErrorResponseMarshal, ErrorResponseError := json.Marshal(ErrorResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusMethodNotAllowed)
@@ -45,7 +45,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	_, ResponseWriterError := w.Write(ErrorResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -58,7 +58,7 @@ func MissingData(w http.ResponseWriter, r *http.Request) {
 	ErrorResponseMarshal, ErrorResponseError := json.Marshal(ErrorResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
@@ -66,7 +66,7 @@ func MissingData(w http.ResponseWriter, r *http.Request) {
 	_, ResponseWriterError := w.Write(ErrorResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -79,7 +79,7 @@ func InternalServerError(w http.ResponseWriter, r *http.Request) {
 	ErrorResponseMarshal, ErrorResponseError := json.Marshal(ErrorResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusInternalServerError)
@@ -87,7 +87,7 @@ func InternalServerError(w http.ResponseWriter, r *http.Request) {
 	_, ResponseWriterError := w.Write(ErrorResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -99,7 +99,7 @@ func SessionCreated(w http.ResponseWriter, r *http.Request, sessionAuthenticatio
 	ErrorResponseMarshal, ErrorResponseError := json.Marshal(ErrorResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -107,7 +107,7 @@ func SessionCreated(w http.ResponseWriter, r *http.Request, sessionAuthenticatio
 	_, ResponseWriterError := w.Write(ErrorResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -115,7 +115,7 @@ func AccountData(w http.ResponseWriter, r *http.Request, accountDataStruct struc
 	AccountDataResponse, ErrorResponseError := json.Marshal(accountDataStruct)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -123,7 +123,7 @@ func AccountData(w http.ResponseWriter, r *http.Request, accountDataStruct struc
 	_, ResponseWriterError := w.Write(AccountDataResponse)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -135,7 +135,7 @@ func ProfilesData(w http.ResponseWriter, r *http.Request, exploreDataStruct []st
 	ExploreDataResponseMarshal, ErrorResponseError := json.Marshal(ExploreResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -143,7 +143,7 @@ func ProfilesData(w http.ResponseWriter, r *http.Request, exploreDataStruct []st
 	_, ResponseWriterError := w.Write(ExploreDataResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -155,7 +155,7 @@ func Success(w http.ResponseWriter, r *http.Request) {
 	SuccessResponseMarshal, ErrorResponseError := json.Marshal(SuccessResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -163,7 +163,7 @@ func Success(w http.ResponseWriter, r *http.Request) {
 	_, ResponseWriterError := w.Write(SuccessResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -175,7 +175,7 @@ func Notifications(w http.ResponseWriter, r *http.Request, notifications []strin
 	NotificationsResponseMarshal, ErrorResponseError := json.Marshal(NotificationsResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -183,7 +183,7 @@ func Notifications(w http.ResponseWriter, r *http.Request, notifications []strin
 	_, ResponseWriterError := w.Write(NotificationsResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -195,7 +195,7 @@ func Connections(w http.ResponseWriter, r *http.Request, connections []structs.C
 	ConnectionResponseMarshal, ErrorResponseError := json.Marshal(ConnectionResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -203,7 +203,7 @@ func Connections(w http.ResponseWriter, r *http.Request, connections []structs.C
 	_, ResponseWriterError := w.Write(ConnectionResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }
 
@@ -215,7 +215,7 @@ func Statistics(w http.ResponseWriter, r *http.Request, statistics []structs.Sta
 	StatisticResponseMarshal, ErrorResponseError := json.Marshal(StatisticsResponse)
 
 	if ErrorResponseError != nil {
-		log.Fatal(ErrorResponseError)
+		pterm.Error.Println(ErrorResponseError)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -223,6 +223,6 @@ func Statistics(w http.ResponseWriter, r *http.Request, statistics []structs.Sta
 	_, ResponseWriterError := w.Write(StatisticResponseMarshal)
 
 	if ResponseWriterError != nil {
-		log.Fatal(ResponseWriterError)
+		pterm.Error.Println(ResponseWriterError)
 	}
 }

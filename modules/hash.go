@@ -2,7 +2,7 @@ package modules
 
 import (
 	"devbio/structs"
-	"log"
+	"github.com/pterm/pterm"
 	"math/rand"
 
 	"golang.org/x/crypto/bcrypt"
@@ -34,7 +34,7 @@ func HashPassword(password string) structs.HashedAndSaltedPassword {
 	HashedAndSaltedPassword.RandomSalt = string(RandomSalt)
 
 	if hashedPasswordError != nil {
-		log.Fatal(hashedPasswordError)
+		pterm.Error.Println(hashedPasswordError)
 
 		return HashedAndSaltedPassword
 	}

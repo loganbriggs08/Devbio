@@ -336,7 +336,6 @@ func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
 		if errors.Is(err, sql.ErrNoRows) {
 			return passwordHashAndSalt
 		} else {
-			log.Fatal(err)
 			return passwordHashAndSalt
 		}
 	}

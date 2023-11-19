@@ -4,7 +4,6 @@ import (
 	"devbio/database"
 	"devbio/endpoints"
 	ReturnModule "devbio/modules/return_module"
-	"log"
 	"net/http"
 
 	"github.com/pterm/pterm"
@@ -39,6 +38,8 @@ func main() {
 		if database.InitializeDatabase() && database.CreateTables() {
 			pterm.Success.Println("Database has been initialized successfully.")
 
+			http.HandleFunc("/api/", endpoints.ManageApi)
+
 			http.HandleFunc("/api/explore", endpoints.ManageExplore)
 
 			http.HandleFunc("/api/account", endpoints.ManageAccounts)
@@ -55,7 +56,7 @@ func main() {
 
 			http.HandleFunc("/api/subscriptions/subscribe", endpoints.ManageSubscribe)
 
-			log.Fatal(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
+			pterm.Error.Println(http.ListenAndServe(":6969", corsMiddleware(http.DefaultServeMux)))
 		} else {
 			pterm.Fatal.WithFatal(true).Println("Failed to initialize database successfully.")
 		}
