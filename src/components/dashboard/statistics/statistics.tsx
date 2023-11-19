@@ -201,47 +201,38 @@ const StatisticsComponent = () => {
 
                             <div className={styles.row}>
                                 <div className={styles.profile_views_graph}>
-                                    {graphShown === "profile_activity" ? (
-                                        <div>
-                                            <div className={styles.button_and_text_holder}>
-                                                <div className={styles.text_holder}>
-                                                    <h1 className={styles.header_text_graph}>Profile Activity</h1>
-                                                    <p className={styles.description_text_graph}>View and monitor your profile activity.</p>
-                                                </div>
-
-                                                <div className={styles.button_holder}>
-                                                    <button className={styles.connection_activity_button} onClick={() => {setGraphShown("connection_activity")}}>Connection Graph</button>
-                                                </div>
+                                    <div>
+                                        <div className={styles.button_and_text_holder}>
+                                            <div className={styles.text_holder}>
+                                                <h1 className={styles.header_text_graph}>Profile Activity</h1>
+                                                <p className={styles.description_text_graph}>View and monitor your profile activity.</p>
                                             </div>
 
-                                            <ProfileActivityGraph views={profileViewsArray} />
+                                            {/* <div className={styles.button_holder}>
+                                                <button className={styles.connection_activity_button} onClick={() => {setGraphShown("connection_activity")}}>Connection Graph</button>
+                                            </div> */}
                                         </div>
-                                    ) : graphShown === "connection_activity" ? (
-                                        <div>
-                                            <div className={styles.button_and_text_holder}>
-                                                <div className={styles.text_holder}>
-                                                    <h1 className={styles.header_text_graph}>Connection Activity</h1>
-                                                    <p className={styles.description_text_graph}>View and monitor your connection activity.</p>
-                                                </div>
 
-                                                <div className={styles.button_holder}>
-                                                    <button className={styles.connection_activity_button} onClick={() => {setGraphShown("profile_activity")}}>Profile Graph</button>
-                                                </div>
-                                            </div>
-
-                                            <ConnectionActivityGraph connectionImpressions={connectionImpressionsArray} />
-                                        </div>
-                                    ) : (
-                                        <div></div>
-                                    )}
+                                        <ProfileActivityGraph views={profileViewsArray} />
+                                    </div>
                                 </div>
 
-                                {/* <div className={styles.connections_activity}>
-                                    <h1 className={styles.header_text_graph}>Connection Activity</h1>
-                                    <p className={styles.description_text_graph}>View and monitor your connection activity.</p>
+                                <div className={styles.connections_activity_graph}>
+                                    <div>
+                                        <div className={styles.button_and_text_holder}>
+                                            <div className={styles.text_holder}>
+                                                <h1 className={styles.header_text_graph}>Connections Activity</h1>
+                                                <p className={styles.description_text_graph}>View and monitor your profile activity.</p>
+                                            </div>
 
-                                    
-                                </div> */}
+                                            {/* <div className={styles.button_holder}>
+                                                <button className={styles.connection_activity_button} onClick={() => {setGraphShown("connection_activity")}}>Connection Graph</button>
+                                            </div> */}
+                                        </div>
+
+                                        <ConnectionActivityGraph connectionImpressions={connectionImpressionsArray} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
