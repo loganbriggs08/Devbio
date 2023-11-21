@@ -1,19 +1,23 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"devbio/modules"
 	"devbio/structs"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/pterm/pterm"
+	"net/url"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
+
+	"github.com/pterm/pterm"
 )
 
-var databaseConnection *sql.DB
+var databaseConnection *pgxpool.Pool
 
 type updateRequestSetupData struct {
 	Username           string
@@ -36,18 +40,34 @@ type updateRequestData struct {
 }
 
 func InitializeDatabase() bool {
-	connection, databaseConnectionError := sql.Open("sqlite3", "database.db")
+	password := "X5^LYoi12Ebt6pCNG3fdCy&b"
+	encodedPassword := url.QueryEscape(password)
 
-	if databaseConnectionError != nil {
+	connectionString := fmt.Sprintf("postgres://devbio:%s@167.86.91.24:5432/devbio", encodedPassword)
+
+	poolConfig, err := pgxpool.ParseConfig(connectionString)
+	if err != nil {
+		fmt.Println("Error parsing connection string:", err)
 		return false
-	} else {
-		databaseConnection = connection
-		return true
 	}
+
+	poolConfig.MaxConns = 20
+	poolConfig.MinConns = 5
+	poolConfig.MaxConnLifetime = 5 * time.Minute
+	poolConfig.MaxConnIdleTime = 2 * time.Minute
+
+	databaseConnection, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
+
+	if err != nil {
+		fmt.Println("Error connecting to the database:", err)
+		return false
+	}
+
+	return true
 }
 
 func CreateTables() bool {
-	_, err := databaseConnection.Exec(`
+	_, err := databaseConnection.Exec(context.Background(), `
 		CREATE TABLE IF NOT EXISTS accounts (
 			username VARCHAR(40) PRIMARY KEY,
 			badges TEXT,
@@ -60,7 +80,7 @@ func CreateTables() bool {
 		);
 			
 			CREATE TABLE IF NOT EXISTS profile_data (
-				username VARCHAR(40),
+				username VARCHAR(40) PRIMARY KEY,
 				profile_picture TEXT,
 				banner_picture TEXT,
 				banner_color TEXT,
@@ -68,8 +88,7 @@ func CreateTables() bool {
 				skills TEXT,
 				location TEXT,
 				interests TEXT,
-				spoken_languages TEXT,
-				FOREIGN KEY (username) REFERENCES accounts(username)
+				spoken_languages TEXT
 			);
 
 			CREATE TABLE IF NOT EXISTS connections (
@@ -77,9 +96,7 @@ func CreateTables() bool {
 				username VARCHAR(40),
 				is_shown BOOLEAN,
 				account_username VARCHAR(40),
-				connection_date DATETIME,
-				FOREIGN KEY (username) REFERENCES profile_data(username),
-				FOREIGN KEY (account_username) REFERENCES accounts(username)
+				connection_date TIMESTAMP
 			);
 
 		CREATE TABLE IF NOT EXISTS sessions (
@@ -91,27 +108,8 @@ func CreateTables() bool {
 		CREATE TABLE IF NOT EXISTS subscriptions (
 		    username VARCHAR(40),
 		    subscription_type VARCHAR(100),
-		    subscription_date DATETIME,
+		    subscription_date TIMESTAMP,
 		    FOREIGN KEY (username) REFERENCES accounts(username)
-		);
-
-		CREATE TABLE IF NOT EXISTS explore (
-		    username VARCHAR(40),
-			rank INT,
-			avg_rating FLOAT,
-			years_experience FLOAT,
-			commits INT,
-			open_projects INT,
-			boosts INT,
-			FOREIGN KEY (boosts) REFERENCES boosts(boosts),
-		    FOREIGN KEY (username) REFERENCES profile_data(username)
-		);
-
-		CREATE TABLE IF NOT EXISTS boosts (
-		    username VARCHAR(40),
-			boosts INT,
-			used_boosts INT,
-		    FOREIGN KEY (username) REFERENCES profile_data(username)
 		);
 
 		CREATE TABLE IF NOT EXISTS notifications (
@@ -136,7 +134,7 @@ func CreateTables() bool {
 		CREATE TABLE IF NOT EXISTS ratelimits (
 		    session_token VARCHAR(40),
 		    requests_in_last_3_minutes BIGINT,
-		    requests_start_time DATETIME
+		    requests_start_time TIMESTAMP
 		);
 	`)
 
@@ -159,9 +157,9 @@ func CreateAccount(username, password string) bool {
 		return false
 	}
 
-	_, err = databaseConnection.Exec(`
+	_, err = databaseConnection.Exec(context.Background(), `
 		INSERT INTO accounts (username, badges, is_setup, is_hireable, is_disabled, password_hash, password_salt)
-		VALUES (?, ?, ?, ?, ?, ?, ?)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`, username, string(badgesJSON), false, false, false, hashedPasswordStruct.HashedPassword, hashedPasswordStruct.RandomSalt)
 
 	if err != nil {
@@ -176,12 +174,12 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 	var userData structs.UserResponse
 	var badgesString, skillsString, interestsString, spokenLanguagesString string
 
-	query := "SELECT username FROM sessions WHERE session_token = ?"
-	row := databaseConnection.QueryRow(query, sessionToken)
+	query := "SELECT username FROM sessions WHERE session_token = $1"
+	row := databaseConnection.QueryRow(context.Background(), query, sessionToken)
 
 	var username sql.NullString
 	if err := row.Scan(&username); err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			return userData
 		}
 		return userData
@@ -191,7 +189,7 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ?", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = $1", username)
 
 	err := row.Scan(
 		&userData.Username,
@@ -202,13 +200,13 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			return userData
 		}
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ?", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = $1", username)
 
 	row.Scan(
 		&userData.ProfilePicture,
@@ -220,7 +218,7 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return userData
 		}
 		return userData
@@ -246,7 +244,7 @@ func GetAccountData(username string) structs.UserResponse {
 	var userData structs.UserResponse
 	var badgesString, skillsString, interestsString, spokenLanguagesString string
 
-	row := databaseConnection.QueryRow("SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = ? COLLATE NOCASE", username)
+	row := databaseConnection.QueryRow(context.Background(), "SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = $1 COLLATE NOCASE", username)
 	err := row.Scan(
 		&userData.Username,
 		&badgesString,
@@ -256,13 +254,13 @@ func GetAccountData(username string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			return userData
 		}
 		return userData
 	}
 
-	row = databaseConnection.QueryRow("SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = ? COLLATE NOCASE", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = $1 COLLATE NOCASE", username)
 
 	row.Scan(
 		&userData.ProfilePicture,
@@ -274,7 +272,7 @@ func GetAccountData(username string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			return userData
 		}
 		return userData
@@ -298,7 +296,7 @@ func GetAccountData(username string) structs.UserResponse {
 
 func AccountExists(username string) bool {
 	var count int
-	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM accounts WHERE LOWER(username) = LOWER(?);", username).Scan(&count)
+	err := databaseConnection.QueryRow(context.Background(), "SELECT COUNT(*) FROM accounts WHERE LOWER(username) = LOWER($1);", username).Scan(&count)
 
 	if err != nil {
 		return false
@@ -308,12 +306,12 @@ func AccountExists(username string) bool {
 }
 
 func AddSession(username, sessionToken string) bool {
-	_, err := databaseConnection.Exec("DELETE FROM sessions WHERE username = ?;", username)
+	_, err := databaseConnection.Exec(context.Background(), "DELETE FROM sessions WHERE username = $1;", username)
 	if err != nil {
 		return false
 	}
 
-	_, err = databaseConnection.Exec("INSERT INTO sessions (username, session_token) VALUES (?, ?);", username, sessionToken)
+	_, err = databaseConnection.Exec(context.Background(), "INSERT INTO sessions (username, session_token) VALUES ($1, $2);", username, sessionToken)
 
 	if err != nil {
 		return false
@@ -325,10 +323,10 @@ func AddSession(username, sessionToken string) bool {
 func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
 	var passwordHashAndSalt structs.HashedAndSaltedPassword
 
-	err := databaseConnection.QueryRow("SELECT password_hash, password_salt FROM accounts WHERE username = ?", username).Scan(&passwordHashAndSalt.HashedPassword, &passwordHashAndSalt.RandomSalt)
+	err := databaseConnection.QueryRow(context.Background(), "SELECT password_hash, password_salt FROM accounts WHERE username = $1", username).Scan(&passwordHashAndSalt.HashedPassword, &passwordHashAndSalt.RandomSalt)
 
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return passwordHashAndSalt
 		} else {
 			return passwordHashAndSalt
@@ -340,7 +338,7 @@ func GetPasswordHashAndSalt(username string) structs.HashedAndSaltedPassword {
 
 func GetAllUsers() ([]string, bool) {
 	var userList []string
-	rows, err := databaseConnection.Query("SELECT username FROM accounts WHERE is_hireable = ?", true)
+	rows, err := databaseConnection.Query(context.Background(), "SELECT username FROM accounts WHERE is_hireable = $1", true)
 
 	for rows.Next() {
 		var username string
@@ -364,7 +362,7 @@ func GetAllUsers() ([]string, bool) {
 func GetExploreData(username string) (structs.ExploreData, bool) {
 	var exploreData structs.ExploreData
 
-	err := databaseConnection.QueryRow("SELECT * FROM explore WHERE username = ?", username).
+	err := databaseConnection.QueryRow(context.Background(), "SELECT * FROM explore WHERE username = $1", username).
 		Scan(&exploreData.Rank, &exploreData.Username, &exploreData.AvgRating, &exploreData.YearsExperience, &exploreData.Commits, &exploreData.OpenProjects, &exploreData.Boosts)
 
 	return exploreData, err != nil
@@ -393,7 +391,7 @@ func GetProfiles() ([]structs.ExploreData, bool) {
 
 func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 	var count int
-	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM profile_data WHERE username = ?;", profileData.Username).Scan(&count)
+	err := databaseConnection.QueryRow(context.Background(), "SELECT COUNT(*) FROM profile_data WHERE username = $1;", profileData.Username).Scan(&count)
 
 	if err != nil {
 		fmt.Println(err)
@@ -419,28 +417,28 @@ func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 	}
 
 	if count > 0 {
-		_, err = databaseConnection.Exec("UPDATE profile_data SET profile_picture = ?, description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE profile_data SET profile_picture = $1, description = $2, skills = $3, location = $4, interests = $5, spoken_languages = $6 WHERE username = $7;", profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 
-		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 	} else {
-		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES ($1, $2, $3, $4, $5, $6, $7);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 
-		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
@@ -453,7 +451,7 @@ func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 
 func UpdateProfileData(profileData updateRequestData) bool {
 	var count int
-	err := databaseConnection.QueryRow("SELECT COUNT(*) FROM profile_data WHERE username = ?;", profileData.Username).Scan(&count)
+	err := databaseConnection.QueryRow(context.Background(), "SELECT COUNT(*) FROM profile_data WHERE username = $1;", profileData.Username).Scan(&count)
 
 	if err != nil {
 		fmt.Println(err)
@@ -479,28 +477,28 @@ func UpdateProfileData(profileData updateRequestData) bool {
 	}
 
 	if count > 0 {
-		_, err = databaseConnection.Exec("UPDATE profile_data SET description = ?, skills = ?, location = ?, interests = ?, spoken_languages = ? WHERE username = ?;", profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE profile_data SET description = $1, skills = $2, location = $3, interests = $4, spoken_languages = $5 WHERE username = $6;", profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 
-		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 	} else {
-		_, err = databaseConnection.Exec("INSERT INTO profile_data (username, description, skills, location, interests, spoken_languages) VALUES (?, ?, ?, ?, ?, ?, ?);", profileData.Username, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO profile_data (username, description, skills, location, interests, spoken_languages) VALUES ($1, $2, $3, $4, $5, $6);", profileData.Username, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
 
 		if err != nil {
 			fmt.Println(err)
 			return false
 		}
 
-		_, err = databaseConnection.Exec("UPDATE accounts SET is_setup = ? WHERE username = ?;", 1, profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
 
 		if err != nil {
 			fmt.Println(err)
@@ -514,11 +512,10 @@ func UpdateProfileData(profileData updateRequestData) bool {
 func GetIsStaff(sessionToken string) bool {
 	var username string
 
-	query := "SELECT username FROM sessions WHERE session_token = ?"
-	row := databaseConnection.QueryRow(query, sessionToken)
+	row := databaseConnection.QueryRow(context.Background(), "SELECT username FROM sessions WHERE session_token = $1", sessionToken)
 
 	if err := row.Scan(&username); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			fmt.Println("Session not found.")
 			return false
 		}
@@ -527,10 +524,10 @@ func GetIsStaff(sessionToken string) bool {
 	}
 
 	var isStaff bool
-	row = databaseConnection.QueryRow("SELECT is_staff FROM accounts WHERE username = ?", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT is_staff FROM accounts WHERE username = $1", username)
 
 	if err := row.Scan(&isStaff); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			fmt.Println("User not found.")
 			return false
 		}
@@ -542,7 +539,7 @@ func GetIsStaff(sessionToken string) bool {
 }
 
 func CreateNotification(recipient string, forEveryone bool, message string) bool {
-	_, databaseError := databaseConnection.Exec("INSERT INTO notifications (recipient, is_for_everyone, message) VALUES(?, ?, ?)", recipient, forEveryone, message)
+	_, databaseError := databaseConnection.Exec(context.Background(), "INSERT INTO notifications (recipient, is_for_everyone, message) VALUES($1, $2, $3)", recipient, forEveryone, message)
 
 	if databaseError == nil {
 		return true
@@ -554,7 +551,7 @@ func CreateNotification(recipient string, forEveryone bool, message string) bool
 func GetNotifications(username string) []string {
 	var notifications []string
 
-	userRows, userError := databaseConnection.Query("SELECT message FROM notifications WHERE recipient = ?", username)
+	userRows, userError := databaseConnection.Query(context.Background(), "SELECT message FROM notifications WHERE recipient = $1", username)
 	if userError != nil {
 		return notifications
 	}
@@ -568,7 +565,7 @@ func GetNotifications(username string) []string {
 		notifications = append(notifications, message)
 	}
 
-	everyoneRows, everyoneError := databaseConnection.Query("SELECT message FROM notifications WHERE is_for_everyone = 1")
+	everyoneRows, everyoneError := databaseConnection.Query(context.Background(), "SELECT message FROM notifications WHERE is_for_everyone = 1")
 	if everyoneError != nil {
 		return notifications
 	}
@@ -594,7 +591,7 @@ func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
 		return connections
 	}
 
-	connectionRows, databaseError := databaseConnection.Query("SELECT connection_type, username, is_shown, account_username, connection_date FROM connections WHERE username = ?", accountData.Username)
+	connectionRows, databaseError := databaseConnection.Query(context.Background(), "SELECT connection_type, username, is_shown, account_username, connection_date FROM connections WHERE username = $1", accountData.Username)
 
 	if databaseError != nil {
 		return connections
@@ -606,6 +603,7 @@ func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
 		rowScanError := connectionRows.Scan(&currentParsedConnection.ConnectionType, &currentParsedConnection.Username, &currentParsedConnection.IsShown, &currentParsedConnection.AccountUsername, &currentParsedConnection.ConnectionDate)
 
 		if rowScanError != nil {
+			fmt.Println(rowScanError)
 			return connections
 		}
 
@@ -616,11 +614,11 @@ func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
 }
 
 func AddGithubAccessToken(username string, accessToken string) bool {
-	row := databaseConnection.QueryRow("SELECT username FROM github_access_tokens WHERE username = ?", username)
+	row := databaseConnection.QueryRow(context.Background(), "SELECT username FROM github_access_tokens WHERE username = $1", username)
 
 	var existingUsername string
-	if err := row.Scan(&existingUsername); err == sql.ErrNoRows {
-		_, insertError := databaseConnection.Exec("INSERT INTO github_access_tokens (username, access_token) VALUES (?, ?)", username, accessToken)
+	if err := row.Scan(&existingUsername); err == pgx.ErrNoRows {
+		_, insertError := databaseConnection.Exec(context.Background(), "INSERT INTO github_access_tokens (username, access_token) VALUES ($1, $2)", username, accessToken)
 
 		if insertError != nil {
 			fmt.Println(insertError)
@@ -632,7 +630,7 @@ func AddGithubAccessToken(username string, accessToken string) bool {
 		return false
 	}
 
-	_, updateError := databaseConnection.Exec("UPDATE github_access_tokens SET access_token = ? WHERE username = ?", accessToken, username)
+	_, updateError := databaseConnection.Exec(context.Background(), "UPDATE github_access_tokens SET access_token = $1 WHERE username = $2", accessToken, username)
 
 	if updateError != nil {
 		fmt.Println(updateError)
@@ -643,28 +641,42 @@ func AddGithubAccessToken(username string, accessToken string) bool {
 }
 
 func AddConnection(connectionType string, username string, isShown bool, accountUsername string, connectionDate string) bool {
-	row := databaseConnection.QueryRow("SELECT username FROM connections WHERE connection_type = ? AND username = ?", connectionType, username)
-
-	var existingUsername string
-
-	if err := row.Scan(&existingUsername); errors.Is(err, sql.ErrNoRows) {
-		_, insertError := databaseConnection.Exec("INSERT INTO connections (connection_type, username, is_shown, account_username, connection_date) VALUES (?, ?, ?, ?, ?)", connectionType, username, isShown, accountUsername, connectionDate)
-
-		if insertError != nil {
-			fmt.Println(insertError)
-			return false
-		}
-
-		return true
-	} else if err != nil {
-		fmt.Println(err)
+	tx, err := databaseConnection.Begin(context.Background())
+	if err != nil {
+		fmt.Println("Error beginning transaction:", err)
 		return false
 	}
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Recovered from panic:", err)
+		}
+	}()
+	defer tx.Rollback(context.Background())
 
-	_, updateError := databaseConnection.Exec("UPDATE connections SET account_username = ?, connection_date = ? WHERE connection_type = ? AND username = ?", accountUsername, connectionDate, connectionType, username)
+	row := tx.QueryRow(context.Background(), "SELECT username FROM connections WHERE connection_type = $1 AND username = $2", connectionType, username)
+	var existingUsername string
 
-	if updateError != nil {
-		fmt.Println(updateError)
+	if err := row.Scan(&existingUsername); errors.Is(err, pgx.ErrNoRows) {
+		_, insertError := tx.Exec(context.Background(), "INSERT INTO connections (connection_type, username, is_shown, account_username, connection_date) VALUES ($1, $2, $3, $4, $5)", connectionType, username, isShown, accountUsername, connectionDate)
+
+		if insertError != nil {
+			fmt.Println("Error inserting row:", insertError)
+			return false
+		}
+	} else if err != nil {
+		fmt.Println("Error scanning row:", err)
+		return false
+	} else {
+		_, updateError := tx.Exec(context.Background(), "UPDATE connections SET account_username = $1, connection_date = $2 WHERE connection_type = $3 AND username = $4", accountUsername, connectionDate, connectionType, username)
+
+		if updateError != nil {
+			fmt.Println("Error updating row:", updateError)
+			return false
+		}
+	}
+
+	if commitErr := tx.Commit(context.Background()); commitErr != nil {
+		fmt.Println("Error committing transaction:", commitErr)
 		return false
 	}
 
@@ -672,7 +684,7 @@ func AddConnection(connectionType string, username string, isShown bool, account
 }
 
 func DeleteConnection(username string, connectionType string) bool {
-	_, databaseExecError := databaseConnection.Exec("DELETE FROM connections WHERE username = ? AND connection_type = ?", username, connectionType)
+	_, databaseExecError := databaseConnection.Exec(context.Background(), "DELETE FROM connections WHERE username = $1 AND connection_type = $2", username, connectionType)
 
 	if databaseExecError != nil {
 		return false
@@ -686,14 +698,21 @@ func IsRatelimited(sessionToken string) (bool, error) {
 		return false, nil
 	}
 
+	if databaseConnection == nil {
+		return false, errors.New("databaseConnection is nil")
+	}
+
+	// Use a proper context
+	ctx := context.Background()
+
 	var requestsInLast3Minutes int64
 	var requestsStartTime time.Time
 
-	err := databaseConnection.QueryRow("SELECT requests_in_last_3_minutes, requests_start_time FROM ratelimits WHERE session_token = ?", sessionToken).
+	err := databaseConnection.QueryRow(ctx, "SELECT requests_in_last_3_minutes, requests_start_time FROM ratelimits WHERE session_token = $1", sessionToken).
 		Scan(&requestsInLast3Minutes, &requestsStartTime)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		_, err = databaseConnection.Exec("INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES (?, 1, CURRENT_TIMESTAMP)", sessionToken)
+	if errors.Is(err, pgx.ErrNoRows) {
+		_, err = databaseConnection.Exec(ctx, "INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES ($1, 1, CURRENT_TIMESTAMP)", sessionToken)
 		if err != nil {
 			return false, err
 		}
@@ -705,7 +724,7 @@ func IsRatelimited(sessionToken string) (bool, error) {
 	elapsedTime := time.Since(requestsStartTime)
 
 	if elapsedTime > 3*time.Minute {
-		_, err := databaseConnection.Exec("UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = ?", sessionToken)
+		_, err := databaseConnection.Exec(ctx, "UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = $1", sessionToken)
 		if err != nil {
 			return false, err
 		}
@@ -716,7 +735,7 @@ func IsRatelimited(sessionToken string) (bool, error) {
 		return true, nil
 	}
 
-	_, err = databaseConnection.Exec("UPDATE ratelimits SET requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = ?", sessionToken)
+	_, err = databaseConnection.Exec(ctx, "UPDATE ratelimits SET requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = $1", sessionToken)
 
 	if err != nil {
 		return false, err
@@ -736,10 +755,10 @@ func UpdateStatistics(username string, connectionClicked bool) bool {
 	currentDate := time.Now().Format("2006-01-02")
 
 	var statistics structs.Statistics
-	err := databaseConnection.QueryRow("SELECT profile_views, connections_clicked FROM statistics WHERE username=?", username).
+	err := databaseConnection.QueryRow(context.Background(), "SELECT profile_views, connections_clicked FROM statistics WHERE username = $1", username).
 		Scan(&statistics.ProfileViews, &statistics.ConnectionsClicked)
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		fmt.Println("Error fetching statistics:", err)
 		return false
 	}
@@ -760,17 +779,17 @@ func UpdateStatistics(username string, connectionClicked bool) bool {
 
 func updateOrInsertStatistics(username string, profileViews, connectionsClicked string) error {
 	var existingUsername string
-	err := databaseConnection.QueryRow("SELECT username FROM statistics WHERE username=?", username).Scan(&existingUsername)
+	err := databaseConnection.QueryRow(context.Background(), "SELECT username FROM statistics WHERE username=$1", username).Scan(&existingUsername)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		_, err := databaseConnection.Exec("INSERT INTO statistics (username, profile_views, connections_clicked) VALUES (?, ?, ?)",
+	if errors.Is(err, pgx.ErrNoRows) {
+		_, err := databaseConnection.Exec(context.Background(), "INSERT INTO statistics (username, profile_views, connections_clicked) VALUES ($1, $2, $3)",
 			username, profileViews, connectionsClicked)
 		return err
 	} else if err != nil {
 		return err
 	}
 
-	_, err = databaseConnection.Exec("UPDATE statistics SET profile_views=?, connections_clicked=? WHERE username=?",
+	_, err = databaseConnection.Exec(context.Background(), "UPDATE statistics SET profile_views=$1, connections_clicked=$2 WHERE username=$3",
 		profileViews, connectionsClicked, username)
 
 	return err
@@ -817,10 +836,10 @@ func GetStatisticsForLastNDays(username string, n int) ([]structs.Statistics, er
 	}
 
 	var statistics structs.Statistics
-	err := databaseConnection.QueryRow("SELECT profile_views, connections_clicked FROM statistics WHERE username=?", username).
+	err := databaseConnection.QueryRow(context.Background(), "SELECT profile_views, connections_clicked FROM statistics WHERE username = $1", username).
 		Scan(&statistics.ProfileViews, &statistics.ConnectionsClicked)
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return nil, fmt.Errorf("Error fetching statistics: %v", err)
 	}
 
