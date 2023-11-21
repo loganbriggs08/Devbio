@@ -244,7 +244,7 @@ func GetAccountData(username string) structs.UserResponse {
 	var userData structs.UserResponse
 	var badgesString, skillsString, interestsString, spokenLanguagesString string
 
-	row := databaseConnection.QueryRow(context.Background(), "SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE username = $1 COLLATE NOCASE", username)
+	row := databaseConnection.QueryRow(context.Background(), "SELECT username, badges, is_setup, is_hireable, is_disabled FROM accounts WHERE LOWER(username) = LOWER($1)", username)
 	err := row.Scan(
 		&userData.Username,
 		&badgesString,
@@ -254,13 +254,14 @@ func GetAccountData(username string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return userData
 		}
+		fmt.Println(err)
 		return userData
 	}
 
-	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = $1 COLLATE NOCASE", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE LOWER(username) = LOWER($1)", username)
 
 	row.Scan(
 		&userData.ProfilePicture,
@@ -272,7 +273,7 @@ func GetAccountData(username string) structs.UserResponse {
 	)
 
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return userData
 		}
 		return userData
