@@ -31,7 +31,7 @@ const GithubLinkComponent = () => {
               },
           });
 
-          nextRouter.push("/dashboard/customize")
+          nextRouter.push("/dashboard")
 
           setLoading(false);
         }
