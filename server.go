@@ -3,7 +3,6 @@ package main
 import (
 	"devbio/database"
 	"devbio/endpoints"
-	ReturnModule "devbio/modules/return_module"
 	"net/http"
 
 	"github.com/pterm/pterm"
@@ -13,11 +12,11 @@ func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		pterm.Success.Println(r.Method, "Request received at", r.URL.Path)
 
-		isRateLimited, _ := database.IsRatelimited(r.Header.Get("session"))
-
-		if isRateLimited {
-			ReturnModule.MethodNotAllowed(w, r)
-		}
+		//isRateLimited, _ := database.IsRatelimited(r.Header.Get("session"))
+		//
+		//if isRateLimited {
+		//	ReturnModule.MethodNotAllowed(w, r)
+		//}
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "*")

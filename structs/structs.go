@@ -1,5 +1,7 @@
 package structs
 
+import "time"
+
 type ErrorResponse struct {
 	ErrorCode    int    `json:"error_code"`
 	ErrorMessage string `json:"error_message"`
@@ -55,11 +57,11 @@ type NotificationsResponse struct {
 }
 
 type Connection struct {
-	IsShown         bool   `json:"is_shown"`
-	Username        string `json:"username"`
-	AccountUsername string `json:"account_username"`
-	ConnectionType  string `json:"connection_type"`
-	ConnectionDate  string `json:"connection_date"`
+	IsShown         bool      `json:"is_shown"`
+	Username        string    `json:"username"`
+	AccountUsername string    `json:"account_username"`
+	ConnectionType  string    `json:"connection_type"`
+	ConnectionDate  time.Time `json:"connection_date"`
 }
 
 type ConnectionsResponse struct {
