@@ -132,7 +132,7 @@ func CreateTables() bool {
 		);
 
 		CREATE TABLE IF NOT EXISTS ratelimits (
-		    session_token VARCHAR(40),
+		    session_token VARCHAR(255),
 		    requests_in_last_3_minutes BIGINT,
 		    requests_start_time TIMESTAMP
 		);
@@ -698,6 +698,7 @@ func IsRatelimited(sessionToken string) (bool, error) {
 		return false, nil
 	}
 
+<<<<<<< Updated upstream
 	if databaseConnection == nil {
 		return false, errors.New("databaseConnection is nil")
 	}
@@ -705,14 +706,36 @@ func IsRatelimited(sessionToken string) (bool, error) {
 	// Use a proper context
 	ctx := context.Background()
 
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 	var requestsInLast3Minutes int64
 	var requestsStartTime time.Time
 
 	err := databaseConnection.QueryRow(ctx, "SELECT requests_in_last_3_minutes, requests_start_time FROM ratelimits WHERE session_token = $1", sessionToken).
 		Scan(&requestsInLast3Minutes, &requestsStartTime)
 
+<<<<<<< Updated upstream
 	if errors.Is(err, pgx.ErrNoRows) {
 		_, err = databaseConnection.Exec(ctx, "INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES ($1, 1, CURRENT_TIMESTAMP)", sessionToken)
+=======
+	if errors.Is(err, sql.ErrNoRows) {
+		_, err = databaseConnection.Exec("INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES (?, 1, CURRENT_TIMESTAMP)", sessionToken)
+=======
+	if databaseConnection == nil {
+		return false, errors.New("databaseConnection is nil")
+	}
+
+	var requestsInLast3Minutes int64
+	var requestsStartTime time.Time
+
+	err := databaseConnection.QueryRow(context.Background(), "SELECT requests_in_last_3_minutes, requests_start_time FROM ratelimits WHERE session_token = $1", sessionToken).
+		Scan(&requestsInLast3Minutes, &requestsStartTime)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO ratelimits (session_token, requests_in_last_3_minutes, requests_start_time) VALUES ($1, 1, CURRENT_TIMESTAMP)", sessionToken)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 		if err != nil {
 			return false, err
 		}
@@ -724,7 +747,15 @@ func IsRatelimited(sessionToken string) (bool, error) {
 	elapsedTime := time.Since(requestsStartTime)
 
 	if elapsedTime > 3*time.Minute {
+<<<<<<< Updated upstream
 		_, err := databaseConnection.Exec(ctx, "UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = $1", sessionToken)
+=======
+<<<<<<< Updated upstream
+		_, err := databaseConnection.Exec("UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = ?", sessionToken)
+=======
+		_, err := databaseConnection.Exec(context.Background(), "UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = 1 WHERE session_token = $1", sessionToken)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 		if err != nil {
 			return false, err
 		}
@@ -735,7 +766,15 @@ func IsRatelimited(sessionToken string) (bool, error) {
 		return true, nil
 	}
 
+<<<<<<< Updated upstream
 	_, err = databaseConnection.Exec(ctx, "UPDATE ratelimits SET requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = $1", sessionToken)
+=======
+<<<<<<< Updated upstream
+	_, err = databaseConnection.Exec("UPDATE ratelimits SET requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = ?", sessionToken)
+=======
+	_, err = databaseConnection.Exec(context.Background(), "UPDATE ratelimits SET requests_start_time = CURRENT_TIMESTAMP, requests_in_last_3_minutes = requests_in_last_3_minutes + 1 WHERE session_token = $1", sessionToken)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 	if err != nil {
 		return false, err
