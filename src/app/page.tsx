@@ -44,7 +44,7 @@ export default function Home() {
 
     return (
         <div>
-            <NavbarComponent/>
+            <NavbarComponent />
             <div className={styles.top}>
                 <div className={styles.centered}>
                     <div className={styles.get_started_header}>
@@ -55,36 +55,17 @@ export default function Home() {
                         </h1>
 
                         <p className={styles.description_text}>
-                            Simplify your Developer Journey with easy to make and Tailored Profiles on devbio.me
-                            <br />
-                            Elevating the Developer Experience has never been easier.
+                            Simplify the progress of your Developer Journey with easy to make and <br />Tailored Profiles on devbio.me. 
                         </p>
 
-                        <a href="/dashboard">
-                            <button className={styles.get_started_button} onClick={pushToDashboard}>
-                                Get Started
-                            </button>
-                        </a>
-
-                        <div className={styles.profile_example_image_top}>
-                            <a href="/dashboard">
-                                <img src="https://cdn.discordapp.com/attachments/1124442686192095345/1163103137297617017/Profile_Showcase3.png" alt="Example image of a profile made with devbio.me" />
-                            </a>
-                        </div>
+                        <button className={styles.get_started_button} onClick={() => navigation.push("/dashboard")}>
+                            Get Started
+                        </button>
                     </div>
-                </div>
-            </div>
 
-            <div className={styles.customizable_profiles}>
-                <div className={styles.profile_example_image}>
-                    <a href="/dashboard">
-                        <img src="https://cdn.discordapp.com/attachments/1124442686192095345/1163103137297617017/Profile_Showcase3.png" alt="Example image of a profile made with devbio.me" />
-                    </a>
-                </div>
-
-                <div className={styles.customizable_profiles_text}>
-                    <h1>Fully <span className={styles.accentText}>Customizable</span> Profiles</h1>
-                    <p className={styles.customizable_profiles_text_p}>Creating a fully customized developer based profile has never been easier<br />Create and Edit your profile within minutes to your liking.</p>
+                    <div className={styles.profile_example_image_top}>
+                        <img src="/dashboard_statistics.png" alt="Example image of a profile made with devbio.me" />
+                    </div>
                 </div>
             </div>
         </div>
