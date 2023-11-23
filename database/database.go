@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/joho/godotenv"
 	"net/url"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 )
 
 var databaseConnection *pgxpool.Pool
+var envFile, _ = godotenv.Read(".env")
 
 type updateRequestSetupData struct {
 	Username           string
@@ -40,10 +42,9 @@ type updateRequestData struct {
 }
 
 func InitializeDatabase() bool {
-	password := "X5^LYoi12Ebt6pCNG3fdCy&b"
-	encodedPassword := url.QueryEscape(password)
+	encodedPassword := url.QueryEscape(envFile["DATABASE_PASSWORD"])
 
-	connectionString := fmt.Sprintf("postgres://devbio:%s@167.86.91.24:5432/devbio", encodedPassword)
+	connectionString := fmt.Sprintf("postgres://devbio:%s@%s/devbio", encodedPassword, envFile["DATABASE_IP"])
 
 	poolConfig, err := pgxpool.ParseConfig(connectionString)
 	if err != nil {
