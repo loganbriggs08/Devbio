@@ -10,6 +10,7 @@ import { RxCross2 } from 'react-icons/rx'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification/notification';
+import { useRouter } from "next/navigation";
 
 const languages: string[] = [
     "English",
@@ -115,10 +116,12 @@ interface Connection {
 }
 
 const DashboardComponent = () => {
+    const navigation = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [connectionsData, setConnectionsData] = useState<Connection[] | null>([]);
     const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
+    const [clickedConnection, setClickedConnection] = useState<string>("");
 
     const [selectedColour, setSelectedColor] = useState<number | null>(null);
     const [selectedLanguages, setSelectedLanguages] = useState<any[]>([]);
@@ -601,68 +604,94 @@ const DashboardComponent = () => {
                             </div>
                         </div>
                     ) : selectedSettingsMenu === 6 ? (
+                    
                         <div className={styles.settings_container}>
-                            <div className={styles.top_section_wrapper}>
-                                <div className={styles.profile_settings_descriptor}>
-                                    <h1 className={styles.profile_settings_text}>Connections</h1>
-                                    <p className={styles.profile_description_text}>Connect external accounts to your Profile.</p>
-                                </div>
-                            </div>
+                            {clickedConnection ? (
+                                <div>
+                                    <div className={styles.top_section_wrapper}>
+                                        <div className={styles.profile_settings_descriptor}>
+                                            <h1 className={styles.profile_settings_text}>Manage Connections</h1>
+                                            <p className={styles.profile_description_text}>Manage your linked {clickedConnection.charAt(0).toUpperCase() + clickedConnection.slice(1)} account connection.</p>
+                                        </div>
 
-                            <div className={styles.divider_line}></div>
-
-                            <div className={styles.connection_button_row}>
-                                <button className={styles.add_connection_button} onClick={() => {window.open("https://github.com/login/oauth/authorize?client_id=f1320042a60d446803c0&scope=read:user,read:project&redirect_uri=http://localhost:3000/callback/github")}}><AiFillGithub /></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.add_connection_button}><RiSpotifyFill className={styles.spotify_green}/></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                                <div className={styles.small_divider}></div>
-                                <button className={styles.not_used_connection_button}></button>
-                            </div>
-                            
-                            {connectionsData && connectionsData.length > 0 ? (
-                                connectionsData.map((connection, index) => (
-                                    <div className={styles.connection_card}>
-                                        <div className={styles.connection_card_top}>
-                                            {connection.connection_type.toLowerCase() === "github" ? (
-                                                <h1 className={styles.connection_icon}><AiFillGithub /></h1>
-                                            ) : (
-                                                <div></div>
-                                            )}
-
-                                            {connection.connection_type.toLowerCase() === "spotify" ? (
-                                                <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
-                                            ) : (
-                                                <div></div>
-                                            )}
-
-                                            <h1 className={styles.account_username_text}>{connection.account_username}</h1>
-                                            <h1 className={styles.connection_type_text}>- {connection.connection_type}</h1>
-                                            
-
-                                            <div className={styles.connection_component_end}>
-                                                <div className={styles.account_linked_since_text}>
-                                                    <h1 className={styles.account_type_text}>LINKED {connection.connection_date.toLocaleUpperCase()}</h1>
-                                                </div>
-
-                                                <a className={styles.one_rem_spacer}></a>
-
-                                                <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
-                                            </div>
+                                        <div className={styles.save_changes_wrapper}>
+                                            <button className={styles.back_button} onClick={() => {setClickedConnection("")}}>Go Back</button>
                                         </div>
                                     </div>
-                                ))
+
+                                    <div className={styles.divider_line}></div>
+
+                                    {clickedConnection === "github" ? (
+                                        <h1>Hello Github connection</h1>
+                                    ) : (
+                                        <div></div>
+                                    )}
+                                </div>
                             ) : (
-                                <div></div>
+                                <div>
+                                    <div className={styles.top_section_wrapper}>
+                                        <div className={styles.profile_settings_descriptor}>
+                                            <h1 className={styles.profile_settings_text}>Connections</h1>
+                                            <p className={styles.profile_description_text}>Connect external accounts to your profile.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.divider_line}></div>
+
+                                    <div className={styles.connection_button_row}>
+                                        <button className={styles.add_connection_button} onClick={() => {window.open("https://github.com/login/oauth/authorize?client_id=f1320042a60d446803c0&scope=read:user,read:project&redirect_uri=http://localhost:3000/callback/github")}}><AiFillGithub /></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.add_connection_button}><RiSpotifyFill className={styles.spotify_green}/></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                        <div className={styles.small_divider}></div>
+                                        <button className={styles.not_used_connection_button}></button>
+                                    </div>
+                                    
+                                    {connectionsData && connectionsData.length > 0 ? (
+                                        connectionsData.map((connection, index) => (
+                                            <div className={styles.connection_card}>
+                                                <div className={styles.connection_card_top} onClick={() => {setClickedConnection(connection.connection_type.toLowerCase())}}>
+                                                    {connection.connection_type.toLowerCase() === "github" ? (
+                                                        <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                                    ) : (
+                                                        <div></div>
+                                                    )}
+
+                                                    {connection.connection_type.toLowerCase() === "spotify" ? (
+                                                        <h1 className={styles.connection_icon}><RiSpotifyFill className={styles.spotify_green}/></h1>
+                                                    ) : (
+                                                        <div></div>
+                                                    )}
+
+                                                    <h1 className={styles.account_username_text}>{connection.account_username}</h1>
+                                                    <h1 className={styles.connection_type_text}>- {connection.connection_type}</h1>
+                                                    
+
+                                                    <div className={styles.connection_component_end}>
+                                                        <div className={styles.account_linked_since_text}>
+                                                            <h1 className={styles.account_type_text}>LINKED {connection.connection_date.toLocaleUpperCase()}</h1>
+                                                        </div>
+
+                                                        <a className={styles.one_rem_spacer}></a>
+
+                                                        <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div></div>
+                                    )}
+                                </div>
                             )}
                         </div>
                     ) : (

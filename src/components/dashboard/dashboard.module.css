@@ -295,6 +295,27 @@
     cursor: pointer;
 }
 
+.back_button {
+    margin-left: 3%;
+    width: 94%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #313131;
+}
+
+.back_button:hover { 
+    cursor: pointer;
+}
+
 .top_section_wrapper {
     display: flex;
 }
