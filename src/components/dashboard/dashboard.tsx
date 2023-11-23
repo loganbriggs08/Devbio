@@ -10,7 +10,7 @@ import { RxCross2 } from 'react-icons/rx'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification/notification';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const languages: string[] = [
     "English",
@@ -116,7 +116,8 @@ interface Connection {
 }
 
 const DashboardComponent = () => {
-    const navigation = useRouter();
+    const searchParams = useSearchParams();
+    const [searchParamsChecked, setSearchParamsChecked] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [connectionsData, setConnectionsData] = useState<Connection[] | null>([]);
     const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
@@ -139,6 +140,12 @@ const DashboardComponent = () => {
         cookie.trim().startsWith('session=')
     );
 
+    if (searchParamsChecked === false) {
+        if (searchParams.get("tab") == "connections") {
+            setSearchParamsChecked(true)
+            setSelectedSettingsMenu(6)
+        }
+    }
 
     useEffect(() => {
         if (sessionCookie) { 

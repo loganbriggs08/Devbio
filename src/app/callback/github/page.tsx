@@ -31,7 +31,7 @@ const GithubLinkComponent = () => {
               },
           });
 
-          nextRouter.push("/dashboard")
+          nextRouter.push("/dashboard?tab=connections")
 
           setLoading(false);
         }
