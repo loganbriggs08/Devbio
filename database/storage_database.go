@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -41,6 +42,7 @@ func CreateStorageTables() bool {
 
 func InsertOrUpdateProfileImage(username string, image []byte) error {
 	var existingImage []byte
+
 	err := databaseStorageConnection.QueryRow("SELECT image FROM profile_images WHERE username = ?;", username).Scan(&existingImage)
 
 	switch {
