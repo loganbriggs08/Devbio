@@ -8,9 +8,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/joho/godotenv"
 	"net/url"
 	"time"
+
+	"github.com/joho/godotenv"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -30,6 +31,7 @@ type updateRequestSetupData struct {
 	Interests          []string `json:"interests"`
 	SpokenLanguages    []string `json:"spoken_languages"`
 	ProfilePictureLink string   `json:"profile_picture_link"`
+	Colour             int64    `json:"selected_colour"`
 }
 
 type updateRequestData struct {
@@ -39,6 +41,7 @@ type updateRequestData struct {
 	Location        string   `json:"location"`
 	Interests       []string `json:"interests"`
 	SpokenLanguages []string `json:"spoken_languages"`
+	Colour          int64    `json:"selected_colour"`
 }
 
 func InitializeDatabase() bool {
@@ -84,7 +87,7 @@ func CreateTables() bool {
 				username VARCHAR(40) PRIMARY KEY,
 				profile_picture TEXT,
 				banner_picture TEXT,
-				banner_color TEXT,
+				banner_color BIGINT,
 				description VARCHAR(255),
 				skills TEXT,
 				location TEXT,
@@ -98,6 +101,16 @@ func CreateTables() bool {
 				is_shown BOOLEAN,
 				account_username VARCHAR(40),
 				connection_date TIMESTAMP
+			);
+		
+			CREATE TABLE IF NOT EXISTS github_repositories (
+				username VARCHAR(40),
+				star_count BIGINT,
+				repository_name VARCHAR(255),
+				repository_description VARCHAR(500),
+				repository_url VARCHAR(255),
+				language VARCHAR(50),
+				is_shown BOOLEAN
 			);
 
 		CREATE TABLE IF NOT EXISTS sessions (
@@ -126,8 +139,9 @@ func CreateTables() bool {
 			FOREIGN KEY (username) REFERENCES profile_data(username) 
 		);
 
-		CREATE TABLE IF NOT EXISTS github_access_tokens (
+		CREATE TABLE IF NOT EXISTS github_tokens (
 		    username VARCHAR(40),
+			refresh_token VARCHAR(255),
 		    access_token VARCHAR(255),
 		    FOREIGN KEY (username) REFERENCES profile_data(username)
 		);
@@ -207,18 +221,20 @@ func GetAccountDataFromSession(sessionToken string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE username = $1", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages, banner_color FROM profile_data WHERE username = $1", username)
 
-	row.Scan(
+	err = row.Scan(
 		&userData.ProfilePicture,
 		&userData.Description,
 		&userData.Location,
 		&skillsString,
 		&interestsString,
 		&spokenLanguagesString,
+		&userData.Colour,
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			return userData
 		}
@@ -262,7 +278,7 @@ func GetAccountData(username string) structs.UserResponse {
 		return userData
 	}
 
-	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages FROM profile_data WHERE LOWER(username) = LOWER($1)", username)
+	row = databaseConnection.QueryRow(context.Background(), "SELECT profile_picture, description, location, skills, interests, spoken_languages, banner_color FROM profile_data WHERE username = $1", username)
 
 	row.Scan(
 		&userData.ProfilePicture,
@@ -271,6 +287,7 @@ func GetAccountData(username string) structs.UserResponse {
 		&skillsString,
 		&interestsString,
 		&spokenLanguagesString,
+		&userData.Colour,
 	)
 
 	if err != nil {
@@ -418,8 +435,14 @@ func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 		return false
 	}
 
+	bannerColorJSON, err := json.Marshal(profileData.Colour)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
 	if count > 0 {
-		_, err = databaseConnection.Exec(context.Background(), "UPDATE profile_data SET profile_picture = $1, description = $2, skills = $3, location = $4, interests = $5, spoken_languages = $6 WHERE username = $7;", profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE profile_data SET profile_picture = $1, description = $2, skills = $3, location = $4, interests = $5, spoken_languages = $6, banner_color = $8 WHERE username = $7;", profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), profileData.Username, string(bannerColorJSON))
 
 		if err != nil {
 			fmt.Println(err)
@@ -433,7 +456,7 @@ func UpdateProfileSetupData(profileData updateRequestSetupData) bool {
 			return false
 		}
 	} else {
-		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages) VALUES ($1, $2, $3, $4, $5, $6, $7);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
+		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO profile_data (username, profile_picture, description, skills, location, interests, spoken_languages, banner_color) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);", profileData.Username, profileData.ProfilePictureLink, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON), string(bannerColorJSON))
 
 		if err != nil {
 			fmt.Println(err)
@@ -492,6 +515,12 @@ func UpdateProfileData(profileData updateRequestData) bool {
 			fmt.Println(err)
 			return false
 		}
+
+		_, err = databaseConnection.Exec(context.Background(), "UPDATE profile_data SET banner_color = $1 WHERE username = $2;", profileData.Colour, profileData.Username)
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
 	} else {
 		_, err = databaseConnection.Exec(context.Background(), "INSERT INTO profile_data (username, description, skills, location, interests, spoken_languages) VALUES ($1, $2, $3, $4, $5, $6);", profileData.Username, profileData.Description, string(skillsJSON), profileData.Location, string(interestsJSON), string(spokenLanguagesJSON))
 
@@ -500,8 +529,14 @@ func UpdateProfileData(profileData updateRequestData) bool {
 			return false
 		}
 
-		_, err = databaseConnection.Exec(context.Background(), "UPDATE accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
+		_, err = databaseConnection.Exec(context.Background(), "INSERT accounts SET is_setup = $1 WHERE username = $2;", true, profileData.Username)
 
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+
+		_, err = databaseConnection.Exec(context.Background(), "INSERT profile_data SET banner_color = $1 WHERE username = $2;", profileData.Colour, profileData.Username)
 		if err != nil {
 			fmt.Println(err)
 			return false
@@ -615,12 +650,16 @@ func GetConnectionsBySessionID(sessionToken string) []structs.Connection {
 	return connections
 }
 
-func AddGithubAccessToken(username string, accessToken string) bool {
-	row := databaseConnection.QueryRow(context.Background(), "SELECT username FROM github_access_tokens WHERE username = $1", username)
+func SetGithubTokens(username string, accessToken string, refreshToken string) bool {
+	if accessToken == "" && refreshToken == "" {
+		return false
+	}
+
+	row := databaseConnection.QueryRow(context.Background(), "SELECT username FROM github_tokens WHERE username = $1", username)
 
 	var existingUsername string
-	if err := row.Scan(&existingUsername); err == pgx.ErrNoRows {
-		_, insertError := databaseConnection.Exec(context.Background(), "INSERT INTO github_access_tokens (username, access_token) VALUES ($1, $2)", username, accessToken)
+	if err := row.Scan(&existingUsername); errors.Is(err, pgx.ErrNoRows) {
+		_, insertError := databaseConnection.Exec(context.Background(), "INSERT INTO github_tokens (username, access_token, refresh_token) VALUES ($1, $2, $3)", username, accessToken, refreshToken)
 
 		if insertError != nil {
 			fmt.Println(insertError)
@@ -632,7 +671,7 @@ func AddGithubAccessToken(username string, accessToken string) bool {
 		return false
 	}
 
-	_, updateError := databaseConnection.Exec(context.Background(), "UPDATE github_access_tokens SET access_token = $1 WHERE username = $2", accessToken, username)
+	_, updateError := databaseConnection.Exec(context.Background(), "UPDATE github_tokens SET access_token = $1, refresh_token = $2 WHERE username = $3", accessToken, refreshToken, username)
 
 	if updateError != nil {
 		fmt.Println(updateError)
@@ -640,6 +679,21 @@ func AddGithubAccessToken(username string, accessToken string) bool {
 	}
 
 	return true
+}
+
+func GetAccessTokenByUsername(username string) (string, error) {
+	row := databaseConnection.QueryRow(context.Background(), "SELECT access_token FROM github_tokens WHERE username = $1", username)
+
+	var accessToken string
+	err := row.Scan(&accessToken)
+
+	if err == pgx.ErrNoRows {
+		return "", fmt.Errorf("no access token found for username: %s", username)
+	} else if err != nil {
+		return "", err
+	}
+
+	return accessToken, nil
 }
 
 func AddConnection(connectionType string, username string, isShown bool, accountUsername string, connectionDate string) bool {
@@ -730,7 +784,7 @@ func IsRatelimited(sessionToken string) (bool, error) {
 		return false, nil
 	}
 
-	if requestsInLast3Minutes > 120 {
+	if requestsInLast3Minutes > 200 {
 		return true, nil
 	}
 
@@ -741,6 +795,22 @@ func IsRatelimited(sessionToken string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func UpdateRepositoryIsShown(repositoryName string, isShown bool) error {
+	query := `
+        UPDATE github_repositories
+        SET is_shown = $1
+        WHERE repository_name = $2
+    `
+
+	_, err := databaseConnection.Exec(context.Background(), query, isShown, repositoryName)
+	if err != nil {
+		fmt.Println("Error updating repository is_shown:", err)
+		return err
+	}
+
+	return nil
 }
 
 func UpdateStatistics(username string, connectionClicked bool) bool {
@@ -891,4 +961,60 @@ func updateJSONDataForDate(jsonStr string, currentDate string) string {
 	}
 
 	return string(updatedJSON)
+}
+
+func InsertRepositoryData(data structs.RepositoryResponse, username string) error {
+	_, err := databaseConnection.Exec(context.Background(),
+		"INSERT INTO github_repositories (username, star_count, repository_name, repository_description, repository_url, language, is_shown) "+
+			"VALUES ($1, $2, $3, $4, $5, $6, $7)",
+		username, data.StarCount,
+		data.RepositoryName, data.RepositoryDescription, data.RepositoryURL, data.Language, true)
+
+	if err != nil {
+		fmt.Println("Error inserting repository data:", err)
+		return err
+	}
+
+	return nil
+}
+
+func DeleteRepositoryData(username string) bool {
+	_, err := databaseConnection.Exec(context.Background(),
+		"DELETE FROM github_repositories WHERE username = $1", username)
+
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func GetRepositoriesByUsername(username string) ([]structs.RepositoryResponse, error) {
+	rows, err := databaseConnection.Query(context.Background(),
+		"SELECT repository_name, repository_description, repository_url, star_count, language, is_shown FROM github_repositories WHERE username = $1", username)
+	if err != nil {
+		fmt.Println("Error querying repository data:", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var repositories []structs.RepositoryResponse
+	for rows.Next() {
+		var repo structs.RepositoryResponse
+		err := rows.Scan(
+			&repo.RepositoryName,
+			&repo.RepositoryDescription,
+			&repo.RepositoryURL,
+			&repo.StarCount,
+			&repo.Language,
+			&repo.IsShown,
+		)
+		if err != nil {
+			fmt.Println("Error scanning repository data:", err)
+			return nil, err
+		}
+
+		repositories = append(repositories, repo)
+	}
+
+	return repositories, nil
 }
