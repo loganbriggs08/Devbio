@@ -28,7 +28,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			if exchangeError != nil {
 				ReturnModule.InternalServerError(w, r)
 			} else {
-				if database.AddGithubAccessToken(username, accessToken) == true {
+				if database.SetGithubTokens(username, accessToken, code) == true {
 					githubUsername, usernameFetchError := github.GetGitHubUsername(accessToken)
 
 					if usernameFetchError != nil {
