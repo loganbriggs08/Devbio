@@ -151,6 +151,16 @@ func CreateTables() bool {
 		    requests_in_last_3_minutes BIGINT,
 		    requests_start_time TIMESTAMP
 		);
+
+		CREATE TABLE IF NOT EXISTS explore (
+			rank            FLOAT,
+			username        VARCHAR(255),
+			avg_rating       FLOAT,
+			years_experience INT,
+			commits         INT,
+			open_projects    INT,
+			boosts          INT
+		);
 	`)
 
 	if err != nil {
@@ -380,29 +390,31 @@ func GetAllUsers() ([]string, bool) {
 
 func GetExploreData(username string) (structs.ExploreData, bool) {
 	var exploreData structs.ExploreData
-
+	fmt.Println(username)
 	err := databaseConnection.QueryRow(context.Background(), "SELECT * FROM explore WHERE username = $1", username).
 		Scan(&exploreData.Rank, &exploreData.Username, &exploreData.AvgRating, &exploreData.YearsExperience, &exploreData.Commits, &exploreData.OpenProjects, &exploreData.Boosts)
 
+	if err != nil {
+		fmt.Println("Error fetching explore data for", username, err)
+	}
 	return exploreData, err != nil
 }
 
 func GetProfiles() ([]structs.ExploreData, bool) {
 	var users []string
 	var profiles []structs.ExploreData
-
 	users, _ = GetAllUsers()
-
+	fmt.Println(users)
 	for i := 0; i < len(users); i++ {
 		username := users[i]
 		exploreData, err := GetExploreData(username)
 
-		if err {
-			fmt.Println(err)
-			return profiles, false
+		if !err {
+			fmt.Println(username, exploreData)
+			profiles = append(profiles, exploreData)
+		} else {
+			fmt.Println("Error fetching explore data for", username, err)
 		}
-
-		profiles = append(profiles, exploreData)
 	}
 
 	return profiles, true
@@ -694,6 +706,21 @@ func GetAccessTokenByUsername(username string) (string, error) {
 	}
 
 	return accessToken, nil
+}
+
+func GetRefreshTokenByUsername(username string) (string, error) {
+	row := databaseConnection.QueryRow(context.Background(), "SELECT refresh_token FROM github_tokens WHERE username = $1", username)
+
+	var refreshToken string
+	err := row.Scan(&refreshToken)
+
+	if err == pgx.ErrNoRows {
+		return "", fmt.Errorf("no refresh token found for username: %s", username)
+	} else if err != nil {
+		return "", err
+	}
+
+	return refreshToken, nil
 }
 
 func AddConnection(connectionType string, username string, isShown bool, accountUsername string, connectionDate string) bool {

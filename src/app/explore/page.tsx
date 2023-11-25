@@ -2,8 +2,9 @@
 import styles from "./explore.module.css"
 import React, { useState, useEffect } from 'react';
 import Profile from '@/components/explore/Profile';
+import ProfileGrid from "@/components/explore/ProfileGrid";
 
-const ProfileGrid = () => {
+const ExplorePage = () => {
   const [profiles, setProfiles] = useState([]);
 
 
@@ -24,4 +25,4 @@ const ProfileGrid = () => {
     )
 }
 
-export default ProfileGrid
+export default ExplorePage

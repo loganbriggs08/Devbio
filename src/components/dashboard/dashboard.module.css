@@ -838,3 +838,98 @@
 .fetch_repos_button:hover {
     cursor: pointer;
 }
+
+.project_card_top {
+    display: flex;
+}
+
+.project_icon {
+    display: flex;
+    margin-left: 2%;
+    margin-right: 1.5%;
+    font-size: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.account_username_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem
+}
+
+.project_card_middle {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.project_card {
+    margin-right: 3%;
+    margin-bottom: 1.5rem;
+    border-radius: 0.3rem;
+    background-color: #313131;
+    transition: transform 0.3s ease-in-out;
+}
+
+.project_card:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+.project_component_end {
+    display: flex;
+    margin-left: auto;
+    margin-right: 3%;
+}
+
+.pagination_wrapper {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.pagination_button {
+    width: 5%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    margin-left: 0.5rem;
+    font-weight: 500;
+    padding: 0.7rem;
+    border-radius: 0.3rem;
+    background-color: #313131;
+}
+
+.pagination_button:hover {
+    cursor: pointer;
+}
+
+.pagination_button_selected {
+    width: 5%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    margin-left: 0.5rem;
+    font-weight: 500;
+    padding: 0.7rem;
+    border-radius: 0.3rem;
+    background-color: #7091F5;
+}
+
+.pagination_button_selected:hover {
+    cursor: pointer;
+}
+
+.star_count {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 0.2rem;
+    background-color: #7091F5;
+}

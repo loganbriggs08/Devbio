@@ -148,6 +148,15 @@ const DashboardComponent = () => {
     const [profilePictureFile, setProfilePictureFile] = useState<File | null>(null);
     const [profilePictureBytes, setProfilePictureBytes] = useState<Uint8Array | null>(null);
 
+    const itemsPerPage = 4;
+    const [currentPage, setCurrentPage] = useState(1);
+  
+    const indexOfLastRepo = currentPage * itemsPerPage;
+    const indexOfFirstRepo = indexOfLastRepo - itemsPerPage;
+    const currentRepos = githubRepositories.slice(indexOfFirstRepo, indexOfLastRepo);
+  
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
     const cookies = document.cookie.split(';');
 
     const sessionCookie = cookies.find((cookie) =>
@@ -706,16 +715,16 @@ const DashboardComponent = () => {
                                                 <div>
                                                     <h2>Github Projects</h2>
 
-                                                    {githubRepositories.map((repo) => (
-                                                        <div>
-                                                            <div className={styles.connection_card} key={repo.repository_name}>
-                                                                <div className={styles.connection_card_top}>
-                                                                    <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                                    {currentRepos.map((repo) => (
+                                                        <div key={repo.repository_name}>
+                                                            <div className={styles.project_card} onClick={() => window.open(repo.repository_url)}>
+                                                                <div className={styles.project_card_top}>
+                                                                    <h1 className={styles.project_icon}><AiFillGithub /></h1>
                                                                     <h1 className={styles.account_username_text}>{repo.repository_name}</h1>
                                                                     <h1 className={styles.connection_type_text}>- {repo.language}</h1>
-                                                        
-                                                                    <div className={styles.connection_component_end}>
-                                                                        <div className={styles.account_linked_since_text}>
+
+                                                                    <div className={styles.project_component_end}>
+                                                                        <div className={styles.star_count}>
                                                                             <h1 className={styles.account_type_text}>{repo.star_count.toLocaleString()} Stars</h1>
                                                                         </div>
                                                                         <a className={styles.one_rem_spacer}></a>
@@ -724,6 +733,17 @@ const DashboardComponent = () => {
                                                             </div>
                                                         </div>
                                                     ))}
+
+                                                    <div className={styles.pagination_wrapper}>
+                                                        {Array.from({ length: Math.ceil(githubRepositories.length / itemsPerPage) }, (_, index) => (
+                                                            <button
+                                                                className={`${styles.pagination_button} ${currentPage === index + 1 ? styles.pagination_button_selected : ''}`}
+                                                                onClick={() => paginate(index + 1)}
+                                                            >
+                                                                {index + 1}
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

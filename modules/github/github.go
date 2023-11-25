@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 func ExchangeCodeForAccessToken(clientID, clientSecret, code, redirectURI string) (string, error) {
@@ -114,8 +116,6 @@ func GetUserRepositories(accessToken string) ([]GithubsRepositoryResponse, error
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
-	fmt.Println(resp)
-
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,6 @@ func GetUserRepositories(accessToken string) ([]GithubsRepositoryResponse, error
 
 	body, err := ioutil.ReadAll(resp.Body)
 
-	fmt.Println(string(body))
 	if err != nil {
 		return nil, err
 	}
@@ -134,4 +133,41 @@ func GetUserRepositories(accessToken string) ([]GithubsRepositoryResponse, error
 	}
 
 	return repositories, nil
+}
+
+func RefreshAccessToken(refreshToken string) (string, error) {
+	envFile, _ := godotenv.Read(".env")
+
+	payload := url.Values{}
+	payload.Set("client_id", envFile["GITHUB_CLIENT_ID"])
+	payload.Set("client_secret", envFile["GITHUB_CLIENT_SECRET"])
+	payload.Set("refresh_token", refreshToken)
+	payload.Set("grant_type", "refresh_token")
+
+	req, err := http.NewRequest("POST", "https://github.com/login/oauth/access_token", strings.NewReader(payload.Encode()))
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	accessToken, err := parseAccessTokenResponse(body)
+	if err != nil {
+		return "", err
+	}
+
+	return accessToken, nil
 }
