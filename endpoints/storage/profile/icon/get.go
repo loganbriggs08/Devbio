@@ -20,14 +20,16 @@ func GetRequest(w http.ResponseWriter, r *http.Request) {
 
 	if imageDatabaseError != nil {
 		ReturnModule.InternalServerError(w, r)
+		return
 	}
 
 	w.Header().Set("Content-Type", "image/jpeg")
-	w.Header().Set("Content-Length", strconv.Itoa(100000000))
+	w.Header().Set("Content-Length", strconv.Itoa(len(image)))
 
 	_, imageDatabaseError = w.Write(image)
 
 	if imageDatabaseError != nil {
 		ReturnModule.InternalServerError(w, r)
+		return
 	}
 }

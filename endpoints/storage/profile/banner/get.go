@@ -23,7 +23,7 @@ func GetRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "image/jpeg")
-	w.Header().Set("Content-Length", strconv.Itoa(100000000))
+	w.Header().Set("Content-Length", strconv.Itoa(10000))
 
 	_, imageDatabaseError = w.Write(image)
 
