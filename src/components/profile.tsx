@@ -7,18 +7,31 @@ interface UserData {
     username: string;
     profile_picture: Uint8Array;
     description: string;
-    skills: string[] | null;
-    interests: string[] | null;
+    skills: string[];
+    interests: string[];
     location: string;
-    spoken_languages: string[] | null;
+    spoken_languages: string[];
     badges: string[];
     is_hirable: boolean;
     is_disabled: boolean;
+    selected_colour: number;
 }
 
 interface ProfileComponentProps {
     userData: UserData | null;
 }
+
+const colorIndexToHexMap = [
+    "gay",
+    "#7091F5",
+    "#FC6060",
+    "#BC7AF9",
+    "#00BD56",
+    "#98ACF8",
+    "#FF414D",
+    "#EE9322",
+    "#EA6227",
+];
 
 const getLanguageFlags = (spokenLanguages: string[] | null): React.ReactNode[] => {
     const languageFlags: React.ReactNode[] = [];
@@ -96,6 +109,11 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
     const spokenLanguages = userData?.spoken_languages ?? null;
     const languageFlags = getLanguageFlags(spokenLanguages);
 
+    console.log("COLOR: " + userData?.selected_colour);
+    const profileTopStyle = {
+        backgroundColor: colorIndexToHexMap[userData?.selected_colour ?? 0],
+    };
+
     const badgeIcons = userData?.badges.map((badge, index) => (
         <div>
             <Badge key={index} type={badge} userData={userData} />
@@ -114,7 +132,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
         <div className={styles.profile_wrapper}>
             {userData ? (
                 <div>
-                    <div className={styles.profile_top}></div>
+                    <div className={styles.profile_top} style={profileTopStyle}></div>
 
                     <div className={styles.profile_image_container}>
                         <img className={styles.profile_image} alt="Users profile picture" src={`http://localhost:6969/api/storage/profile/icon/${userData?.username}`} />

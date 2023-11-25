@@ -92,3 +92,46 @@ func GetGitHubUsername(accessToken string) (string, error) {
 
 	return username, nil
 }
+
+type GithubsRepositoryResponse struct {
+	GitHubUsername        string `json:"owner.login"`
+	RepositoryName        string `json:"name"`
+	RepositoryDescription string `json:"description"`
+	RepositoryURL         string `json:"html_url"`
+	Language              string `json:"language"`
+	StarCount             int    `json:"stargazers_count"`
+}
+
+func GetUserRepositories(accessToken string) ([]GithubsRepositoryResponse, error) {
+	req, err := http.NewRequest("GET", "https://api.github.com/user/repos", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
+	fmt.Println(resp)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	fmt.Println(string(body))
+	if err != nil {
+		return nil, err
+	}
+
+	var repositories []GithubsRepositoryResponse
+	if err := json.Unmarshal(body, &repositories); err != nil {
+		return nil, err
+	}
+
+	return repositories, nil
+}

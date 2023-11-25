@@ -4,6 +4,7 @@ import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -102,11 +103,13 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			Interests          []string `json:"interests"`
 			SpokenLanguages    []string `json:"spoken_languages"`
 			ProfilePictureLink string   `json:"profile_picture_link"`
+			Colour             int64    `json:"selected_colour"`
 		}
 
 		decoder := json.NewDecoder(r.Body)
 
 		if err := decoder.Decode(&updateRequestData); err != nil {
+			fmt.Println(err)
 			ReturnModule.InternalServerError(w, r)
 			return
 		}
@@ -141,6 +144,7 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 			Location        string   `json:"location"`
 			Interests       []string `json:"interests"`
 			SpokenLanguages []string `json:"spoken_languages"`
+			Colour          int64    `json:"selected_colour"`
 		}
 
 		decoder := json.NewDecoder(r.Body)

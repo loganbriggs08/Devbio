@@ -10,13 +10,14 @@ interface UserData {
     username: string;
     profile_picture: Uint8Array;
     description: string;
-    skills: string[] | null;
-    interests: string[] | null;
+    skills: string[];
+    interests: string[];
     location: string;
-    spoken_languages: string[] | null;
+    spoken_languages: string[];
     badges: string[];
     is_hirable: boolean;
     is_disabled: boolean;
+    selected_colour: number;
 }
 
 export default function Page({ params }: { params: { username: string } }) {

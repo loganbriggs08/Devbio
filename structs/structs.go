@@ -28,6 +28,7 @@ type UserResponse struct {
 	IsSetup         bool     `json:"is_setup"`
 	IsHirable       bool     `json:"is_hirable"`
 	IsDisabled      bool     `json:"is_disabled"`
+	Colour          int64    `json:"selected_colour"`
 }
 
 type SuccessResponse struct {
@@ -76,4 +77,17 @@ type Statistics struct {
 
 type StatisticsResponse struct {
 	Statistics []Statistics `json:"statistics"`
+}
+
+type RepositoryResponse struct {
+	RepositoryName        string `json:"repository_name"`
+	RepositoryDescription string `json:"repository_description"`
+	RepositoryURL         string `json:"repository_url"`
+	StarCount             int    `json:"star_count"`
+	Language              string `json:"language"`
+	IsShown               bool   `json:"is_shown"`
+}
+
+type RepositoriesResponse struct {
+	Repositories []RepositoryResponse `json:"github_repositories"`
 }

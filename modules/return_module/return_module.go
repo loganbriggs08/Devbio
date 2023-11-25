@@ -3,8 +3,9 @@ package ReturnModule
 import (
 	"devbio/structs"
 	"encoding/json"
-	"github.com/pterm/pterm"
 	"net/http"
+
+	"github.com/pterm/pterm"
 )
 
 func CustomError(w http.ResponseWriter, r *http.Request, ErrorMessage string, ErrorCode int) {
@@ -221,6 +222,26 @@ func Statistics(w http.ResponseWriter, r *http.Request, statistics []structs.Sta
 	w.WriteHeader(http.StatusOK)
 
 	_, ResponseWriterError := w.Write(StatisticResponseMarshal)
+
+	if ResponseWriterError != nil {
+		pterm.Error.Println(ResponseWriterError)
+	}
+}
+
+func Repositories(w http.ResponseWriter, r *http.Request, repositoriesArray []structs.RepositoryResponse) {
+	RepositoriesResponse := structs.RepositoriesResponse{
+		Repositories: repositoriesArray,
+	}
+
+	RepositoriesResponseMarshal, ErrorResponseError := json.Marshal(RepositoriesResponse)
+
+	if ErrorResponseError != nil {
+		pterm.Error.Println(ErrorResponseError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_, ResponseWriterError := w.Write(RepositoriesResponseMarshal)
 
 	if ResponseWriterError != nil {
 		pterm.Error.Println(ResponseWriterError)

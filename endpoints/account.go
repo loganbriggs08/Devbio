@@ -1,13 +1,14 @@
 package endpoints
 
 import (
-	"devbio/endpoints/account"
+	accounts "devbio/endpoints/account"
 	"devbio/endpoints/account/connections"
 	"devbio/endpoints/account/connections/callback"
+	"devbio/endpoints/account/connections/github"
 	"devbio/endpoints/account/session"
 	"devbio/endpoints/account/statistics"
 	"devbio/endpoints/account/update"
-	"devbio/modules/return_module"
+	ReturnModule "devbio/modules/return_module"
 	"net/http"
 )
 
@@ -62,6 +63,18 @@ func ManageConnections(w http.ResponseWriter, r *http.Request) {
 func ManageConnectionsCallback(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		callback.PostRequest(w, r)
+	} else {
+		ReturnModule.MethodNotAllowed(w, r)
+	}
+}
+
+func ManageGithubConnectionsCallback(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		github.GithubConnectionsGetRequest(w, r)
+	} else if r.Method == "POST" {
+		github.GithubConnectionsPostRequest(w, r)
+	} else if r.Method == "PATCH" {
+		github.GithubConnectionsPatchRequest(w, r)
 	} else {
 		ReturnModule.MethodNotAllowed(w, r)
 	}

@@ -1,3 +1,4 @@
+import axios from "axios";
 import since from "since-time-ago";
 import styles from './dashboard.module.css';
 import React, { useState, useEffect } from 'react';
@@ -105,6 +106,7 @@ interface UserData {
     badges: string[];
     is_hirable: boolean;
     is_disabled: boolean;
+    selected_colour: number;
 }
 
 interface Connection {
@@ -115,14 +117,26 @@ interface Connection {
     connection_date: string;
 }
 
+interface GitHubRepository {
+    repository_name: string;
+    repository_description: string;
+    repository_url: string;
+    star_count: number;
+    language: string;
+    is_shown: boolean;
+}
+
 const DashboardComponent = () => {
+    const router = useRouter();
     const searchParams = useSearchParams();
+    const [requestSent, setRequestSent] = useState<boolean>(false);
     const [searchParamsChecked, setSearchParamsChecked] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [connectionsData, setConnectionsData] = useState<Connection[] | null>([]);
     const [profilePictureUpdated, setProfilePictureUpdated] = useState<boolean>(false);
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
     const [clickedConnection, setClickedConnection] = useState<string>("");
+    const [githubRepositories, setGithubRepositories] = useState<GitHubRepository[]>([]);
 
     const [selectedColour, setSelectedColor] = useState<number | null>(null);
     const [selectedLanguages, setSelectedLanguages] = useState<any[]>([]);
@@ -168,6 +182,7 @@ const DashboardComponent = () => {
                 setSelectedSkills(data.skills)
                 setInterests(data.interests)
                 setAccountDescriptionInput(data.description)
+                setSelectedColor(data.selected_colour)
             })
             .catch((error) => {
                 console.error('Error fetching account data:', error);
@@ -210,6 +225,28 @@ const DashboardComponent = () => {
         }
       }, [sessionCookie, connectionsData]);
 
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('http://localhost:6969/api/account/connections/github', {
+              headers: {
+                session: sessionCookie?.trim().substring(8)
+              }
+            });
+
+            console.log(response.data)
+    
+            const sortedRepositories = response.data.github_repositories.sort((a, b) => b.star_count - a.star_count);
+    
+            setGithubRepositories(sortedRepositories);
+          } catch (error) {
+            console.error('Error fetching GitHub repositories:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
       const deleteConnection = (connection_type: string) => {
         fetch('http://localhost:6969/api/account/connections', {
           method: 'DELETE',
@@ -235,6 +272,38 @@ const DashboardComponent = () => {
         .catch((error) => {
           ErrorToast("Failed to unlink connection from account.");
         });
+      };
+
+      const getUsersRepositories = async () => {
+        if (requestSent === false) {
+            try {
+                setRequestSent(true)
+                const response = await axios.post('http://localhost:6969/api/account/connections/github', null, {
+                    headers: {
+                    'Content-Type': 'application/json',
+                    session: sessionCookie ? sessionCookie.split('=')[1] : '',
+                    },
+                });
+            
+                if (response.status === 401) {
+                    throw new Error('Invalid session');
+                }
+            
+                const githubResponse = await axios.get('http://localhost:6969/api/account/connections/github', {
+                    headers: {
+                    session: sessionCookie?.trim().substring(8),
+                    },
+                });
+            
+                console.log(githubResponse.data);
+            
+                const sortedRepositories = githubResponse.data.github_repositories.sort((a, b) => b.star_count - a.star_count);
+            
+                setGithubRepositories(sortedRepositories);
+            } catch (error) {
+                console.error('Error fetching GitHub repositories:', error);
+            }
+        }
       };
 
     const handleImageUploadAndSave = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -276,6 +345,7 @@ const DashboardComponent = () => {
             location: userData.location,
             interests: interests,
             spoken_languages: selectedLanguages,
+            selected_colour: selectedColour
         };
       
         fetch('http://localhost:6969/api/account/update', {
@@ -617,7 +687,7 @@ const DashboardComponent = () => {
                                 <div>
                                     <div className={styles.top_section_wrapper}>
                                         <div className={styles.profile_settings_descriptor}>
-                                            <h1 className={styles.profile_settings_text}>Manage Connections</h1>
+                                            <h1 className={styles.profile_settings_text}>{clickedConnection.charAt(0).toUpperCase() + clickedConnection.slice(1)} Connection</h1>
                                             <p className={styles.profile_description_text}>Manage your linked {clickedConnection.charAt(0).toUpperCase() + clickedConnection.slice(1)} account connection.</p>
                                         </div>
 
@@ -629,7 +699,34 @@ const DashboardComponent = () => {
                                     <div className={styles.divider_line}></div>
 
                                     {clickedConnection === "github" ? (
-                                        <h1>Hello Github connection</h1>
+                                        <div className={styles.repo_holder}>
+                                            {githubRepositories.length === 0 ? (
+                                                <button className={styles.fetch_repos_button} onClick={() => {getUsersRepositories()}}>{requestSent === false ? ("Fetch Repositories") : ("Loading...")}</button>
+                                            ) : (
+                                                <div>
+                                                    <h2>Github Projects</h2>
+
+                                                    {githubRepositories.map((repo) => (
+                                                        <div>
+                                                            <div className={styles.connection_card} key={repo.repository_name}>
+                                                                <div className={styles.connection_card_top}>
+                                                                    <h1 className={styles.connection_icon}><AiFillGithub /></h1>
+                                                                    <h1 className={styles.account_username_text}>{repo.repository_name}</h1>
+                                                                    <h1 className={styles.connection_type_text}>- {repo.language}</h1>
+                                                        
+                                                                    <div className={styles.connection_component_end}>
+                                                                        <div className={styles.account_linked_since_text}>
+                                                                            <h1 className={styles.account_type_text}>{repo.star_count.toLocaleString()} Stars</h1>
+                                                                        </div>
+                                                                        <a className={styles.one_rem_spacer}></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     ) : (
                                         <div></div>
                                     )}
@@ -690,7 +787,7 @@ const DashboardComponent = () => {
 
                                                         <a className={styles.one_rem_spacer}></a>
 
-                                                        <button className={styles.unlink_button} onClick={() => deleteConnection(connection.connection_type)}><RxCross2 className={styles.white_color} /></button>
+                                                        <button className={styles.unlink_button} onClick={(e) => {deleteConnection(connection.connection_type); e.stopPropagation()}}><RxCross2 className={styles.white_color} /></button>
                                                     </div>
                                                 </div>
                                             </div>
