@@ -18,25 +18,34 @@ interface ProfileData {
 
 const ProfileGrid: React.FC = () => {
   const [profiles, setProfiles] = useState<ProfileData[]>([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:6969/api/explore');
         const data = await response.json();
-        console.log(response)
+        console.log('API Response:', data);
         setProfiles(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="profile-grid">
-      {profiles.map((profile, index) => (
+      
+      {Array.isArray(profiles) && profiles.map((profile, index) => (
         <Profile key={index} profileData={profile} />
       ))}
     </div>

@@ -8,7 +8,6 @@ import (
 
 func GetRequest(w http.ResponseWriter, r *http.Request) {
 	profileDataStruct, err := database.GetProfiles()
-
 	if err {
 		ReturnModule.InternalServerError(w, r)
 	} else {
