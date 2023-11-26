@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { NotificationComponent } from '@/components/notification/notification';
 import { useRouter, useSearchParams } from "next/navigation";
+import { stringify } from "querystring";
 
 const languages: string[] = [
     "English",
@@ -150,7 +151,9 @@ const DashboardComponent = () => {
 
     const itemsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
-  
+
+
+    const [projectSearch, setProjectSearch] = useState<string>("");
     const indexOfLastRepo = currentPage * itemsPerPage;
     const indexOfFirstRepo = indexOfLastRepo - itemsPerPage;
     const currentRepos = githubRepositories.slice(indexOfFirstRepo, indexOfLastRepo);
@@ -281,6 +284,37 @@ const DashboardComponent = () => {
         .catch((error) => {
           ErrorToast("Failed to unlink connection from account.");
         });
+      };
+
+      useEffect(() => {
+        console.log('githubRepositories updated:', githubRepositories);
+      }, [githubRepositories]);
+
+      const hideOrShowConnection = (repository_name: string, shown: string) => {
+
+        fetch('http://localhost:6969/api/account/connections/github', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                session: sessionCookie ? sessionCookie.split('=')[1] : "",
+                repository_name: repository_name,
+                is_shown: shown
+            },
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                setGithubRepositories((prevRepos) => {
+                    const updatedRepos = prevRepos.map((repo) =>
+                      repo.repository_name === repository_name ? { ...repo, is_shown: shown === "true" } : repo
+                    );
+                    return updatedRepos;
+                  });
+
+                SuccessToast("Successfully updated connection on profile.");
+            } else {
+                ErrorToast("Failed to update connection on profile.");
+            }
+        })        
       };
 
       const getUsersRepositories = async () => {
@@ -713,27 +747,49 @@ const DashboardComponent = () => {
                                                 <button className={styles.fetch_repos_button} onClick={() => {getUsersRepositories()}}>{requestSent === false ? ("Fetch Repositories") : ("Loading...")}</button>
                                             ) : (
                                                 <div>
-                                                    <h2>Github Projects</h2>
 
-                                                    {currentRepos.map((repo) => (
-                                                        <div key={repo.repository_name}>
-                                                            <div className={styles.project_card} onClick={() => window.open(repo.repository_url)}>
-                                                                <div className={styles.project_card_top}>
-                                                                    <h1 className={styles.project_icon}><AiFillGithub /></h1>
-                                                                    <h1 className={styles.account_username_text}>{repo.repository_name}</h1>
-                                                                    <h1 className={styles.connection_type_text}>- {repo.language}</h1>
+                                                <div className={styles.row}>
+                                                    <input
+                                                        className={styles.project_search}
+                                                        type="text"
+                                                        placeholder="Search for Projects.."
+                                                        value={projectSearch}
+                                                        onChange={(e) => setProjectSearch(e.target.value)}
+                                                    />
 
-                                                                    <div className={styles.project_component_end}>
-                                                                        <div className={styles.star_count}>
-                                                                            <h1 className={styles.account_type_text}>{repo.star_count.toLocaleString()} Stars</h1>
-                                                                        </div>
-                                                                        <a className={styles.one_rem_spacer}></a>
+                                                    <button className={styles.refresh_button} onClick={() => {getUsersRepositories()}}>Refresh</button>
+                                                </div>
+
+                                                {githubRepositories
+                                                    .filter((repo) =>
+                                                        projectSearch.trim() === '' ||
+                                                        repo.repository_name.toLowerCase().includes(projectSearch.toLowerCase())
+                                                    ).slice(indexOfFirstRepo, indexOfLastRepo).map((repo) => (
+                                                    <div key={repo.repository_name}>
+                                                        <div className={styles.project_card} onClick={() => window.open(repo.repository_url)}>
+                                                            <div className={styles.project_card_top}>
+                                                                <h1 className={styles.project_icon}><AiFillGithub /></h1>
+                                                                <h1 className={styles.account_username_text}>{repo.repository_name}</h1>
+                                                                <h1 className={styles.connection_type_text}>- {repo.language}</h1>
+
+                                                                <div className={styles.project_component_end}>
+                                                                    <div className={styles.star_count}>
+                                                                        <h1 className={styles.account_type_text}>{repo.star_count.toLocaleString()} Stars</h1>
                                                                     </div>
+                                                                <a className={styles.one_rem_spacer}></a>
+
+                                                                {repo.is_shown === true ? (
+                                                                    <button className={styles.show_button} onClick={(e) => {e.stopPropagation(); hideOrShowConnection(repo.repository_name, "false")}}>Hide</button>
+                                                                ) : (
+                                                                    <button className={styles.show_button} onClick={(e) => {e.stopPropagation();hideOrShowConnection(repo.repository_name, "true")}}>Show</button>
+                                                                )}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    ))}
+                                                    </div>
+                                                ))}
 
+                                                {projectSearch === "" ? (
                                                     <div className={styles.pagination_wrapper}>
                                                         {Array.from({ length: Math.ceil(githubRepositories.length / itemsPerPage) }, (_, index) => (
                                                             <button
@@ -744,6 +800,9 @@ const DashboardComponent = () => {
                                                             </button>
                                                         ))}
                                                     </div>
+                                                ) : (
+                                                    <div className={styles.margin_bottom}></div>
+                                                )}
                                                 </div>
                                             )}
                                         </div>

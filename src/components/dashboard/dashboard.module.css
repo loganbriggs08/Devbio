@@ -869,12 +869,10 @@
     margin-bottom: 1.5rem;
     border-radius: 0.3rem;
     background-color: #313131;
-    transition: transform 0.3s ease-in-out;
 }
 
 .project_card:hover {
     cursor: pointer;
-    transform: scale(1.02);
 }
 .project_component_end {
     display: flex;
@@ -932,4 +930,85 @@
     padding-right: 0.8rem;
     border-radius: 0.2rem;
     background-color: #7091F5;
+}
+
+.hide_button {
+    color: #FFF;
+    border: none;
+    font-size: 1rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 0.7rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 0.3rem;
+    background-color: #E65959;
+}
+
+.hide_button:hover {
+    cursor: pointer;
+}
+
+.show_button {
+    color: #FFF;
+    border: none;
+    font-size: 1rem;
+    font-family: "Quicksand";
+    font-weight: 500;
+    padding: 0.7rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 0.3rem;
+    background-color: #E65959;
+}
+
+.show_button:hover {
+    cursor: pointer;
+}
+
+
+.project_search {
+    width: 77%;
+    font-family: "Quicksand";
+    font-weight: 500;
+    font-size: 1.4rem;
+    background-color: #313131;
+    padding-left: 0.8rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
+    border: #7091F5;
+    color: #fff;
+    height: 4rem;
+    border-radius: 0.4rem;
+    font-size: large; 
+    margin-bottom: 2rem;
+}
+
+.project_search:focus {
+    outline: none;
+}
+
+.margin_bottom {
+    margin-bottom: 2rem;
+}
+
+.refresh_button {
+    margin-left: 3%;
+    width: 15%;
+    margin-bottom: 2rem;
+    color: #FFF;
+    border: none;
+    font-size: 1.2rem;
+    font-family: "Quicksand";
+    margin-top: 0.3rem;
+    font-weight: 500;
+    padding: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 0.3rem;
+    margin-left: 3%;
+    background-color: #313131;
+}
+
+.refresh_button:hover { 
+    cursor: pointer;
 }
