@@ -138,6 +138,7 @@ const DashboardComponent = () => {
     const [selectedSettingsMenu, setSelectedSettingsMenu] = useState<number>(1);
     const [clickedConnection, setClickedConnection] = useState<string>("");
     const [githubRepositories, setGithubRepositories] = useState<GitHubRepository[]>([]);
+    const [refreshButtonState, setRefreshButtonState] = useState<string>("Refresh");
 
     const [selectedColour, setSelectedColor] = useState<number | null>(null);
     const [selectedLanguages, setSelectedLanguages] = useState<any[]>([]);
@@ -319,32 +320,37 @@ const DashboardComponent = () => {
 
       const getUsersRepositories = async () => {
         if (requestSent === false) {
-            try {
-                setRequestSent(true)
-                const response = await axios.post('http://localhost:6969/api/account/connections/github', null, {
-                    headers: {
-                    'Content-Type': 'application/json',
-                    session: sessionCookie ? sessionCookie.split('=')[1] : '',
-                    },
-                });
-            
-                if (response.status === 401) {
-                    throw new Error('Invalid session');
+            if (refreshButtonState === "Refresh") {
+                setRefreshButtonState("...")
+
+                try {
+                    setRequestSent(true)
+                    const response = await axios.post('http://localhost:6969/api/account/connections/github', null, {
+                        headers: {
+                        'Content-Type': 'application/json',
+                        session: sessionCookie ? sessionCookie.split('=')[1] : '',
+                        },
+                    });
+                
+                    if (response.status === 401) {
+                        throw new Error('Invalid session');
+                    }
+                
+                    const githubResponse = await axios.get('http://localhost:6969/api/account/connections/github', {
+                        headers: {
+                        session: sessionCookie?.trim().substring(8),
+                        },
+                    });
+                
+                    console.log(githubResponse.data);
+                
+                    const sortedRepositories = githubResponse.data.github_repositories.sort((a, b) => b.star_count - a.star_count);
+                
+                    setGithubRepositories(sortedRepositories);
+                    setRefreshButtonState("Refreshed")
+                } catch (error) {
+                    console.error('Error fetching GitHub repositories:', error);
                 }
-            
-                const githubResponse = await axios.get('http://localhost:6969/api/account/connections/github', {
-                    headers: {
-                    session: sessionCookie?.trim().substring(8),
-                    },
-                });
-            
-                console.log(githubResponse.data);
-            
-                const sortedRepositories = githubResponse.data.github_repositories.sort((a, b) => b.star_count - a.star_count);
-            
-                setGithubRepositories(sortedRepositories);
-            } catch (error) {
-                console.error('Error fetching GitHub repositories:', error);
             }
         }
       };
@@ -757,7 +763,7 @@ const DashboardComponent = () => {
                                                         onChange={(e) => setProjectSearch(e.target.value)}
                                                     />
 
-                                                    <button className={styles.refresh_button} onClick={() => {getUsersRepositories()}}>Refresh</button>
+                                                    <button className={styles.refresh_button} onClick={() => {getUsersRepositories()}}>{refreshButtonState === "Refresh" ? ("Refresh") : (refreshButtonState)}</button>
                                                 </div>
 
                                                 {githubRepositories
