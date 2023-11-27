@@ -1,25 +1,21 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Profile from './Profile';
+import ProfileComponent from '../Profile';
+import styles from "./profile_grid.module.css";
 
 interface ProfileData {
+  rank: number;
   username: string;
-  profile_picture: string;
-  description: string;
-  skills: string[];
-  interests: string[];
-  location: string;
-  spoken_languages: string[];
-  badges: string[];
-  is_setup: boolean;
-  is_hirable: boolean;
-  is_disabled: boolean;
+  avg_rating: number;
+  years_experience: number;
+  commits: number;
+  open_projects: number;
+  boosts: number;
 }
 
 const ProfileGrid: React.FC = () => {
   const [profiles, setProfiles] = useState<ProfileData[]>([]);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,14 +23,14 @@ const ProfileGrid: React.FC = () => {
         const response = await fetch('http://localhost:6969/api/explore');
         const data = await response.json();
         console.log('API Response:', data);
-        setProfiles(data);
+        setProfiles(data.explore_data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -43,10 +39,11 @@ const ProfileGrid: React.FC = () => {
   }
 
   return (
-    <div className="profile-grid">
-      
-      {Array.isArray(profiles) && profiles.map((profile, index) => (
-        <Profile key={index} profileData={profile} />
+    <div className={styles.profile_grid}>
+      {profiles.map((profile, index) => (
+        <div key={index} className={styles.profile_grid_item}>
+          <ProfileComponent userData={profile} />
+        </div>
       ))}
     </div>
   );

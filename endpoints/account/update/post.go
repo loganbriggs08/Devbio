@@ -4,7 +4,6 @@ import (
 	"devbio/database"
 	ReturnModule "devbio/modules/return_module"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -109,7 +108,6 @@ func PostRequest(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 
 		if err := decoder.Decode(&updateRequestData); err != nil {
-			fmt.Println(err)
 			ReturnModule.InternalServerError(w, r)
 			return
 		}

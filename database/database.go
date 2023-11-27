@@ -404,7 +404,6 @@ func GetProfiles() ([]structs.ExploreData, bool) {
 	var users []string
 	var profiles []structs.ExploreData
 	users, _ = GetAllUsers()
-	fmt.Println(users)
 	for i := 0; i < len(users); i++ {
 		username := users[i]
 		exploreData, err := GetExploreData(username)
@@ -417,7 +416,7 @@ func GetProfiles() ([]structs.ExploreData, bool) {
 		}
 	}
 
-	return profiles, true
+	return profiles, false
 }
 
 func UpdateProfileSetupData(profileData updateRequestSetupData) bool {

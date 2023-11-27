@@ -1,0 +1,12 @@
+.profile_grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .profile_grid_item {
+    background-color: #252525;
+    flex: 0 0 calc(33.33% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+  }
+  

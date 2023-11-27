@@ -109,12 +109,11 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData }) => {
     const spokenLanguages = userData?.spoken_languages ?? null;
     const languageFlags = getLanguageFlags(spokenLanguages);
 
-    console.log("COLOR: " + userData?.selected_colour);
     const profileTopStyle = {
         backgroundColor: colorIndexToHexMap[userData?.selected_colour ?? 0],
     };
 
-    const badgeIcons = userData?.badges.map((badge, index) => (
+    const badgeIcons = userData?.badges?.map((badge, index) => (
         <div>
             <Badge key={index} type={badge} userData={userData} />
 
