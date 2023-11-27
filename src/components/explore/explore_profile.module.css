@@ -15,7 +15,6 @@
 
 .profile_content {
     margin-left: 5%;
-    margin-bottom: 5rem;
 }
 
 .profile_image_container {
@@ -24,26 +23,47 @@
     margin-left: 2%;
 }
 
-.send_message_button {
+.swap_content_button {
     font-family: "Quicksand";
     font-weight: 500;
-    background-color: #1F1F1F;
-    margin-bottom: 0.3rem;
-    margin-top: 0.1rem;
     border: none;
     color: #fff;
     height: 3.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     border-radius: 0.4rem;
     font-size: 20px;
-    margin-top: 6rem;
-    margin-left: auto;
-    margin-right: 2rem;
+    margin-top: rem;
+    margin-left: 27rem;
+    background-color: #7091F5;
+    cursor: pointer;
 }
 
-.send_message_button:hover {
+.swap_content_button:hover {
     cursor: pointer;
+}
+
+.send_message_button_container {
+    display: inline-block;
+    margin-top: 5.5rem;
+    margin-left: -5rem;
+}
+
+.send_message_button {
+    font-family: "Quicksand";
+    font-weight: 500;
+    border: none;
+    color: #fff;
+    height: 3.5rem;
+    border-radius: 0.4rem;
+    font-size: 20px;
+}
+
+.send_message_button {
+    background-color: #1F1F1F;
+    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    margin-left: 6rem;
 }
 
 .profile_image {
@@ -55,7 +75,7 @@
 }
 
 .username_text {
-    margin-bottom: 0.5rem;
+    float: left;
 }
 
 .description_text {
@@ -115,57 +135,24 @@
     margin-bottom: 10px;
 }
 
-/* .profile_content, span, h3 {
-    line-height: 8px;
-} */
-
 .badges_container {
     display: flex;
-    margin-left: 8px; 
+    margin-left: 8px;
+    margin-top: 5px;
+    margin-right: 10px;
 }
+
 
 .badge {
     margin-right: 8px;
-}
-
-.swap_content_button {
-    font-family: "Quicksand";
-    font-weight: 500;
-    background-color: #7091F5;
-    margin-bottom: 0.3rem;
-    margin-top: 0.1rem;
-    border: none;
-    color: #fff;
-    height: 3.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    border-radius: 0.4rem;
-    font-size: 20px;
-    margin-top: 6rem;
-    margin-left: 13rem;
-    margin-right: 2rem;
-}
-
-.swap_content_button:hover {
-    cursor: pointer;
-}
-
-.interests h2,
-.skills h2,
-.location h2 {
-    margin-bottom: 0;
-}
-
-.location h2 {
-    margin: 0;
-}
-
-.location_text {
-    margin-bottom: 0;
 }
 
 .interests span,
 .skills span,
 .location p {
     font-weight: 700;
+}
+
+.open_profile_button {
+    margin-left: auto !important;
 }

@@ -1,10 +1,9 @@
 .container {
-    width: 450px;
-    height: 490px;
-    background-color: #252525;
-    border-radius: 12px;
+    width: 22%;
     text-align: center;
-    margin-left: 25px;
+    background-color: #252525;
+    border-radius: 0.5rem;
+    margin-left: 2.5%;
 }
 
 .title {
@@ -17,9 +16,9 @@
 
 .price {
     color: white;
-    font-size: 24px;
+    font-size: 1.563rem;
     font-family: "Quicksand";
-    font-weight: 700;
+    font-weight: 500;
     word-wrap: break-word;
     margin-top: -2rem;
 
@@ -28,26 +27,29 @@
 .month {
     color: #fff;
     opacity: 0.8;
-    font-size: 16px;
+    font-size: 1rem;
     font-family: "Quicksand";
-    font-weight: 700;
+    font-weight: 500;
     word-wrap: break-word;
     margin-top: -2rem;
 }
 
 .divider_line {
-    width: 100%;
-    height: 2px;
+    width: 87%;
+    height: 0.15rem;
     background-color: white;
-    margin-bottom: 1rem; 
     opacity: 0.3;
+    margin-bottom: 2rem; 
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .purchaseButton {
     font-family: "Quicksand";
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 500;
     margin: 1rem 0;
+    margin-bottom: 2.5rem;
     padding: 0.8rem;
     color: white;
     border: none;
@@ -60,4 +62,28 @@
 
 .premium_text {
     color: #FFB000;
+}
+
+.checkmark_icon {
+    font-size: 2rem;
+    margin-right: 0.2rem;
+    color: #99DC7A;
+    vertical-align: middle;
+}
+
+.feature_text {
+    font-size: 1.15rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.extra_features {
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+.feature_list_wrapper {
+    text-align: left !important;
+    margin-left: 10%;
+    margin-bottom: 1.5rem;
 }

@@ -1,8 +1,8 @@
 'use client'
 import styles from "./explore.module.css"
 import React, { useState, useEffect } from 'react';
-import Profile from '@/components/explore/Profile';
-import ProfileGrid from "@/components/explore/ProfileGrid";
+import Profile from '@/components/explore/explore_profile';
+import ProfileGrid from "@/components/explore/profile_grid";
 
 const ExplorePage = () => {
   const [profiles, setProfiles] = useState([]);

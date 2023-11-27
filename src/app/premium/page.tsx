@@ -17,23 +17,23 @@ export default function Premium() {
         <div className={styles.centered}>
           <Card
                   title="Premium"
-                  item1="Premium Badge"
-                  item2="Explore Boost"
-                  item3="Custom Domain"
-                  item4="Beta Features"
-                  item5="Colored Name"
-                  item6="Claim Inactive Usernames"
+                  item1="Get a neat Premium Badge."
+                  item2="Receive monthly Explore Boosts."
+                  item3="Link a Custom Domain to Profile."
+                  item4="Use selection of Colored Usernames."
+                  item5="Claim unused/inactive usernames."
+                  item6="Access to multiple Beta Features."
                   price={5.99}
                   pp={false}
               /> 
           <Card
               title="Premium"
-              item1="Premium Features"
-              item2="Prioritized Support"
-              item3="Premium+ Discord Role"
-              item4="5x Explore Boosts"
-              item5="More Customisibility"
-              item6="Premium+ Badge"
+              item1="All features from the Premium plan."
+              item2="Receive Prioritized Support from us."
+              item3="Get a Premium+ Discord Role."
+              item4="Get an extra 3x Explore Boosts."
+              item5="Wider Range of Customisibility."
+              item6="Premium+ Badge on devbio Profile."
               price={12.99}
               pp={true}
           /> 
