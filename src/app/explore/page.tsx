@@ -15,12 +15,10 @@ const ExplorePage = () => {
                     <h1>Expand Your <span className={styles.colored_text}>Devs</span> Team</h1>
                     <h4>Discover highly skilled <span className={styles.colored_text}>devs</span></h4>
                 
-                
-                    <ProfileGrid/>
-
-                
                 </div>
             </div>
+            <ProfileGrid/>
+
         </div>
     )
 }

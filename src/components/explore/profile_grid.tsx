@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import ProfileComponent from '@/components/explore/explore_profile';
+import ProfileComponentV2 from '@/components/explore/exp_profile_v2';
 import styles from "./profile_grid.module.css";
 import { useRouter } from 'next/navigation';
 
@@ -67,7 +68,7 @@ const ProfileGrid: React.FC = () => {
     }
   }, [router]);
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:6969/api/explore');
@@ -92,7 +93,8 @@ const ProfileGrid: React.FC = () => {
       {profiles.map((profile, index) => (
         <div key={index} className={styles.profile_grid_item}>
           
-          <ProfileComponent exploreData={profile} userData={userData2}/>
+          {/* <ProfileComponent exploreData={profile} userData={userData2}/> */}
+          <ProfileComponentV2 userData={userData2}/>
         </div>
       ))}
     </div>
