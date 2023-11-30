@@ -119,7 +119,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData, exploreDa
     const [currentProfilePage, setCurrentProfilePage] = useState<string>("profile");
     const spokenLanguages = userData?.spoken_languages ?? null;
     const languageFlags = getLanguageFlags(spokenLanguages);
-
+    console.log(userData?.username)
     const profileTopStyle = {
         backgroundColor: colorIndexToHexMap[userData?.selected_colour ?? 0],
     };
@@ -130,7 +130,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData, exploreDa
 
             {index === 0 && userData?.is_hirable === true ? (
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none" className={styles.badge}>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.1358 2.06564C17.1358 1.12873 16.4043 0.387202 15.4042 0.112476C14.4261 -0.156189 13.2415 0.0485501 12.5308 0.812002L8.64756 4.53523L5.48793 7.49021L0.501577 12.2843C0.462705 12.3217 0.426933 12.3609 0.394476 12.4018C-0.123468 13.0539 -0.0857647 13.824 0.244456 14.4061C0.584052 15.0046 1.37102 15.6128 2.55219 15.6128H7.71345V22.902C7.71345 23.8629 8.47332 24.5835 9.46919 24.8656C10.4175 25.1343 11.5266 24.9995 12.3738 24.4662C12.4552 24.415 12.5292 24.3572 12.5947 24.2938L19.5222 17.5816L22.5308 14.7406L22.5511 14.7211L24.5105 12.7855C24.5447 12.7517 24.5765 12.7164 24.6055 12.6798C25.1235 12.0277 25.0858 11.2575 24.7555 10.6755C24.4159 10.0769 23.629 9.46875 22.4478 9.46875H17.1358V2.06564Z" fill="#FFB000" fill-opacity="0.8"/>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M17.1358 2.06564C17.1358 1.12873 16.4043 0.387202 15.4042 0.112476C14.4261 -0.156189 13.2415 0.0485501 12.5308 0.812002L8.64756 4.53523L5.48793 7.49021L0.501577 12.2843C0.462705 12.3217 0.426933 12.3609 0.394476 12.4018C-0.123468 13.0539 -0.0857647 13.824 0.244456 14.4061C0.584052 15.0046 1.37102 15.6128 2.55219 15.6128H7.71345V22.902C7.71345 23.8629 8.47332 24.5835 9.46919 24.8656C10.4175 25.1343 11.5266 24.9995 12.3738 24.4662C12.4552 24.415 12.5292 24.3572 12.5947 24.2938L19.5222 17.5816L22.5308 14.7406L22.5511 14.7211L24.5105 12.7855C24.5447 12.7517 24.5765 12.7164 24.6055 12.6798C25.1235 12.0277 25.0858 11.2575 24.7555 10.6755C24.4159 10.0769 23.629 9.46875 22.4478 9.46875H17.1358V2.06564Z" fill="#FFB000" fillOpacity="0.8"/>
                 </svg>
             ) : (
                 <div></div>
@@ -151,7 +151,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData, exploreDa
                     </div>
 
                     <div className={styles.profile_image_container}>
-                        <img className={styles.profile_image} alt="Users profile picture" src={`http://localhost:6969/api/storage/profile/icon/${userData?.username}`} />
+                        <img className={styles.profile_image} alt="Users profile picture" src={`http://localhost:6969/api/storage/profile/icon/${exploreData?.username}`} />
                         <button className={styles.swap_content_button} onClick={() => {currentProfilePage === "profile" ? setCurrentProfilePage("connections") : setCurrentProfilePage("profile")}}>
                             {currentProfilePage === "profile" ? "Connections" : "Profile"}
                         </button>
@@ -160,7 +160,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ userData, exploreDa
 
                     <div className={styles.profile_bottom}>
                         <div className={styles.profile_content}>
-                            <h1 className={styles.username_text}>{userData?.username}</h1>
+                            <h1 className={styles.username_text}>{exploreData?.username}</h1>
                             
                             {currentProfilePage === "profile" ? (
                                 <div>

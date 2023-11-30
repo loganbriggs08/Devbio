@@ -87,14 +87,13 @@ const ProfileGrid: React.FC = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log(profiles)
   return (
     <div className={styles.profile_grid}>
       {profiles.map((profile, index) => (
         <div key={index} className={styles.profile_grid_item}>
-          
           {/* <ProfileComponent exploreData={profile} userData={userData2}/> */}
-          <ProfileComponentV2 userData={userData2}/>
+          <ProfileComponentV2 exploreData={profile} userData={userData2}/>
         </div>
       ))}
     </div>
